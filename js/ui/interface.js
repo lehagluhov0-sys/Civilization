@@ -8,6 +8,7 @@
       this.canvas = $("worldCanvas");
       this.ctx = this.canvas.getContext("2d");
       this.mini = $("miniMap").getContext("2d");
+      this.roadMode = false;
       this.bind();
 
       C.on("time", () => this.refresh());
@@ -37,14 +38,23 @@
 
       canvas.addEventListener("pointerdown", event => {
         const rect = canvas.getBoundingClientRect();
+        const startX = event.clientX - rect.left;
+        const startY = event.clientY - rect.top;
         pointer = {
-          startX: event.clientX - rect.left,
-          startY: event.clientY - rect.top,
-          lastX: event.clientX - rect.left,
-          lastY: event.clientY - rect.top,
-          moved: false
+          startX: startX,
+          startY: startY,
+          lastX: startX,
+          lastY: startY,
+          lastRoadTile: null,
+          moved: false,
+          road: this.roadMode
         };
         canvas.setPointerCapture(event.pointerId);
+        if (pointer.road) {
+          const tile = C.camera.screenToTile(startX, startY);
+          pointer.lastRoadTile = tile;
+          this.paintRoadLine(tile, tile);
+        }
       });
 
       canvas.addEventListener("pointermove", event => {
@@ -56,7 +66,14 @@
         const dy = y - pointer.lastY;
 
         if (Math.hypot(x - pointer.startX, y - pointer.startY) > 5) pointer.moved = true;
-        if (pointer.moved) {
+        if (pointer.road) {
+          const tile = C.camera.screenToTile(x, y);
+          if (!pointer.lastRoadTile || tile.x !== pointer.lastRoadTile.x || tile.y !== pointer.lastRoadTile.y) {
+            this.paintRoadLine(pointer.lastRoadTile || tile, tile);
+            pointer.lastRoadTile = tile;
+          }
+          this.draw();
+        } else if (pointer.moved) {
           C.state.camera.x += dx;
           C.state.camera.y += dy;
           this.draw();
@@ -73,7 +90,7 @@
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        if (!pointer.moved) {
+        if (!pointer.road && !pointer.moved) {
           const tile = C.camera.screenToTile(x, y);
           if (C.world.get(tile.x, tile.y)) {
             C.state.selected = tile;
@@ -113,6 +130,13 @@
         C.state.selected = null;
         C.emit("selection");
         this.draw();
+      };
+      $("roadModeButton").onclick = () => {
+        this.roadMode = !this.roadMode;
+        this.refreshRoadMode();
+        this.addLog(this.roadMode
+          ? "Режим дорог включён. Проведи пальцем по карте, чтобы проложить маршрут."
+          : "Режим прокладки дорог выключен.");
       };
       $("gridToggle").onchange = event => {
         C.state.showGrid = event.target.checked;
@@ -168,6 +192,7 @@
       $("season").textContent = C.time.season();
       $("day").textContent = C.state.day;
       this.refreshTime();
+      this.refreshRoadMode();
       this.refreshSelection();
       this.draw();
     },
@@ -177,7 +202,7 @@
       $("population").textContent = C.city.population;
       $("cityPopulation").textContent = C.city.population;
       $("cityHousing").textContent = C.city.housing;
-      $("cityJobs").textContent = C.city.employment + "/" + C.city.maxJobs;
+      $("cityJobs").textContent = C.city.maxJobs;
       $("buildingCount").textContent = C.city.buildingCount;
       $("money").textContent = resources.money;
       $("food").textContent = resources.food;
@@ -215,6 +240,52 @@
       $("wageCost").textContent = economy.wages.toFixed(2);
       $("dailyBalance").textContent = (economy.balance > 0 ? "+" : "") + economy.balance.toFixed(2);
       $("dailyBalance").style.color = economy.balance < 0 ? "#d97757" : economy.balance > 0 ? "#63b98b" : "";
+    },
+
+    refreshRoadMode: function () {
+      const button = $("roadModeButton");
+      if (!button) return;
+      button.textContent = this.roadMode ? "✓ Режим дорог: ВКЛ" : "＋ Режим дорог: ВЫКЛ";
+      button.classList.toggle("active", this.roadMode);
+      $("mapHint").textContent = this.roadMode
+        ? "РЕЖИМ ДОРОГ · ПРОВЕДИ ПАЛЬЦЕМ ПО КАРТЕ ДЛЯ ПРОКЛАДКИ МАРШРУТА"
+        : "ПЕРЕТАСКИВАЙ КАРТУ · НАЖМИ НА КЛЕТКУ ДЛЯ ВЫБОРА";
+    },
+
+    paintRoadLine: function (from, to) {
+      let x0 = from.x;
+      let y0 = from.y;
+      const x1 = to.x;
+      const y1 = to.y;
+      const dx = Math.abs(x1 - x0);
+      const sx = x0 < x1 ? 1 : -1;
+      const dy = -Math.abs(y1 - y0);
+      const sy = y0 < y1 ? 1 : -1;
+      let error = dx + dy;
+      let failed = false;
+
+      while (true) {
+        const tile = C.world.get(x0, y0);
+        if (tile && !tile.road && !tile.building && tile.type !== "water") {
+          const result = C.infrastructure.buildRoad(x0, y0);
+          if (!result.ok) {
+            if (!failed) this.addLog(result.message);
+            failed = true;
+            if (result.message.indexOf("Недостаточно") !== -1) {
+              this.roadMode = false;
+              this.refreshRoadMode();
+              break;
+            }
+          }
+        }
+        if (x0 === x1 && y0 === y1) break;
+        const twice = 2 * error;
+        if (twice >= dy) { error += dy; x0 += sx; }
+        if (twice <= dx) { error += dx; y0 += sy; }
+      }
+      this.refreshResources();
+      this.refreshInfrastructure();
+      this.refreshEconomy();
     },
 
     refreshZoom: function () {
