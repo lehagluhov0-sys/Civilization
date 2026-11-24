@@ -42,6 +42,7 @@
       const definition = catalog[type];
       if (!tile || !definition) return { ok: false, message: "Невозможно построить здесь." };
       if (tile.building) return { ok: false, message: "На этой клетке уже есть здание." };
+      if (tile.road) return { ok: false, message: "Сначала выбери клетку без дороги." };
       if (!definition.terrain.includes(tile.type)) {
         return { ok: false, message: "Это здание нельзя строить на данной местности." };
       }
