@@ -58,7 +58,9 @@
         message = "Посольство установило дружеский контакт с державой «" + civ.name + "».";
       } else if (action === "embassy") {
         if (civ.embassy) return { ok: false, message: "Посольство уже открыто." };
+        if (this.envoys < 1) return { ok: false, message: "Нет свободных дипломатов. Новый посол появится через некоторое время." };
         if (!pay(25, 0, 5)) return { ok: false, message: "Нужно 25 монет и 5 камня." };
+        this.envoys--;
         civ.embassy = true; this.adjust(civ, 8, 8); civ.cooldown = 8;
         message = "В столице «" + civ.name + "» открыто наше постоянное посольство.";
       } else if (action === "gift") {
@@ -91,6 +93,8 @@
       } else if (action === "alliance") {
         if (civ.alliance) return { ok: false, message: "Союз уже заключён." };
         if (civ.relation < 65 || civ.nonAggression <= 0) return { ok: false, message: "Для союза нужны отношения от 65 и действующий пакт о ненападении." };
+        if (this.influence < 5) return { ok: false, message: "Для заключения союза нужно 5 очков влияния." };
+        this.influence -= 5;
         civ.alliance = true; this.adjust(civ, 12, 10); civ.cooldown = 20;
         message = "Заключён союз с «" + civ.name + "». Союз укрепляет влияние обеих держав.";
       } else {
@@ -126,6 +130,10 @@
 
     daily: function () {
       this.dayCounter++;
+      if (this.dayCounter % 15 === 0 && this.envoys < 5) {
+        this.envoys++;
+        this.record("В столицу прибыл новый дипломат. Теперь свободных послов: " + this.envoys + ".");
+      }
       this.civilizations.forEach(civ => {
         if (civ.cooldown > 0) civ.cooldown--;
         if (civ.nonAggression > 0) civ.nonAggression--;
