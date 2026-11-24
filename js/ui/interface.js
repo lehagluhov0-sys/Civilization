@@ -180,6 +180,9 @@
 
           const section = button.dataset.section;
           if (section === "city") {
+            this.closeResearchPanel();
+            this.closeDiplomacyPanel();
+            this.closeWorldPanel();
             this.addLog("Выбран раздел управления поселением.");
             if (C.city.center) C.state.selected = { x: C.city.center.x, y: C.city.center.y };
             C.emit("selection");
@@ -191,6 +194,7 @@
             this.addLog("Открыта карта мира.");
           } else if (section === "research") {
             this.closeDiplomacyPanel();
+            this.closeWorldPanel();
             this.openResearchPanel();
           } else if (section === "world") {
             this.closeResearchPanel();
