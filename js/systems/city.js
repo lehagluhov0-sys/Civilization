@@ -54,7 +54,7 @@
 
     daily: function () {
       const resources = C.state.resources;
-      let food = 0, wood = 0, stone = 0, upkeep = 0;
+      let food = 0, wood = 0, stone = 0;
 
       for (const row of C.world.tiles) {
         for (const tile of row) {
@@ -64,7 +64,6 @@
           food += definition.food || 0;
           wood += definition.wood || 0;
           stone += definition.stone || 0;
-          if (tile.building.type !== "city_center") upkeep += 1;
         }
       }
 
@@ -72,7 +71,6 @@
       resources.food = Math.max(0, resources.food + food - consumption);
       resources.wood += wood;
       resources.stone += stone;
-      resources.money = Math.max(0, resources.money - upkeep);
 
       if (C.state.day % 5 === 0 && this.population < this.housing && resources.food > consumption * 3) {
         this.population++;
@@ -86,6 +84,7 @@
       }
 
       this.recalculate();
+      if (C.economy) C.economy.daily();
       C.emit("resources");
       C.emit("city");
     }
