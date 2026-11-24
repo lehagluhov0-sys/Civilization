@@ -12,7 +12,7 @@
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.3.0</span></small></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.4.0</span></small></div></div>
       <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
@@ -39,14 +39,34 @@
           <div class="info-line"><span>Рабочие места</span><b id="cityJobs">0</b></div>
           <div class="info-line"><span>Здания</span><b id="buildingCount">1</b></div>
         </section>
+        <section class="inspector-card workforce-card">
+          <div class="section-label">РАБОЧАЯ СИЛА</div>
+          <div class="info-line"><span>Трудоспособные жители</span><b id="laborForce">66</b></div>
+          <div class="info-line"><span>Трудоустроено</span><b id="employed">0</b></div>
+          <div class="info-line"><span>Безработные</span><b id="unemployed">0</b></div>
+          <div class="info-line"><span>Свободные вакансии</span><b id="vacantJobs">0</b></div>
+          <div class="panel-divider"></div>
+          <div class="info-line"><span>Фермы</span><b id="farmWorkers">0</b></div>
+          <div class="info-line"><span>Лесопилки</span><b id="lumberWorkers">0</b></div>
+          <div class="info-line"><span>Каменоломни</span><b id="quarryWorkers">0</b></div>
+          <div class="info-line"><span>Склады</span><b id="warehouseWorkers">0</b></div>
+        </section>
+        <section class="inspector-card logistics-card">
+          <div class="section-label">ИНФРАСТРУКТУРА И ЛОГИСТИКА</div>
+          <div class="info-line"><span>Дорожные клетки</span><b id="roadCount">0</b></div>
+          <div class="info-line"><span>Подключённые здания</span><b id="connectedBuildings">0</b></div>
+          <div class="info-line"><span>Вместимость склада</span><b id="storageCapacity">300</b></div>
+        </section>
         <div class="panel-divider"></div>
         <div class="section-label">ЭКОНОМИКА И НАЛОГИ</div>
         <div class="info-line"><span>Налоговая ставка</span><b id="taxRateValue">15%</b></div>
         <input id="taxRate" class="tax-slider" type="range" min="0" max="30" step="1" value="15" aria-label="Налоговая ставка">
         <div class="info-line"><span>Доход в день</span><b id="taxIncome">0</b></div>
         <div class="info-line"><span>Содержание зданий</span><b id="buildingUpkeep">0</b></div>
+        <div class="info-line"><span>Содержание дорог</span><b id="roadUpkeep">0</b></div>
+        <div class="info-line"><span>Зарплаты</span><b id="wageCost">0</b></div>
         <div class="info-line"><span>Баланс в день</span><b id="dailyBalance">0</b></div>
-        <p class="economy-note">Налоги поступают каждый игровой день. Каждое обычное здание требует 1 монету на содержание.</p>
+        <p class="economy-note">Налоги формируют доход. Из казны оплачиваются здания, дороги и зарплаты работников.</p>
         <div class="panel-divider"></div>
         <div class="section-label">СВЕДЕНИЯ О МИРЕ</div>
         <div class="info-line"><span>Размер карты</span><b>48 × 48</b></div>
@@ -97,6 +117,8 @@
   <script src="js/camera/camera.js"></script>
   <script src="js/world/test-world.js"></script>
   <script src="js/systems/buildings.js"></script>
+  <script src="js/systems/infrastructure.js"></script>
+  <script src="js/systems/workforce.js"></script>
   <script src="js/systems/city.js"></script>
   <script src="js/systems/economy.js"></script>
   <script src="js/ui/interface.js"></script>
