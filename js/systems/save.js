@@ -59,6 +59,7 @@
           research: C.research ? C.research.exportData() : null,
           diplomacy: C.diplomacy ? C.diplomacy.exportData() : null,
           politics: C.politics ? C.politics.exportData() : null,
+          map: C.world && C.world.exportData ? C.world.exportData() : null,
           buildings: buildings,
           roads: roads
         };
@@ -107,6 +108,8 @@
         }
 
         C.state.selected = validPoint(savedState.selected) ? savedState.selected : null;
+        if (data.map && C.world.importData) C.world.importData(data.map);
+        else if (C.world.prepareForLegacySave) C.world.prepareForLegacySave(data);
         C.city.population = Math.max(10, Number(data.city && data.city.population) || 120);
         C.state.resources.population = C.city.population;
         C.city.center = validPoint(data.city && data.city.center) ? data.city.center : null;
@@ -156,6 +159,7 @@
 
       window.addEventListener("pagehide", () => this.save());
       window.addEventListener("beforeunload", () => this.save());
+      this.save();
     }
   };
 })();
