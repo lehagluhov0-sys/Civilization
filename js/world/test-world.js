@@ -77,6 +77,95 @@
     }
   }
 
+  function drawTerrainDetail(ctx, tile, x, y, cell) {
+    if (cell < 13) return;
+    const cx = x + cell / 2;
+    const cy = y + cell / 2;
+    const detail = seededHash(tile.x, tile.y, 991);
+
+    if (tile.type === "forest") {
+      ctx.fillStyle = "#294d35";
+      ctx.beginPath();
+      ctx.moveTo(cx, y + cell * 0.16);
+      ctx.lineTo(x + cell * 0.23, y + cell * 0.72);
+      ctx.lineTo(x + cell * 0.77, y + cell * 0.72);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#203f2d";
+      ctx.beginPath();
+      ctx.moveTo(x + cell * 0.34, y + cell * 0.27);
+      ctx.lineTo(x + cell * 0.12, y + cell * 0.78);
+      ctx.lineTo(x + cell * 0.56, y + cell * 0.78);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#9a7950";
+      ctx.fillRect(cx - cell * 0.035, y + cell * 0.68, cell * 0.07, cell * 0.18);
+    } else if (tile.type === "mountain") {
+      ctx.fillStyle = "#434c52";
+      ctx.beginPath();
+      ctx.moveTo(x + cell * 0.12, y + cell * 0.83);
+      ctx.lineTo(x + cell * 0.51, y + cell * 0.13);
+      ctx.lineTo(x + cell * 0.9, y + cell * 0.83);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#d5dcda";
+      ctx.beginPath();
+      ctx.moveTo(x + cell * 0.39, y + cell * 0.35);
+      ctx.lineTo(x + cell * 0.51, y + cell * 0.13);
+      ctx.lineTo(x + cell * 0.65, y + cell * 0.39);
+      ctx.lineTo(x + cell * 0.53, y + cell * 0.34);
+      ctx.lineTo(x + cell * 0.47, y + cell * 0.46);
+      ctx.closePath(); ctx.fill();
+    } else if (tile.type === "rock") {
+      ctx.fillStyle = "#555750";
+      ctx.fillRect(x + cell * 0.22, y + cell * (0.48 + detail * 0.12), cell * 0.2, cell * 0.18);
+      ctx.fillRect(x + cell * 0.57, y + cell * 0.35, cell * 0.22, cell * 0.25);
+      ctx.fillStyle = "#a19f91";
+      ctx.fillRect(x + cell * 0.25, y + cell * 0.48, cell * 0.14, cell * 0.045);
+    } else if (tile.type === "desert") {
+      ctx.strokeStyle = "#d4bd7c";
+      ctx.lineWidth = Math.max(1, cell * 0.035);
+      ctx.beginPath();
+      ctx.moveTo(x + cell * 0.12, y + cell * 0.68);
+      ctx.quadraticCurveTo(cx, y + cell * (0.55 + detail * 0.12), x + cell * 0.88, y + cell * 0.68);
+      ctx.stroke();
+      ctx.fillStyle = "#806d45";
+      ctx.fillRect(x + cell * 0.7, y + cell * 0.28, cell * 0.05, cell * 0.05);
+    } else if (tile.type === "tundra") {
+      ctx.strokeStyle = "#dce8e8";
+      ctx.lineWidth = Math.max(1, cell * 0.035);
+      ctx.beginPath();
+      ctx.moveTo(x + cell * 0.25, y + cell * 0.34);
+      ctx.lineTo(x + cell * 0.42, y + cell * 0.5);
+      ctx.lineTo(x + cell * 0.34, y + cell * 0.68);
+      ctx.moveTo(x + cell * 0.42, y + cell * 0.5);
+      ctx.lineTo(x + cell * 0.62, y + cell * 0.39);
+      ctx.stroke();
+    } else if (tile.type === "swamp") {
+      ctx.strokeStyle = "#354d3d";
+      ctx.lineWidth = Math.max(1, cell * 0.045);
+      ctx.beginPath();
+      ctx.moveTo(cx, y + cell * 0.82);
+      ctx.lineTo(cx - cell * 0.08, y + cell * 0.37);
+      ctx.moveTo(cx, y + cell * 0.65);
+      ctx.lineTo(cx + cell * 0.18, y + cell * 0.29);
+      ctx.stroke();
+    } else if (tile.type === "water") {
+      ctx.strokeStyle = "#77a8bd";
+      ctx.globalAlpha = 0.52;
+      ctx.lineWidth = Math.max(1, cell * 0.035);
+      ctx.beginPath();
+      ctx.moveTo(x + cell * 0.16, y + cell * 0.38);
+      ctx.lineTo(x + cell * 0.44, y + cell * 0.38);
+      ctx.moveTo(x + cell * 0.52, y + cell * 0.68);
+      ctx.lineTo(x + cell * 0.84, y + cell * 0.68);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    } else {
+      ctx.fillStyle = "#9bad69";
+      ctx.globalAlpha = 0.55;
+      ctx.fillRect(x + cell * (0.2 + detail * 0.55), y + cell * 0.25, Math.max(1, cell * 0.05), Math.max(1, cell * 0.05));
+      ctx.globalAlpha = 1;
+    }
+  }
+
   const colors = {
     water: "#315b76",
     rock: "#77766f",
@@ -124,8 +213,8 @@
         this.tiles.push(row);
       }
 
-      addRiver(this.tiles, 5, 0.72, 2.2, 0.8);
-      addRiver(this.tiles, 42, -0.58, 2.5, 2.4);
+      addRiver(this.tiles, 17, 0.24, 2.6, 0.8);
+      addRiver(this.tiles, 34, -0.25, 2.8, 2.4);
       addLakes(this.tiles, this.seed);
 
       // Keep a small fertile starting region near the centre of the world.
@@ -216,7 +305,7 @@
           const sy = camera.y + y * cell;
           ctx.fillStyle = colors[tile.type];
           ctx.fillRect(sx, sy, cell + 0.4, cell + 0.4);
-          drawTerrainDetail(ctx, tile, sx, sy, cell, zoom);
+          drawTerrainDetail(ctx, tile, sx, sy, cell);
 
           if (C.state.showPoliticalMap && tile.owner) {
             const ownerColor = tile.owner === "player" ? "#e2b45c" :
