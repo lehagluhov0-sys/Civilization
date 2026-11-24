@@ -14,8 +14,8 @@
   ];
   const fresh = () => catalog.map((c, i) => ({
     id: c.id, name: c.name, flag: c.flag, leader: c.leader, trait: c.trait,
-    style: c.style, focus: c.focus, relation: [12, -4, 20, 5, 15][i],
-    trust: [25, 18, 30, 22, 28][i], embassy: false, trade: false,
+    style: c.style, focus: c.focus, relation: [12, -4, 20, 5, 15, 8, -10, 3][i],
+    trust: [25, 18, 30, 22, 28, 24, 16, 20][i], embassy: false, trade: false,
     nonAggression: 0, alliance: false, cooldown: 0, lastAction: "Пока контактов не было."
   }));
   C.diplomacy = {
