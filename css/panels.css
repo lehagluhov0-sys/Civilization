@@ -9,3 +9,10 @@
 .tile-card .selection-info{min-height:90px;padding:7px 2px 3px}
 .city-card .info-line:last-child{margin-bottom:3px}
 .inspector>.panel-divider{flex:0 0 1px}
+
+/* Workforce, logistics and road construction controls */
+.workforce-card .info-line,
+.logistics-card .info-line{margin:6px 0}
+.build-cost{display:block;margin-top:4px;font-size:9px;color:var(--muted);font-weight:400}
+.road-button{border-left:2px solid var(--accent)}
+.road-button:hover{background:#302b21}
