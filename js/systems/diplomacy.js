@@ -197,7 +197,7 @@
       });
       this.reputation = clamp(Number(data.reputation) || 50, 0, 100);
       this.influence = Math.max(0, Number(data.influence) || 0);
-      this.envoys = clamp(Number(data.envoys) || 2, 0, 10);
+      this.envoys = clamp(Number.isFinite(Number(data.envoys)) ? Number(data.envoys) : 2, 0, 10);
       this.pending = Array.isArray(data.pending) ? data.pending.slice(0, 2) : [];
       this.history = Array.isArray(data.history) ? data.history.slice(0, 30) : [];
       this.dayCounter = Math.max(0, Number(data.dayCounter) || 0);
