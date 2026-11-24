@@ -7,7 +7,10 @@
     { id: "northland", name: "Нордхейм", flag: "❄️", leader: "Ярл Эйрик", trait: "Осторожные", style: "Сдержанны, но уважают силу и последовательность.", focus: "wood", bonus: "Дерево" },
     { id: "verdantia", name: "Вердантия", flag: "🌿", leader: "Советница Мира", trait: "Учёные", style: "Заинтересованы в знаниях и культурном обмене.", focus: "science", bonus: "Наука" },
     { id: "montara", name: "Монтара", flag: "⛰️", leader: "Князь Дарен", trait: "Промышленники", style: "Ценят ресурсы, ремесло и взаимную выгоду.", focus: "stone", bonus: "Камень" },
-    { id: "maritoria", name: "Маритория", flag: "⚓", leader: "Дож Леон", trait: "Дипломаты", style: "Предпочитают договоры, посольства и долгий мир.", focus: "money", bonus: "Монеты" }
+    { id: "maritoria", name: "Маритория", flag: "⚓", leader: "Дож Леон", trait: "Дипломаты", style: "Предпочитают договоры, посольства и долгий мир.", focus: "money", bonus: "Монеты" },
+    { id: "aurelia", name: "Аурелия", flag: "🌅", leader: "Король Седрик", trait: "Мореплаватели", style: "Развивают торговлю и ищут новые морские пути.", focus: "money", bonus: "Монеты" },
+    { id: "kharad", name: "Харад", flag: "⚒️", leader: "Тан Бором", trait: "Ремесленники", style: "Славятся добычей камня и строительным мастерством.", focus: "stone", bonus: "Камень" },
+    { id: "serebria", name: "Серебрия", flag: "🌙", leader: "Княгиня Лиара", trait: "Культурные", style: "Поддерживают образование, искусство и обмен знаниями.", focus: "science", bonus: "Наука" }
   ];
   const fresh = () => catalog.map((c, i) => ({
     id: c.id, name: c.name, flag: c.flag, leader: c.leader, trait: c.trait,
