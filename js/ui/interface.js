@@ -29,6 +29,7 @@
       });
       C.on("world", () => this.draw());
       C.on("research", () => { if (this.researchPanel) this.renderResearchPanel(); });
+      C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });
 
       this.refresh();
     },
@@ -179,9 +180,14 @@
             this.draw();
           } else if (section === "map") {
             this.closeResearchPanel();
+            this.closeDiplomacyPanel();
             this.addLog("Открыта карта мира.");
           } else if (section === "research") {
+            this.closeDiplomacyPanel();
             this.openResearchPanel();
+          } else if (section === "diplomacy") {
+            this.closeResearchPanel();
+            this.openDiplomacyPanel();
           } else {
             this.addLog("Раздел «" + button.textContent.trim() + "» будет добавлен на следующем этапе.");
           }
@@ -198,6 +204,106 @@
       };
     },
 
+
+
+    openDiplomacyPanel: function () {
+      if (!C.diplomacy) {
+        this.addLog("Система дипломатии не загружена.");
+        return;
+      }
+      if (!this.diplomacyPanel) {
+        const panel = document.createElement("div");
+        panel.id = "diplomacyOverlay";
+        panel.style.cssText = "position:fixed;inset:0;z-index:510;background:rgba(5,9,13,.90);display:flex;align-items:center;justify-content:center;padding:10px;";
+        panel.innerHTML = '<div style="width:min(900px,100%);max-height:94%;overflow:auto;background:#1b242d;border:1px solid #c69b55;padding:14px;color:#e8edf1;box-shadow:0 12px 40px #0009"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:-14px;background:#1b242d;padding:4px 0 10px;z-index:2"><b style="letter-spacing:2px">МЕЖДУНАРОДНЫЕ ОТНОШЕНИЯ</b><button id="closeDiplomacy" class="wide-button" style="width:auto">Закрыть ✕</button></div><div id="diplomacyContent"></div></div>';
+        document.body.appendChild(panel);
+        this.diplomacyPanel = panel;
+        panel.querySelector("#closeDiplomacy").onclick = () => this.closeDiplomacyPanel();
+      }
+      this.renderDiplomacyPanel();
+    },
+
+    closeDiplomacyPanel: function () {
+      if (this.diplomacyPanel) this.diplomacyPanel.remove();
+      this.diplomacyPanel = null;
+    },
+
+    renderDiplomacyPanel: function () {
+      if (!this.diplomacyPanel || !C.diplomacy) return;
+      const d = C.diplomacy;
+      const content = this.diplomacyPanel.querySelector("#diplomacyContent");
+      let html = '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:4px 0 12px">';
+      html += '<div style="background:#222e39;padding:9px"><small>РЕПУТАЦИЯ</small><br><b>' + d.reputation + ' / 100</b></div>';
+      html += '<div style="background:#222e39;padding:9px"><small>ВЛИЯНИЕ</small><br><b>' + d.influence + '</b></div>';
+      html += '<div style="background:#222e39;padding:9px"><small>ПОСЛЫ</small><br><b>' + d.envoys + '</b></div></div>';
+      html += '<p style="font-size:11px;color:#9eacb8">Репутация влияет на отношение держав. Влияние используется в международной политике. Торговые договоры дают ежедневный доход, а союзы постепенно укрепляют влияние.</p>';
+
+      if (d.pending.length) {
+        html += '<div style="border:1px solid #c69b55;padding:10px;margin:10px 0"><b>ДИПЛОМАТИЧЕСКИЕ ПРЕДЛОЖЕНИЯ</b>';
+        d.pending.forEach(p => {
+          const civ = d.get(p.civId);
+          if (!civ) return;
+          html += '<div style="background:#222e39;padding:9px;margin-top:8px"><b>' + civ.flag + ' ' + civ.name + ' — ' + p.title + '</b><p style="font-size:11px;color:#9eacb8">' + p.text + '</p><button class="wide-button" data-dip-response="' + p.id + '" data-accept="1">Принять</button><button class="wide-button" data-dip-response="' + p.id + '" data-accept="0">Отклонить</button></div>';
+        });
+        html += '</div>';
+      }
+
+      html += '<b>НЕЗАВИСИМЫЕ ДЕРЖАВЫ · ' + d.civilizations.length + '</b>';
+      d.civilizations.forEach(civ => {
+        const relation = d.relationName(civ.relation);
+        const color = civ.relation >= 45 ? "#79b88d" : civ.relation < -15 ? "#d77b68" : "#d7b46b";
+        const treaties = [];
+        if (civ.embassy) treaties.push("Посольство");
+        if (civ.trade) treaties.push("Торговля");
+        if (civ.nonAggression > 0) treaties.push("Мир: " + civ.nonAggression + " дн.");
+        if (civ.alliance) treaties.push("Союз");
+        html += '<section style="background:#222e39;border:1px solid #34424e;padding:10px;margin:9px 0">';
+        html += '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>' + civ.flag + ' ' + civ.name + '</b><span style="font-size:10px;color:' + color + '">' + relation.toUpperCase() + '</span></div>';
+        html += '<div style="font-size:11px;color:#aab6c0;margin:5px 0">Правитель: ' + civ.leader + ' · Черта: ' + civ.trait + '</div>';
+        html += '<div style="height:7px;background:#11171d;margin:7px 0"><div style="height:7px;width:' + Math.max(0, Math.min(100, civ.relation + 100) / 2) + '%;background:' + color + '"></div></div>';
+        html += '<div style="display:flex;justify-content:space-between;font-size:10px;color:#aab6c0"><span>Отношения: ' + civ.relation + ' / 100</span><span>Доверие: ' + civ.trust + ' / 100</span></div>';
+        html += '<p style="font-size:11px;color:#9eacb8;margin:6px 0">' + civ.style + '</p>';
+        html += '<p style="font-size:10px;color:#d7b46b;margin:5px 0">' + (treaties.length ? treaties.join(" · ") : "Договоров пока нет") + '</p>';
+        html += '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px">';
+        const actions = [
+          ["greet","Установить контакт"],["embassy","Открыть посольство"],["gift","Отправить подарок · 20 мон."],
+          ["trade","Торговый договор"],["pact","Пакт о ненападении"],["culture","Культурный обмен"],
+          ["science","Научный обмен"],["alliance","Предложить союз"]
+        ];
+        actions.forEach(a => {
+          const disabled = civ.cooldown > 0 || (a[0] === "embassy" && civ.embassy) ||
+            (a[0] === "trade" && civ.trade) || (a[0] === "pact" && civ.nonAggression > 0) ||
+            (a[0] === "alliance" && civ.alliance);
+          html += '<button class="wide-button" data-dip-action="' + a[0] + '" data-civ="' + civ.id + '" ' + (disabled ? 'disabled' : '') + ' style="font-size:10px;padding:7px">' + a[1] + '</button>';
+        });
+        html += '</div>';
+        if (civ.cooldown > 0) html += '<small style="color:#9eacb8">Перерыв между действиями: ' + civ.cooldown + ' дн.</small>';
+        html += '</section>';
+      });
+
+      html += '<b>ПОСЛЕДНИЕ ДИПЛОМАТИЧЕСКИЕ СОБЫТИЯ</b>';
+      if (!d.history.length) html += '<p style="font-size:11px;color:#9eacb8">Пока международных событий не было.</p>';
+      d.history.slice(0, 8).forEach(item => {
+        html += '<div style="border-bottom:1px solid #34424e;padding:6px 0;font-size:11px"><span style="color:#d7b46b">День ' + item.day + '</span> · ' + item.message + '</div>';
+      });
+
+      content.innerHTML = html;
+      content.querySelectorAll("[data-dip-action]").forEach(button => {
+        button.onclick = () => {
+          const result = C.diplomacy.action(button.dataset.civ, button.dataset.dipAction);
+          if (!result.ok) this.addLog(result.message);
+          this.renderDiplomacyPanel();
+          this.refreshResources();
+        };
+      });
+      content.querySelectorAll("[data-dip-response]").forEach(button => {
+        button.onclick = () => {
+          C.diplomacy.respond(button.dataset.dipResponse, button.dataset.accept === "1");
+          this.renderDiplomacyPanel();
+          this.refreshResources();
+        };
+      });
+    },
 
     openResearchPanel: function () {
       if (!C.research) {
