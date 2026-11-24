@@ -142,7 +142,7 @@
         }, 700);
       };
 
-      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city"]
+      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings"]
         .forEach(name => C.on(name, schedule));
 
       window.addEventListener("pagehide", () => this.save());
