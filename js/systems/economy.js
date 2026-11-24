@@ -1,5 +1,7 @@
 (function () {
+  "use strict";
   const C = window.Civ;
+
   C.economy = {
     taxRate: 15,
     lastIncome: 0,
@@ -14,13 +16,25 @@
 
     calculate: function () {
       const income = Math.round(C.city.population * this.taxRate / 1000 * 10) / 10;
-      let upkeep = 0;
+      let buildingUpkeep = 0;
+
       for (const row of C.world.tiles) {
         for (const tile of row) {
-          if (tile.building && tile.building.type !== "city_center") upkeep += 1;
+          if (tile.building && tile.building.type !== "city_center") buildingUpkeep += 1;
         }
       }
-      return { income: income, upkeep: upkeep, balance: Math.round((income - upkeep) * 10) / 10 };
+
+      const roadUpkeep = C.infrastructure ? C.infrastructure.roadUpkeep() : 0;
+      const wages = C.workforce ? C.workforce.wageCost() : 0;
+      const upkeep = Math.round((buildingUpkeep + roadUpkeep + wages) * 100) / 100;
+      return {
+        income: income,
+        buildingUpkeep: buildingUpkeep,
+        roadUpkeep: roadUpkeep,
+        wages: wages,
+        upkeep: upkeep,
+        balance: Math.round((income - upkeep) * 100) / 100
+      };
     },
 
     daily: function () {
@@ -29,7 +43,10 @@
       this.lastExpenses = result.upkeep;
       this.totalIncome += result.income;
       this.totalExpenses += result.upkeep;
-      C.state.resources.money = Math.max(0, Math.round((C.state.resources.money + result.balance) * 10) / 10);
+      C.state.resources.money = Math.max(
+        0,
+        Math.round((C.state.resources.money + result.balance) * 100) / 100
+      );
       C.emit("economy");
     }
   };
