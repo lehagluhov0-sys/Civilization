@@ -15,7 +15,9 @@
     const title = document.createElement("strong");
     title.textContent = "Не удалось запустить Civilization";
     const details = document.createElement("pre");
-    details.textContent = message + "\n\nОткрой консоль браузера или отправь этот текст разработчику.";
+    details.textContent = message + "
+
+Открой консоль браузера или отправь этот текст разработчику.";
     box.append(title, details);
   }
 
@@ -41,6 +43,7 @@
       if (!C.city.center) C.city.init();
       else C.city.recalculate();
       if (C.infrastructure) C.infrastructure.updateNetwork();
+      if (C.politics) C.politics.init();
       if (restored) C.camera.ready = true;
       C.camera.resize();
       if (!restored) C.camera.center();
