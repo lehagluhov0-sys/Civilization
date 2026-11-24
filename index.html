@@ -12,7 +12,7 @@
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.2.0</span></small></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.3.0</span></small></div></div>
       <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
@@ -35,6 +35,14 @@
         <div class="info-line"><span>Жильё</span><b id="cityHousing">120</b></div>
         <div class="info-line"><span>Рабочие места</span><b id="cityJobs">0</b></div>
         <div class="info-line"><span>Здания</span><b id="buildingCount">1</b></div>
+        <div class="panel-divider"></div>
+        <div class="section-label">ЭКОНОМИКА И НАЛОГИ</div>
+        <div class="info-line"><span>Налоговая ставка</span><b id="taxRateValue">15%</b></div>
+        <input id="taxRate" class="tax-slider" type="range" min="0" max="30" step="1" value="15" aria-label="Налоговая ставка">
+        <div class="info-line"><span>Доход в день</span><b id="taxIncome">0</b></div>
+        <div class="info-line"><span>Содержание зданий</span><b id="buildingUpkeep">0</b></div>
+        <div class="info-line"><span>Баланс в день</span><b id="dailyBalance">0</b></div>
+        <p class="economy-note">Налоги поступают каждый игровой день. Каждое обычное здание требует 1 монету на содержание.</p>
         <div class="panel-divider"></div>
         <div class="section-label">СВЕДЕНИЯ О МИРЕ</div>
         <div class="info-line"><span>Размер карты</span><b>48 × 48</b></div>
@@ -86,6 +94,7 @@
   <script src="js/world/test-world.js"></script>
   <script src="js/systems/buildings.js"></script>
   <script src="js/systems/city.js"></script>
+  <script src="js/systems/economy.js"></script>
   <script src="js/ui/interface.js"></script>
   <script src="js/main.js"></script>
 </body>
