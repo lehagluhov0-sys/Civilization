@@ -108,8 +108,8 @@
         }
 
         C.state.selected = validPoint(savedState.selected) ? savedState.selected : null;
-        if (data.map && C.world.importData) C.world.importData(data.map);
-        else if (C.world.prepareForLegacySave) C.world.prepareForLegacySave(data);
+        const mapRestored = !!(data.map && C.world.importData && C.world.importData(data.map));
+        if (!mapRestored && C.world.prepareForLegacySave) C.world.prepareForLegacySave(data);
         C.city.population = Math.max(10, Number(data.city && data.city.population) || 120);
         C.state.resources.population = C.city.population;
         C.city.center = validPoint(data.city && data.city.center) ? data.city.center : null;
