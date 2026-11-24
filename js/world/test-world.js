@@ -124,6 +124,18 @@
             }
           }
 
+          if (C.state.showPoliticalMap && C.politics) {
+            C.politics.countries.forEach(country => {
+              if (country.capital.x === x && country.capital.y === y) {
+                ctx.fillStyle = "#fff4d6";
+                ctx.font = "bold " + Math.max(10, cell * 0.58) + "px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(country.flag, sx + cell / 2, sy + cell / 2);
+              }
+            });
+          }
+
           if (tile.building) {
             const symbols = {
               city_center: "⌂",
