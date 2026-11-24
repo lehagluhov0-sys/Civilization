@@ -55,6 +55,7 @@
             } : null
           },
           economy: { taxRate: C.economy.taxRate },
+          research: C.research ? C.research.exportData() : null,
           buildings: buildings,
           roads: roads
         };
@@ -122,6 +123,8 @@
           }
         });
 
+        if (C.research && data.research) C.research.importData(data.research);
+
         const taxRate = Number(data.economy && data.economy.taxRate);
         if (Number.isFinite(taxRate)) C.economy.taxRate = Math.max(0, Math.min(30, taxRate));
         this.loaded = true;
@@ -142,7 +145,7 @@
         }, 700);
       };
 
-      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings"]
+      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings", "research"]
         .forEach(name => C.on(name, schedule));
 
       window.addEventListener("pagehide", () => this.save());
