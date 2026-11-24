@@ -45,6 +45,11 @@
         C.emit("research");
         return;
       }
+      if (this.points < 1) {
+        C.emit("research");
+        return;
+      }
+      this.points = Math.round((this.points - 1) * 10) / 10;
       const tech = this.getTech(this.activeId);
       if (!tech) {
         this.activeId = null;
