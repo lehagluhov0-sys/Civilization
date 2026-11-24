@@ -262,7 +262,7 @@
       const center = data.city && data.city.center;
       if (center) {
         const tile = this.get(center.x, center.y);
-        if (tile && tile.type === "water") tile.type = "grass";
+        if (tile && tile.type !== "grass") tile.type = "grass";
       }
       (Array.isArray(data.roads) ? data.roads : []).forEach(point => {
         const tile = point && this.get(point.x, point.y);
