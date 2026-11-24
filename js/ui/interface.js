@@ -29,7 +29,8 @@
       });
       C.on("world", () => this.draw());
       C.on("research", () => { if (this.researchPanel) this.renderResearchPanel(); });
-      C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });\n      C.on("politics", () => { if (this.worldPanel) this.renderWorldPanel(); this.draw(); });
+      C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });
+      C.on("politics", () => { if (this.worldPanel) this.renderWorldPanel(); this.draw(); });
 
       this.refresh();
     },
@@ -147,6 +148,11 @@
         C.emit("settings");
         this.draw();
       };
+      $("politicalLayerToggle").onchange = event => {
+        C.state.showPoliticalMap = event.target.checked;
+        C.emit("settings");
+        this.draw();
+      };
       $("pauseButton").onclick = () => {
         C.state.paused = !C.state.paused;
         C.emit("settings");
@@ -181,12 +187,18 @@
           } else if (section === "map") {
             this.closeResearchPanel();
             this.closeDiplomacyPanel();
+            this.closeWorldPanel();
             this.addLog("Открыта карта мира.");
           } else if (section === "research") {
             this.closeDiplomacyPanel();
             this.openResearchPanel();
+          } else if (section === "world") {
+            this.closeResearchPanel();
+            this.closeDiplomacyPanel();
+            this.openWorldPanel();
           } else if (section === "diplomacy") {
             this.closeResearchPanel();
+            this.closeWorldPanel();
             this.openDiplomacyPanel();
           } else {
             this.addLog("Раздел «" + button.textContent.trim() + "» будет добавлен на следующем этапе.");
@@ -403,7 +415,8 @@
       $("day").textContent = C.state.day;
       this.refreshTime();
       this.refreshRoadMode();
-      $("gridToggle").checked = C.state.showGrid;\n      $("politicalLayerToggle").checked = !!C.state.showPoliticalMap;
+      $("gridToggle").checked = C.state.showGrid;
+      $("politicalLayerToggle").checked = !!C.state.showPoliticalMap;
       this.refreshSelection();
       this.draw();
     },
