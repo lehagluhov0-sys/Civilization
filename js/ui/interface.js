@@ -29,7 +29,7 @@
       });
       C.on("world", () => this.draw());
       C.on("research", () => { if (this.researchPanel) this.renderResearchPanel(); });
-      C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });
+      C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });\n      C.on("politics", () => { if (this.worldPanel) this.renderWorldPanel(); this.draw(); });
 
       this.refresh();
     },
@@ -206,6 +206,41 @@
 
 
 
+    openWorldPanel: function () {
+      if (!C.politics) { this.addLog("Политическая карта не загружена."); return; }
+      if (!this.worldPanel) {
+        const panel = document.createElement("div");
+        panel.id = "worldOverlay";
+        panel.style.cssText = "position:fixed;inset:0;z-index:520;background:rgba(5,9,13,.90);display:flex;align-items:center;justify-content:center;padding:10px;";
+        panel.innerHTML = '<div style="width:min(820px,100%);max-height:94%;overflow:auto;background:#1b242d;border:1px solid #c69b55;padding:14px;color:#e8edf1"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><b style="letter-spacing:2px">МИРОВАЯ ПОЛИТИКА</b><button id="closeWorld" class="wide-button" style="width:auto">Закрыть ✕</button></div><div id="worldContent"></div></div>';
+        document.body.appendChild(panel);
+        this.worldPanel = panel;
+        panel.querySelector("#closeWorld").onclick = () => this.closeWorldPanel();
+      }
+      this.renderWorldPanel();
+    },
+
+    closeWorldPanel: function () {
+      if (this.worldPanel) this.worldPanel.remove();
+      this.worldPanel = null;
+    },
+
+    renderWorldPanel: function () {
+      if (!this.worldPanel || !C.politics) return;
+      const content = this.worldPanel.querySelector("#worldContent");
+      let html = '<p style="font-size:12px;color:#9eacb8">Государства развиваются самостоятельно. Территории определяются положением столиц и силой держав.</p>';
+      html += '<div style="background:#26333e;padding:10px;margin:8px 0"><b>ТВОЁ ГОСУДАРСТВО</b><div style="font-size:12px;margin-top:5px">Территория: ' + (C.politics.playerTerritory || 0) + ' клеток · Население: ' + C.city.population + ' · Столица: ' + (C.city.center.x + 1) + ', ' + (C.city.center.y + 1) + '</div></div>';
+      C.politics.countries.forEach(c => {
+        const relation = C.diplomacy.get(c.id);
+        html += '<div style="background:#222e39;border-left:4px solid ' + c.color + ';padding:10px;margin:8px 0">';
+        html += '<div style="display:flex;justify-content:space-between;gap:8px"><b>' + c.flag + ' ' + c.name + '</b><span style="color:#d9b66f;font-size:11px">' + (relation ? C.diplomacy.relationName(relation.relation) : "Нейтралитет") + '</span></div>';
+        html += '<div style="font-size:11px;color:#aebbc5;margin-top:5px">' + c.leader + ' · Столица: ' + (c.capital.x + 1) + ', ' + (c.capital.y + 1) + '</div>';
+        html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px;font-size:11px"><span>Жители<br><b>' + c.population.toLocaleString("ru-RU") + '</b></span><span>Города<br><b>' + c.cities + '</b></span><span>Земли<br><b>' + c.territory + '</b></span><span>Развитие<br><b>' + c.development + '/10</b></span></div>';
+        html += '<div style="height:5px;background:#111920;margin-top:8px"><div style="height:5px;width:' + c.stability + '%;background:' + c.color + '"></div></div><small style="color:#9eacb8">Стабильность ' + c.stability + '% · Казна ' + Math.floor(c.treasury) + '</small></div>';
+      });
+      content.innerHTML = html;
+    },
+
     openDiplomacyPanel: function () {
       if (!C.diplomacy) {
         this.addLog("Система дипломатии не загружена.");
@@ -368,7 +403,7 @@
       $("day").textContent = C.state.day;
       this.refreshTime();
       this.refreshRoadMode();
-      $("gridToggle").checked = C.state.showGrid;
+      $("gridToggle").checked = C.state.showGrid;\n      $("politicalLayerToggle").checked = !!C.state.showPoliticalMap;
       this.refreshSelection();
       this.draw();
     },
