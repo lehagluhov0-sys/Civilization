@@ -12,7 +12,7 @@
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП</small></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.2.0</span></small></div></div>
       <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
@@ -79,6 +79,7 @@
       <div class="time-controls"><span id="gameStatus">ПАУЗА</span><button id="pauseButton" class="time-button active">Ⅱ</button><button class="time-button speed-button" data-speed="1">×1</button><button class="time-button speed-button" data-speed="2">×2</button><button class="time-button speed-button" data-speed="4">×4</button></div>
     </footer>
   </div>
+  <div id="startupError" role="alert" hidden></div>
   <script src="js/core/state.js"></script>
   <script src="js/core/time.js"></script>
   <script src="js/camera/camera.js"></script>
