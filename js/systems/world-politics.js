@@ -73,6 +73,10 @@
             if (score < best) { best = score; winner = center; }
           }
           const tile = C.world.get(x, y);
+          if (tile.type === "water") {
+            tile.owner = null;
+            continue;
+          }
           tile.owner = winner.id;
           counts[winner.id] = (counts[winner.id] || 0) + 1;
         }
