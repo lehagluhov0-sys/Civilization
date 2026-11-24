@@ -175,7 +175,10 @@
         C.economy.setTaxRate(event.target.value);
         this.refreshEconomy();
       };
-      $("menuButton").onclick = () => this.addLog("Главное меню будет добавлено позже.");
+      $("menuButton").onclick = () => {
+        const saved = C.save && C.save.save();
+        this.addLog(saved ? "Игра сохранена на устройстве." : "Не удалось сохранить игру. Проверь доступное место и настройки браузера.");
+      };
     },
 
     draw: function () {
@@ -193,6 +196,7 @@
       $("day").textContent = C.state.day;
       this.refreshTime();
       this.refreshRoadMode();
+      $("gridToggle").checked = C.state.showGrid;
       this.refreshSelection();
       this.draw();
     },
