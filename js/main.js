@@ -41,11 +41,12 @@
       if (!C.city.center) C.city.init();
       else C.city.recalculate();
       if (C.infrastructure) C.infrastructure.updateNetwork();
+      if (restored) C.camera.ready = true;
+      C.camera.resize();
+      if (!restored) C.camera.center();
       C.ui.init();
       if (C.save) C.save.init();
       if (restored) C.log("Сохранение загружено. Продолжаем развитие поселения.");
-      C.camera.resize();
-      if (!restored) C.camera.center();
       C.ui.draw();
       window.addEventListener("resize", function () {
         C.camera.resize();
