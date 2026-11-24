@@ -1,3 +1,11 @@
 .inspector,.right-panel{display:flex;flex-direction:column}.right-panel{gap:0}.event-log{overflow:auto;min-height:65px;max-height:32%}.main-nav button,.time-controls button{transition:background .12s,border-color .12s,color .12s}.nav-button:hover,.wide-button:hover,.time-button:hover,.map-tools button:hover{border-color:var(--accent);color:var(--accent2)}.map-area canvas{cursor:grab}.map-area canvas.dragging{cursor:grabbing}@media(max-height:430px){.topbar{height:48px;flex-basis:48px}.bottom-bar{height:44px;flex-basis:44px}.panel{padding:7px}.panel-divider{margin:7px 0}.selection-info{min-height:95px}.section-label{margin:7px 0}.info-line{margin:5px 0}}
 .tax-slider{width:100%;accent-color:var(--accent);margin:4px 0 8px;cursor:pointer}
 .economy-note{font-size:10px;line-height:1.35;color:var(--muted);margin:5px 0 0}
+
+/* Clear separation between selected tile/building controls and city statistics */
+.inspector{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.inspector-card{flex:0 0 auto;min-width:0;background:#161e26;border:1px solid var(--line);border-radius:4px;padding:7px 9px;margin:0 0 10px}
+.inspector-card .section-label{margin:3px 0 8px;padding-bottom:6px;border-bottom:1px solid #34424e}
+.tile-card .selection-info{min-height:90px;padding:7px 2px 3px}
+.city-card .info-line:last-child{margin-bottom:3px}
+.inspector>.panel-divider{flex:0 0 1px}
