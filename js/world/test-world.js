@@ -126,13 +126,26 @@
 
           if (C.state.showPoliticalMap && C.politics) {
             C.politics.countries.forEach(country => {
-              if (country.capital.x === x && country.capital.y === y) {
-                ctx.fillStyle = "#fff4d6";
-                ctx.font = "bold " + Math.max(10, cell * 0.58) + "px Arial";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(country.flag, sx + cell / 2, sy + cell / 2);
-              }
+              (country.settlements || [{ x: country.capital.x, y: country.capital.y }]).forEach((city, index) => {
+                if (city.x !== x || city.y !== y) return;
+                const cx = sx + cell / 2;
+                const cy = sy + cell / 2;
+                if (index === 0) {
+                  ctx.fillStyle = "#fff4d6";
+                  ctx.font = "bold " + Math.max(10, cell * 0.58) + "px Arial";
+                  ctx.textAlign = "center";
+                  ctx.textBaseline = "middle";
+                  ctx.fillText(country.flag, cx, cy);
+                } else {
+                  ctx.fillStyle = country.color;
+                  ctx.beginPath();
+                  ctx.arc(cx, cy, Math.max(2, cell * 0.16), 0, Math.PI * 2);
+                  ctx.fill();
+                  ctx.strokeStyle = "#fff4d6";
+                  ctx.lineWidth = 1;
+                  ctx.stroke();
+                }
+              });
             });
           }
 
