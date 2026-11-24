@@ -46,7 +46,7 @@
       for (let y = 0; y < H; y++) {
         const row = [];
         for (let x = 0; x < W; x++) {
-          row.push({ x: x, y: y, type: terrain(x, y), road: false });
+          row.push({ x: x, y: y, type: terrain(x, y), road: false, owner: null });
         }
         this.tiles.push(row);
       }
@@ -79,6 +79,25 @@
           const sy = camera.y + y * cell;
           ctx.fillStyle = colors[tile.type];
           ctx.fillRect(sx, sy, cell + 0.4, cell + 0.4);
+
+          if (C.state.showPoliticalMap && tile.owner) {
+            const ownerColor = tile.owner === "player" ? "#e2b45c" :
+              (C.politics && C.politics.get(tile.owner) ? C.politics.get(tile.owner).color : "#ffffff");
+            ctx.fillStyle = ownerColor;
+            ctx.globalAlpha = 0.19;
+            ctx.fillRect(sx, sy, cell + 0.4, cell + 0.4);
+            ctx.globalAlpha = 1;
+            const east = this.get(x + 1, y);
+            const south = this.get(x, y + 1);
+            ctx.strokeStyle = ownerColor;
+            ctx.globalAlpha = 0.8;
+            ctx.lineWidth = Math.max(1, cell * 0.055);
+            ctx.beginPath();
+            if (!east || east.owner !== tile.owner) { ctx.moveTo(sx + cell, sy); ctx.lineTo(sx + cell, sy + cell); }
+            if (!south || south.owner !== tile.owner) { ctx.moveTo(sx, sy + cell); ctx.lineTo(sx + cell, sy + cell); }
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
 
           if (tile.road) {
             const roadWidth = Math.max(3, cell * 0.23);
