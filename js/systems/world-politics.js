@@ -47,7 +47,9 @@
           population: 650 + i * 275, treasury: 100 + i * 35,
           development: 1 + (i % 2), power: 1, cities: 1,
           food: 90 + i * 12, stability: 70 + i * 3,
-          cityNames: [civ.name + " — столица"], lastGrowth: 0, territory: 0
+          cityNames: [civ.name + " — столица"],
+          settlements: [{ name: civ.name + " — столица", x: capital.x, y: capital.y }],
+          lastGrowth: 0, territory: 0
         };
       }).filter(Boolean);
       this.dayCounter = 0;
@@ -87,6 +89,25 @@
       C.emit("world");
     },
 
+    findCitySite: function (country) {
+      const occupied = [];
+      this.countries.forEach(c => (c.settlements || []).forEach(city => occupied.push(city)));
+      let best = null;
+      let bestScore = Infinity;
+      for (let y = Math.max(1, country.capital.y - 10); y <= Math.min(C.world.height - 2, country.capital.y + 10); y++) {
+        for (let x = Math.max(1, country.capital.x - 10); x <= Math.min(C.world.width - 2, country.capital.x + 10); x++) {
+          const tile = C.world.get(x, y);
+          if (!tile || tile.type === "water" || tile.building) continue;
+          if (Math.abs(x - C.city.center.x) + Math.abs(y - C.city.center.y) < 4) continue;
+          if (occupied.some(city => Math.abs(x - city.x) + Math.abs(y - city.y) < 3)) continue;
+          const terrainPenalty = tile.type === "grass" ? 0 : tile.type === "forest" ? 1 : 2;
+          const score = Math.abs(x - country.capital.x) + Math.abs(y - country.capital.y) + terrainPenalty;
+          if (score < bestScore) { best = { x: x, y: y }; bestScore = score; }
+        }
+      }
+      return best;
+    },
+
     daily: function () {
       this.dayCounter++;
       if (this.dayCounter % 10 === 0) {
@@ -100,7 +121,13 @@
             c.development++;
             c.cities++;
             if (!Array.isArray(c.cityNames)) c.cityNames = [c.name + " — столица"];
-            c.cityNames.push(c.name + " — город " + c.cities);
+            const cityName = c.name + " — город " + c.cities;
+            c.cityNames.push(cityName);
+            const site = this.findCitySite(c);
+            if (site) {
+              if (!Array.isArray(c.settlements)) c.settlements = [{ name: c.name + " — столица", x: c.capital.x, y: c.capital.y }];
+              c.settlements.push({ name: cityName, x: site.x, y: site.y });
+            }
             c.treasury = Math.max(0, c.treasury - 20);
             C.log("Держава «" + c.name + "» развила экономику и основала новый город.");
           }
@@ -124,7 +151,9 @@
           id: c.id, capital: { x: c.capital.x, y: c.capital.y },
           population: c.population, treasury: c.treasury,
           development: c.development, power: c.power, cities: c.cities,
-          food: c.food, stability: c.stability, cityNames: Array.isArray(c.cityNames) ? c.cityNames.slice(0, 20) : [c.name + " — столица"]
+          food: c.food, stability: c.stability,
+          cityNames: Array.isArray(c.cityNames) ? c.cityNames.slice(0, 20) : [c.name + " — столица"],
+          settlements: Array.isArray(c.settlements) ? c.settlements.slice(0, 20).map(city => ({ name: city.name, x: city.x, y: city.y })) : []
         }))
       };
     },
@@ -149,6 +178,12 @@
           food: clamp(Number(saved.food) || 0, 0, 500),
           stability: clamp(Number(saved.stability) || 50, 0, 100),
           cityNames: Array.isArray(saved.cityNames) ? saved.cityNames.slice(0, 20) : [civ.name + " — столица"],
+          settlements: Array.isArray(saved.settlements) ? saved.settlements.slice(0, 20).filter(city =>
+            city && Number.isInteger(city.x) && Number.isInteger(city.y) &&
+            city.x >= 0 && city.y >= 0 && city.x < C.world.width && city.y < C.world.height &&
+            C.world.get(city.x, city.y).type !== "water"
+          ).map(city => ({ name: String(city.name || "Город"), x: city.x, y: city.y })) :
+            [{ name: civ.name + " — столица", x: x, y: y }],
           territory: 0
         };
       }).filter(Boolean);
