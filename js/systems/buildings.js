@@ -24,7 +24,7 @@
     },
     quarry: {
       name: "Каменоломня", icon: "◆", cost: { wood: 10, stone: 20, money: 30 },
-      stone: 6, jobs: 8, terrain: ["rock"],
+      stone: 6, jobs: 8, terrain: ["rock", "mountain"],
       description: "Добывает до 6 единиц камня в день. Выпуск зависит от работников и дорожной связи."
     },
     warehouse: {
