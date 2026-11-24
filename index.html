@@ -12,7 +12,7 @@
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.4.0</span></small></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.4.1</span></small></div></div>
       <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
@@ -36,7 +36,7 @@
           <div class="section-label">НАСЕЛЕНИЕ И ПОСЕЛЕНИЕ</div>
           <div class="info-line"><span>Жители</span><b id="cityPopulation">120</b></div>
           <div class="info-line"><span>Жильё</span><b id="cityHousing">120</b></div>
-          <div class="info-line"><span>Рабочие места</span><b id="cityJobs">0</b></div>
+          <div class="info-line"><span>Всего рабочих мест</span><b id="cityJobs">0</b></div>
           <div class="info-line"><span>Здания</span><b id="buildingCount">1</b></div>
         </section>
         <section class="inspector-card workforce-card">
@@ -74,6 +74,7 @@
         <div class="info-line"><span>Игровой день</span><b id="day">1</b></div>
         <div class="panel-divider"></div>
         <div class="section-label">ДЕЙСТВИЯ</div>
+        <button class="wide-button" id="roadModeButton">＋ Режим дорог: ВЫКЛ</button>
         <button class="wide-button" id="centerButton">⌖ Центрировать карту</button>
         <button class="wide-button" id="clearSelectionButton">Снять выделение</button>
       </aside>
@@ -84,7 +85,7 @@
           <div class="map-tools"><button id="zoomOut" title="Отдалить">−</button><span id="zoomValue">100%</span><button id="zoomIn" title="Приблизить">+</button></div>
         </div>
         <canvas id="worldCanvas" aria-label="Игровая карта"></canvas>
-        <div class="map-hint">ПЕРЕТАСКИВАЙ КАРТУ · НАЖМИ НА КЛЕТКУ ДЛЯ ВЫБОРА</div>
+        <div class="map-hint" id="mapHint">ПЕРЕТАСКИВАЙ КАРТУ · НАЖМИ НА КЛЕТКУ ДЛЯ ВЫБОРА</div>
       </section>
 
       <aside class="panel right-panel">
