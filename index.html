@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#171d24">
+  <title>Civilization — стратегия</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/interface.css">
+  <link rel="stylesheet" href="css/panels.css">
+</head>
+<body>
+  <div id="game" class="game-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП</small></div></div>
+      <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
+      <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
+      <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
+      <div class="top-stat"><span>ЕДА</span><b id="food">180</b></div>
+      <div class="top-stat"><span>ДЕРЕВО</span><b id="wood">90</b></div>
+      <div class="top-stat"><span>КАМЕНЬ</span><b id="stone">60</b></div>
+      <button class="icon-button" id="menuButton" aria-label="Меню">☰</button>
+    </header>
+
+    <main class="main-layout">
+      <aside class="panel inspector">
+        <div class="panel-heading"><span>ИНСПЕКТОР</span><span class="live-dot"></span></div>
+        <div id="selectionInfo" class="selection-info">
+          <div class="empty-symbol">⌖</div><b>Ничего не выбрано</b>
+          <p>Нажми на клетку карты, чтобы посмотреть местность.</p>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="section-label">СВЕДЕНИЯ О МИРЕ</div>
+        <div class="info-line"><span>Размер карты</span><b>48 × 48</b></div>
+        <div class="info-line"><span>Сезон</span><b id="season">Весна</b></div>
+        <div class="info-line"><span>Игровой день</span><b id="day">1</b></div>
+        <div class="panel-divider"></div>
+        <div class="section-label">ДЕЙСТВИЯ</div>
+        <button class="wide-button" id="centerButton">⌖ Центрировать карту</button>
+        <button class="wide-button" id="clearSelectionButton">Снять выделение</button>
+      </aside>
+
+      <section class="map-area">
+        <div class="map-toolbar">
+          <div><span class="map-title">МИР</span><span class="map-coords" id="coordinates">X: — Y: —</span></div>
+          <div class="map-tools"><button id="zoomOut" title="Отдалить">−</button><span id="zoomValue">100%</span><button id="zoomIn" title="Приблизить">+</button></div>
+        </div>
+        <canvas id="worldCanvas" aria-label="Игровая карта"></canvas>
+        <div class="map-hint">ПЕРЕТАСКИВАЙ КАРТУ · НАЖМИ НА КЛЕТКУ ДЛЯ ВЫБОРА</div>
+      </section>
+
+      <aside class="panel right-panel">
+        <div class="panel-heading">ОБЗОР</div>
+        <canvas id="miniMap" width="160" height="120"></canvas>
+        <div class="panel-divider"></div>
+        <div class="panel-heading">ЖУРНАЛ СОБЫТИЙ</div>
+        <div id="eventLog" class="event-log"><div class="log-entry"><time>День 1</time> Основано новое поселение.</div><div class="log-entry"><time>День 1</time> Исследуйте окружающую местность.</div></div>
+        <div class="panel-divider"></div>
+        <div class="section-label">СЛОИ КАРТЫ</div>
+        <label class="layer-option"><input type="checkbox" id="gridToggle" checked> Сетка клеток</label>
+      </aside>
+    </main>
+
+    <footer class="bottom-bar">
+      <nav class="main-nav">
+        <button class="nav-button active" data-section="map">▦ Карта</button>
+        <button class="nav-button" data-section="city">⌂ Город</button>
+        <button class="nav-button" data-section="economy">◈ Экономика</button>
+        <button class="nav-button" data-section="research">⌬ Исследования</button>
+        <button class="nav-button" data-section="diplomacy">♙ Дипломатия</button>
+        <button class="nav-button" data-section="military">⚔ Армия</button>
+      </nav>
+      <div class="time-controls"><span id="gameStatus">ПАУЗА</span><button id="pauseButton" class="time-button active">Ⅱ</button><button class="time-button speed-button" data-speed="1">×1</button><button class="time-button speed-button" data-speed="2">×2</button><button class="time-button speed-button" data-speed="4">×4</button></div>
+    </footer>
+  </div>
+  <script src="js/core/state.js"></script>
+  <script src="js/core/time.js"></script>
+  <script src="js/camera/camera.js"></script>
+  <script src="js/world/test-world.js"></script>
+  <script src="js/ui/interface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
