@@ -66,7 +66,7 @@
       let stoneProduction = 0;
 
       if (C.research) C.research.daily();
-      if (C.diplomacy) C.diplomacy.daily();
+      if (C.diplomacy) C.diplomacy.daily();\n      if (C.politics) C.politics.daily();
       if (C.infrastructure) C.infrastructure.updateNetwork();
       if (C.workforce) C.workforce.allocate();
 
