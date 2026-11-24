@@ -25,16 +25,20 @@
     <main class="main-layout">
       <aside class="panel inspector">
         <div class="panel-heading"><span>ИНСПЕКТОР</span><span class="live-dot"></span></div>
-        <div id="selectionInfo" class="selection-info">
-          <div class="empty-symbol">⌖</div><b>Ничего не выбрано</b>
-          <p>Нажми на клетку карты, чтобы посмотреть местность.</p>
-        </div>
-        <div class="panel-divider"></div>
-        <div class="section-label">ПОСЕЛЕНИЕ</div>
-        <div class="info-line"><span>Жители</span><b id="cityPopulation">120</b></div>
-        <div class="info-line"><span>Жильё</span><b id="cityHousing">120</b></div>
-        <div class="info-line"><span>Рабочие места</span><b id="cityJobs">0</b></div>
-        <div class="info-line"><span>Здания</span><b id="buildingCount">1</b></div>
+        <section class="inspector-card tile-card">
+          <div class="section-label">КЛЕТКА И СТРОИТЕЛЬСТВО</div>
+          <div id="selectionInfo" class="selection-info">
+            <div class="empty-symbol">⌖</div><b>Ничего не выбрано</b>
+            <p>Нажми на клетку карты, чтобы посмотреть местность.</p>
+          </div>
+        </section>
+        <section class="inspector-card city-card">
+          <div class="section-label">НАСЕЛЕНИЕ И ПОСЕЛЕНИЕ</div>
+          <div class="info-line"><span>Жители</span><b id="cityPopulation">120</b></div>
+          <div class="info-line"><span>Жильё</span><b id="cityHousing">120</b></div>
+          <div class="info-line"><span>Рабочие места</span><b id="cityJobs">0</b></div>
+          <div class="info-line"><span>Здания</span><b id="buildingCount">1</b></div>
+        </section>
         <div class="panel-divider"></div>
         <div class="section-label">ЭКОНОМИКА И НАЛОГИ</div>
         <div class="info-line"><span>Налоговая ставка</span><b id="taxRateValue">15%</b></div>
