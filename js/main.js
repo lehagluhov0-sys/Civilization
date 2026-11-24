@@ -37,8 +37,13 @@
         throw new Error("Не загружен один из игровых модулей. Проверь файлы и пути в index.html.");
       }
       if (!C.world.tiles.length) C.world.init();
+      const restored = C.save ? C.save.load() : false;
       if (!C.city.center) C.city.init();
+      else C.city.recalculate();
+      if (C.infrastructure) C.infrastructure.updateNetwork();
       C.ui.init();
+      if (C.save) C.save.init();
+      if (restored) C.log("Сохранение загружено. Продолжаем развитие поселения.");
       C.camera.resize();
       C.camera.center();
       C.ui.draw();
