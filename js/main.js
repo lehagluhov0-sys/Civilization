@@ -15,9 +15,7 @@
     const title = document.createElement("strong");
     title.textContent = "Не удалось запустить Civilization";
     const details = document.createElement("pre");
-    details.textContent = message + "
-
-Открой консоль браузера или отправь этот текст разработчику.";
+    details.textContent = message + "\\n\\nОткрой консоль браузера или отправь этот текст разработчику.";
     box.append(title, details);
   }
 
