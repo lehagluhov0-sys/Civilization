@@ -17,7 +17,7 @@
         for (let y = Math.max(1, start[1] - radius); y <= Math.min(C.world.height - 2, start[1] + radius); y++) {
           for (let x = Math.max(1, start[0] - radius); x <= Math.min(C.world.width - 2, start[0] + radius); x++) {
             const tile = C.world.get(x, y);
-            if (!tile || tile.type === "water") continue;
+            if (!tile || ["water", "mountain", "swamp", "tundra", "desert"].includes(tile.type)) continue;
             if (Math.abs(x - player.x) + Math.abs(y - player.y) < 9) continue;
             if (used.some(p => Math.abs(x - p.x) + Math.abs(y - p.y) < 9)) continue;
             const score = Math.abs(x - start[0]) + Math.abs(y - start[1]);
@@ -97,7 +97,7 @@
       for (let y = Math.max(1, country.capital.y - 10); y <= Math.min(C.world.height - 2, country.capital.y + 10); y++) {
         for (let x = Math.max(1, country.capital.x - 10); x <= Math.min(C.world.width - 2, country.capital.x + 10); x++) {
           const tile = C.world.get(x, y);
-          if (!tile || tile.type === "water" || tile.building) continue;
+          if (!tile || ["water", "mountain", "swamp", "tundra", "desert"].includes(tile.type) || tile.building) continue;
           if (Math.abs(x - C.city.center.x) + Math.abs(y - C.city.center.y) < 4) continue;
           if (occupied.some(city => Math.abs(x - city.x) + Math.abs(y - city.y) < 3)) continue;
           const terrainPenalty = tile.type === "grass" ? 0 : tile.type === "forest" ? 1 : 2;
