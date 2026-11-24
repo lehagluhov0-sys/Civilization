@@ -78,11 +78,12 @@
           if (definition) warehouses += definition.storage || 0;
         }
       }
-      return this.baseStorage + warehouses;
+      return this.baseStorage + warehouses + (C.research ? C.research.getEffect("storage") : 0);
     },
 
     roadUpkeep: function () {
-      return Math.round(this.roadCount * 0.05 * 100) / 100;
+      const modifier = C.research ? C.research.getEffect("roads") : 1;
+      return Math.round(this.roadCount * 0.05 * modifier * 100) / 100;
     },
 
     buildRoad: function (x, y) {
