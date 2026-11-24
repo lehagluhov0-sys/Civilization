@@ -252,7 +252,7 @@
         html += '<div style="display:flex;justify-content:space-between;gap:8px"><b>' + c.flag + ' ' + c.name + '</b><span style="color:#d9b66f;font-size:11px">' + (relation ? C.diplomacy.relationName(relation.relation) : "Нейтралитет") + '</span></div>';
         html += '<div style="font-size:11px;color:#aebbc5;margin-top:5px">' + c.leader + ' · Столица: ' + (c.capital.x + 1) + ', ' + (c.capital.y + 1) + '</div>';
         html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px;font-size:11px"><span>Жители<br><b>' + c.population.toLocaleString("ru-RU") + '</b></span><span>Города<br><b>' + c.cities + '</b></span><span>Земли<br><b>' + c.territory + '</b></span><span>Развитие<br><b>' + c.development + '/10</b></span></div>';
-        html += '<div style="height:5px;background:#111920;margin-top:8px"><div style="height:5px;width:' + c.stability + '%;background:' + c.color + '"></div></div><small style="color:#9eacb8">Стабильность ' + c.stability + '% · Казна ' + Math.floor(c.treasury) + '</small></div>';
+        html += '<div style="height:5px;background:#111920;margin-top:8px"><div style="height:5px;width:' + c.stability + '%;background:' + c.color + '"></div></div><small style="color:#9eacb8">Стабильность ' + c.stability + '% · Казна ' + Math.floor(c.treasury) + '</small><div style="font-size:10px;color:#aebbc5;margin-top:5px">Города: ' + (c.cityNames || []).join(', ') + '</div></div>';
       });
       content.innerHTML = html;
     },
