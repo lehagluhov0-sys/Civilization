@@ -1,8 +1,8 @@
 (function () {
   "use strict";
   const C = window.Civ;
-  const palette = ["#d9a441", "#67a8d8", "#8fc16b", "#bd82cf", "#d17d68", "#63c2b2"];
-  const starts = [[5, 5], [42, 6], [6, 41], [42, 41], [24, 5]];
+  const palette = ["#d9a441", "#67a8d8", "#8fc16b", "#bd82cf", "#d17d68", "#63c2b2", "#d18d48", "#8f9bd1"];
+  const starts = [[5, 5], [42, 6], [6, 41], [42, 41], [24, 5], [24, 42], [5, 24], [42, 24]];
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
   C.politics = {
@@ -47,7 +47,7 @@
           population: 650 + i * 275, treasury: 100 + i * 35,
           development: 1 + (i % 2), power: 1, cities: 1,
           food: 90 + i * 12, stability: 70 + i * 3,
-          lastGrowth: 0, territory: 0
+          cityNames: [civ.name + " — столица"], lastGrowth: 0, territory: 0
         };
       }).filter(Boolean);
       this.dayCounter = 0;
@@ -95,6 +95,8 @@
           if (this.dayCounter % 30 === 0 && c.development < 10) {
             c.development++;
             c.cities++;
+            if (!Array.isArray(c.cityNames)) c.cityNames = [c.name + " — столица"];
+            c.cityNames.push(c.name + " — город " + c.cities);
             c.treasury = Math.max(0, c.treasury - 20);
             C.log("Держава «" + c.name + "» развила экономику и основала новый город.");
           }
@@ -118,7 +120,7 @@
           id: c.id, capital: { x: c.capital.x, y: c.capital.y },
           population: c.population, treasury: c.treasury,
           development: c.development, power: c.power, cities: c.cities,
-          food: c.food, stability: c.stability
+          food: c.food, stability: c.stability, cityNames: Array.isArray(c.cityNames) ? c.cityNames.slice(0, 20) : [c.name + " — столица"]
         }))
       };
     },
@@ -142,6 +144,7 @@
           cities: clamp(Number(saved.cities) || 1, 1, 20),
           food: clamp(Number(saved.food) || 0, 0, 500),
           stability: clamp(Number(saved.stability) || 50, 0, 100),
+          cityNames: Array.isArray(saved.cityNames) ? saved.cityNames.slice(0, 20) : [civ.name + " — столица"],
           territory: 0
         };
       }).filter(Boolean);
