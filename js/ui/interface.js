@@ -98,6 +98,7 @@
             this.draw();
           }
         }
+        if (pointer.moved && !pointer.road) C.emit("camera");
         pointer = null;
       };
 
@@ -140,10 +141,12 @@
       };
       $("gridToggle").onchange = event => {
         C.state.showGrid = event.target.checked;
+        C.emit("settings");
         this.draw();
       };
       $("pauseButton").onclick = () => {
         C.state.paused = !C.state.paused;
+        C.emit("settings");
         this.refreshTime();
       };
 
@@ -151,6 +154,7 @@
         button.onclick = () => {
           C.state.speed = Number(button.dataset.speed);
           C.state.paused = false;
+          C.emit("settings");
           this.refreshTime();
         };
       });
