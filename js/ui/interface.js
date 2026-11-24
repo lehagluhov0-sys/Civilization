@@ -125,6 +125,7 @@
       };
       $("centerButton").onclick = () => {
         C.camera.center();
+        C.emit("camera");
         this.draw();
       };
       $("clearSelectionButton").onclick = () => {
