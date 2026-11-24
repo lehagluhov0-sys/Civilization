@@ -161,19 +161,27 @@
       });
 
       document.querySelectorAll(".nav-button").forEach(button => {
-        button.onclick = () => {
+        button.type = "button";
+        button.addEventListener("click", event => {
+          event.preventDefault();
+          event.stopPropagation();
+
           document.querySelectorAll(".nav-button").forEach(item => {
             item.classList.toggle("active", item === button);
           });
-          if (button.dataset.section === "city") {
+
+          const section = button.dataset.section;
+          if (section === "city") {
             this.addLog("Выбран раздел управления поселением.");
             if (C.city.center) C.state.selected = { x: C.city.center.x, y: C.city.center.y };
             C.emit("selection");
             this.draw();
-          } else if (button.dataset.section !== "map") {
+          } else if (section === "map") {
+            this.addLog("Открыта карта мира.");
+          } else {
             this.addLog("Раздел «" + button.textContent.trim() + "» будет добавлен на следующем этапе.");
           }
-        };
+        }, { passive: false });
       });
 
       $("taxRate").oninput = event => {
