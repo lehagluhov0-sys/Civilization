@@ -37,14 +37,14 @@
     const elevation = fractalNoise(x / 10.5, y / 10.5, seed) * 0.72 +
       valueNoise(x / 4.4, y / 4.4, seed + 31) * 0.28;
     const humidity = fractalNoise(x / 8.2 + 18, y / 8.2 - 9, seed + 47);
-    const temperature = 0.96 - Math.abs(y / (H - 1) - 0.5) * 1.28 +
-      fractalNoise(x / 15 + 3, y / 15 + 20, seed + 71) * 0.18;
+    const temperature = 0.9 - Math.abs(y / (H - 1) - 0.5) * 1.65 +
+      fractalNoise(x / 15 + 3, y / 15 + 20, seed + 71) * 0.12;
 
     if (elevation < 0.39) return "water";
-    if (temperature < 0.22) return "tundra";
-    if (elevation > 0.79) return "mountain";
-    if (elevation > 0.68) return "rock";
-    if (humidity > 0.79 && elevation < 0.57) return "swamp";
+    if (temperature < 0.28) return "tundra";
+    if (elevation > 0.73) return "mountain";
+    if (elevation > 0.64) return "rock";
+    if (humidity > 0.73 && elevation < 0.59) return "swamp";
     if (temperature > 0.58 && humidity < 0.31) return "desert";
     if (humidity > 0.56) return "forest";
     return "grass";
