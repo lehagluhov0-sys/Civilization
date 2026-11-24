@@ -87,16 +87,20 @@
             const centerY = sy + cell / 2;
             ctx.fillStyle = "#b39a69";
             ctx.fillRect(centerX - half, centerY - half, roadWidth, roadWidth);
-            if (this.get(x + 1, y) && this.get(x + 1, y).road) {
+            const east = this.get(x + 1, y);
+            const west = this.get(x - 1, y);
+            const south = this.get(x, y + 1);
+            const north = this.get(x, y - 1);
+            if (east && (east.road || east.building)) {
               ctx.fillRect(centerX, centerY - half, cell / 2 + 1, roadWidth);
             }
-            if (this.get(x - 1, y) && this.get(x - 1, y).road) {
+            if (west && (west.road || west.building)) {
               ctx.fillRect(sx, centerY - half, cell / 2 + 1, roadWidth);
             }
-            if (this.get(x, y + 1) && this.get(x, y + 1).road) {
+            if (south && (south.road || south.building)) {
               ctx.fillRect(centerX - half, centerY, roadWidth, cell / 2 + 1);
             }
-            if (this.get(x, y - 1) && this.get(x, y - 1).road) {
+            if (north && (north.road || north.building)) {
               ctx.fillRect(centerX - half, sy, roadWidth, cell / 2 + 1);
             }
           }
