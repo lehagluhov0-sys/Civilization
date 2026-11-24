@@ -65,6 +65,7 @@
       let woodProduction = 0;
       let stoneProduction = 0;
 
+      if (C.research) C.research.daily();
       if (C.infrastructure) C.infrastructure.updateNetwork();
       if (C.workforce) C.workforce.allocate();
 
@@ -75,9 +76,9 @@
           if (!definition) continue;
 
           const productivity = C.workforce ? C.workforce.productivity(tile) : 0;
-          foodProduction += (definition.food || 0) * productivity;
+          foodProduction += (definition.food || 0) * productivity * (C.research ? C.research.getEffect("food") : 1);
           woodProduction += (definition.wood || 0) * productivity;
-          stoneProduction += (definition.stone || 0) * productivity;
+          stoneProduction += (definition.stone || 0) * productivity * (C.research ? C.research.getEffect("stone") : 1);
         }
       }
 
