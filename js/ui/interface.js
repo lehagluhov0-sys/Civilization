@@ -28,6 +28,7 @@
         this.refreshInfrastructure();
       });
       C.on("world", () => this.draw());
+      C.on("research", () => { if (this.researchPanel) this.renderResearchPanel(); });
 
       this.refresh();
     },
@@ -177,7 +178,10 @@
             C.emit("selection");
             this.draw();
           } else if (section === "map") {
+            this.closeResearchPanel();
             this.addLog("Открыта карта мира.");
+          } else if (section === "research") {
+            this.openResearchPanel();
           } else {
             this.addLog("Раздел «" + button.textContent.trim() + "» будет добавлен на следующем этапе.");
           }
@@ -192,6 +196,55 @@
         const saved = C.save && C.save.save();
         this.addLog(saved ? "Игра сохранена на устройстве." : "Не удалось сохранить игру. Проверь доступное место и настройки браузера.");
       };
+    },
+
+
+    openResearchPanel: function () {
+      if (!C.research) {
+        this.addLog("Система исследований не загружена.");
+        return;
+      }
+      if (!this.researchPanel) {
+        const panel = document.createElement("div");
+        panel.id = "researchOverlay";
+        panel.style.cssText = "position:fixed;inset:0;z-index:500;background:rgba(5,9,13,.88);display:flex;align-items:center;justify-content:center;padding:14px;";
+        panel.innerHTML = '<div style="width:min(720px,100%);max-height:90%;overflow:auto;background:#1b242d;border:1px solid #c69b55;padding:16px;color:#e8edf1;box-shadow:0 12px 40px #0009"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><b style="letter-spacing:2px">НАУЧНЫЕ ИССЛЕДОВАНИЯ</b><button id="closeResearch" class="wide-button" style="width:auto">Закрыть ✕</button></div><div id="researchContent"></div></div>';
+        document.body.appendChild(panel);
+        this.researchPanel = panel;
+        $("closeResearch").onclick = () => this.closeResearchPanel();
+      }
+      this.renderResearchPanel();
+    },
+
+    closeResearchPanel: function () {
+      if (this.researchPanel) this.researchPanel.remove();
+      this.researchPanel = null;
+    },
+
+    renderResearchPanel: function () {
+      if (!this.researchPanel || !C.research) return;
+      const content = this.researchPanel.querySelector("#researchContent");
+      const active = C.research.getTech(C.research.activeId);
+      let html = '<p style="color:#91a0ad;font-size:12px">Эпоха: Древний мир · Научные очки: <b style="color:#e0b86e">' + C.research.points.toFixed(1) + '</b> · Получение: +' + C.research.sciencePerDay() + ' в день</p>';
+      if (active) {
+        const percent = Math.min(100, Math.round(C.research.progress / active.cost * 100));
+        html += '<div style="padding:10px;background:#222e39;border:1px solid #34424e;margin:10px 0"><b>Сейчас изучается: ' + active.name + '</b><p style="font-size:11px;color:#91a0ad">' + C.research.progress + ' / ' + active.cost + ' очков · ' + percent + '%</p><div style="height:8px;background:#11171d"><div style="height:8px;width:' + percent + '%;background:#c69b55"></div></div></div>';
+      } else {
+        html += '<p style="font-size:11px;color:#91a0ad">Выбери технологию, чтобы начать исследование. Очки науки накапливаются ежедневно.</p>';
+      }
+      C.research.catalog.forEach(tech => {
+        const done = C.research.isCompleted(tech.id);
+        const selected = C.research.activeId === tech.id;
+        html += '<div style="padding:10px;margin:8px 0;background:#222e39;border:1px solid ' + (done ? '#79a56a' : selected ? '#c69b55' : '#34424e') + '"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>' + tech.name + '</b><span style="font-size:10px;color:#e0b86e">' + (done ? 'ИЗУЧЕНО' : tech.cost + ' науки') + '</span></div><p style="font-size:11px;line-height:1.4;color:#91a0ad;margin:7px 0">' + tech.description + '</p>' + (done ? '' : '<button class="wide-button" data-tech="' + tech.id + '" ' + (selected ? 'disabled' : '') + '>' + (selected ? 'Изучается' : 'Начать исследование') + '</button>') + '</div>';
+      });
+      content.innerHTML = html;
+      content.querySelectorAll("[data-tech]").forEach(button => {
+        button.onclick = () => {
+          const result = C.research.start(button.dataset.tech);
+          if (!result.ok) this.addLog(result.message);
+          this.renderResearchPanel();
+        };
+      });
     },
 
     draw: function () {
