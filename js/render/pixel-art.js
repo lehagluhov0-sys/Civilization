@@ -97,12 +97,30 @@
 
   const originalDraw = C.world.draw;
   C.world.draw = function (ctx) {
-    originalDraw.call(this, ctx);
     const camera = C.state.camera;
     const zoom = camera.zoom;
     const cell = C.camera.cell * zoom;
     const dpr = C.camera.dpr || 1;
-    if (cell < 7) return;
+    // Snap the camera once for the entire frame. Every terrain and sprite
+    // layer then shares exactly the same translation, preventing pixel jitter.
+    const pixelStep = 1 / dpr;
+    const renderX = Math.round(camera.x / pixelStep) * pixelStep;
+    const renderY = Math.round(camera.y / pixelStep) * pixelStep;
+    const savedX = camera.x;
+    const savedY = camera.y;
+    camera.x = renderX;
+    camera.y = renderY;
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    originalDraw.call(this, ctx);
+    ctx.restore();
+
+    if (cell < 7) {
+      camera.x = savedX;
+      camera.y = savedY;
+      return;
+    }
 
     ctx.save();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -143,6 +161,8 @@
       ctx.strokeRect(camera.x+p.x*cell+1,camera.y+p.y*cell+1,cell-2,cell-2);
     }
     ctx.restore();
+    camera.x = savedX;
+    camera.y = savedY;
   };
 
   C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 1 };
