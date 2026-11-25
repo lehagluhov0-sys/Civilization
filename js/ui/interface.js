@@ -648,8 +648,9 @@
 
         if (tile.type !== "water") {
           hasAction = true;
+          const roadCost = C.terrain ? C.terrain.roadCost(tile) : { wood: 3, money: 2 };
           content += '<button class="wide-button build-button road-button" data-action="road">Проложить дорогу' +
-            '<small class="build-cost">Д 3 · Мон 2</small></button>';
+            '<small class="build-cost">Д ' + roadCost.wood + ' · Мон ' + roadCost.money + '</small></button>';
         }
         if (!hasAction) content += "<p>На этой местности пока нельзя строить.</p>";
       }
