@@ -458,6 +458,14 @@
           const tile = this.tiles[y][x];
           ctx.fillStyle = colors[tile.type];
           ctx.fillRect(x * cellWidth, y * cellHeight, Math.ceil(cellWidth), Math.ceil(cellHeight));
+          if (C.state.showPoliticalMap && tile.owner) {
+            const ownerColor = tile.owner === "player" ? "#e2b45c" :
+              (C.politics && C.politics.get(tile.owner) ? C.politics.get(tile.owner).color : "#ffffff");
+            ctx.fillStyle = ownerColor;
+            ctx.globalAlpha = 0.48;
+            ctx.fillRect(x * cellWidth, y * cellHeight, Math.ceil(cellWidth), Math.ceil(cellHeight));
+            ctx.globalAlpha = 1;
+          }
           if (tile.road) {
             ctx.fillStyle = "#d0b47e";
             ctx.fillRect(x * cellWidth, y * cellHeight, Math.max(1, cellWidth), Math.max(1, cellHeight));
