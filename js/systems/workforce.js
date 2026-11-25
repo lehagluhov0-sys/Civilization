@@ -1,7 +1,7 @@
 (function () {
   "use strict";
   const C = window.Civ;
-  const priority = { farm: 1, lumber: 2, quarry: 3, warehouse: 4 };
+  const priority = { farm: 1, fishery: 1, lumber: 2, quarry: 3, market: 4, warehouse: 5 };
 
   C.workforce = {
     participationRate: 0.55,
