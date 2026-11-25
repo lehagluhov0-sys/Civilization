@@ -225,13 +225,104 @@
         C.economy.setTaxRate(event.target.value);
         this.refreshEconomy();
       };
-      $("menuButton").onclick = () => {
-        const saved = C.save && C.save.save();
-        this.addLog(saved ? "Игра сохранена на устройстве." : "Не удалось сохранить игру. Проверь доступное место и настройки браузера.");
-      };
+      $("menuButton").onclick = () => this.openMainMenu(false);
     },
 
 
+
+
+    openMainMenu: function (isStart) {
+      const old = document.getElementById("mainMenuOverlay");
+      if (old) old.remove();
+      const overlay = document.createElement("div");
+      overlay.id = "mainMenuOverlay";
+      overlay.className = "main-menu-overlay";
+      overlay.innerHTML =
+        '<div class="main-menu-card">' +
+          '<div class="main-menu-emblem">C</div>' +
+          '<div class="main-menu-kicker">СТРАТЕГИЯ · ИСТОРИЯ · РАЗВИТИЕ</div>' +
+          '<h1>CIVILIZATION</h1><p class="main-menu-subtitle">Твоя история начинается с одного поселения</p>' +
+          '<div class="main-menu-actions">' +
+            '<button id="menuContinue" class="main-menu-primary">Продолжить</button>' +
+            '<button id="menuNewGame">Новая игра</button>' +
+            '<button id="menuLoad">Загрузить сохранение</button>' +
+            '<button id="menuSave">Сохранить игру</button>' +
+            '<button id="menuSettings">Настройки карты</button>' +
+          '</div>' +
+          '<div class="main-menu-version">OFFLINE STRATEGY · v0.12.0</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      overlay.querySelector("#menuContinue").onclick = () => overlay.remove();
+      overlay.querySelector("#menuNewGame").onclick = () => {
+        if (window.confirm("Начать новую игру? Текущее автосохранение будет заменено. Ручные слоты останутся.")) {
+          localStorage.removeItem("civilization_save_v1");
+          window.location.reload();
+        }
+      };
+      overlay.querySelector("#menuLoad").onclick = () => this.openSaveSlots("load");
+      overlay.querySelector("#menuSave").onclick = () => this.openSaveSlots("save");
+      overlay.querySelector("#menuSettings").onclick = () => {
+        const political = !C.state.showPoliticalMap;
+        C.state.showPoliticalMap = political;
+        C.emit("settings");
+        this.draw();
+        this.addLog(political ? "Политическая карта включена." : "Политическая карта выключена.");
+      };
+      if (isStart) overlay.querySelector("#menuContinue").textContent = "Начать игру";
+    },
+
+    openSaveSlots: function (mode) {
+      const existing = document.getElementById("saveSlotsOverlay");
+      if (existing) existing.remove();
+      const overlay = document.createElement("div");
+      overlay.id = "saveSlotsOverlay";
+      overlay.className = "save-slots-overlay";
+      overlay.innerHTML = '<div class="save-slots-card"><div class="save-slots-heading"><b>' +
+        (mode === "save" ? "СОХРАНЕНИЕ ИГРЫ" : "ЗАГРУЗКА ИГРЫ") +
+        '</b><button id="closeSaveSlots">Закрыть ✕</button></div><div id="saveSlotsList"></div></div>';
+      document.body.appendChild(overlay);
+      overlay.querySelector("#closeSaveSlots").onclick = () => overlay.remove();
+      const list = overlay.querySelector("#saveSlotsList");
+      C.save.listSlots().forEach(slot => {
+        const item = document.createElement("div");
+        item.className = "save-slot";
+        const date = slot.savedAt ? new Date(slot.savedAt).toLocaleString("ru-RU") : "Пустой слот";
+        item.innerHTML = '<div><b>Слот ' + slot.id + '</b><small>' +
+          (slot.empty ? "Пусто" : date + " · День " + slot.day + " · Год " + slot.year + " · Жители " + slot.population) +
+          '</small></div><div class="save-slot-actions">' +
+          '<button data-slot-action="main">' + (mode === "save" ? "Сохранить" : "Загрузить") + '</button>' +
+          (slot.empty ? '' : '<button data-slot-action="delete">Удалить</button>') +
+          '</div>';
+        item.querySelector('[data-slot-action="main"]').onclick = () => {
+          if (mode === "save") {
+            const ok = C.save.save(slot.id);
+            this.addLog(ok ? "Игра сохранена в слот " + slot.id + "." : "Не удалось сохранить игру.");
+            overlay.remove();
+            return;
+          }
+          if (!slot.empty && C.save.load(slot.id)) {
+            if (C.city) C.city.recalculate();
+            if (C.infrastructure) C.infrastructure.updateNetwork();
+            if (C.politics) C.politics.recalculateTerritories();
+            C.camera.ready = true;
+            C.camera.resize();
+            this.refresh();
+            overlay.remove();
+            const menu = document.getElementById("mainMenuOverlay");
+            if (menu) menu.remove();
+            this.addLog("Загружен слот " + slot.id + ".");
+          } else {
+            this.addLog("Не удалось загрузить слот " + slot.id + ".");
+          }
+        };
+        const del = item.querySelector('[data-slot-action="delete"]');
+        if (del) del.onclick = () => {
+          C.save.deleteSlot(slot.id);
+          this.openSaveSlots(mode);
+        };
+        list.appendChild(item);
+      });
+    },
 
     openWorldPanel: function () {
       if (!C.politics) { this.addLog("Политическая карта не загружена."); return; }
