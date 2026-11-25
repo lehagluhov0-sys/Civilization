@@ -3,8 +3,8 @@
   const C = window.Civ;
 
   C.city = {
-    population: 120,
-    housing: 120,
+    population: 5,
+    housing: 5,
     employment: 0,
     maxJobs: 0,
     laborForce: 0,
@@ -38,7 +38,7 @@
     },
 
     recalculate: function () {
-      let housing = 120;
+      let housing = 5;
       let jobs = 0;
       let count = 0;
 
