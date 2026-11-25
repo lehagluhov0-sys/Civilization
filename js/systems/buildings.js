@@ -51,7 +51,7 @@
       const tile = C.world.get(x, y);
       const definition = catalog[type];
       if (!tile || !definition) return { ok: false, message: "Невозможно построить здесь." };
-      if (tile.building) return { ok: false, message: "На этой клетке уже есть здание." };
+      if (tile.building || tile.construction) return { ok: false, message: "На этом участке уже идёт строительство или стоит здание." };
       if (tile.road) return { ok: false, message: "Сначала выбери клетку без дороги." };
       if (C.terrain && !C.terrain.canBuild(definition, x, y)) {
         return { ok: false, message: definition.requiresWater
