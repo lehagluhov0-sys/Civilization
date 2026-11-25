@@ -37,7 +37,9 @@
     },
 
     save: function (slotId) {
+      // A new-game reload must not write the old world back during pagehide/beforeunload.
       try {
+        if (!slotId && sessionStorage.getItem("civilization_start_new_game") === "1") return true;
         const buildings = [];
         const roads = [];
         for (const row of C.world.tiles) {
