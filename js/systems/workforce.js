@@ -63,7 +63,8 @@
       if (!definition || !definition.jobs) return 0;
       const workers = tile.building.workers || 0;
       if (!workers) return 0;
-      return (workers / definition.jobs) * C.infrastructure.efficiency(tile.x, tile.y);
+      const level = Math.max(1, Number(tile.building.level) || 1);
+      return (workers / definition.jobs) * (1 + (level - 1) * 0.2) * C.infrastructure.efficiency(tile.x, tile.y);
     },
 
     wageCost: function () {
