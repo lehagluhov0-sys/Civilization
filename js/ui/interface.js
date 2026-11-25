@@ -698,6 +698,8 @@
       $("food").textContent = resources.food;
       $("wood").textContent = resources.wood;
       $("stone").textContent = resources.stone;
+      if ($("iron")) $("iron").textContent = resources.iron || 0;
+      if ($("copper")) $("copper").textContent = resources.copper || 0;
       $("storageCapacity").textContent = C.infrastructure.storageCapacity();
     },
 
@@ -833,6 +835,7 @@
         '<div class="terrain-name">' + C.world.names[tile.type] + '</div>' +
         '<div class="terrain-description">' + C.world.descriptions[tile.type] + '</div>' +
         (terrainInfo ? '<p style="font-size:10px;color:#d7b46b">Плодородие: ' + C.terrain.fertility(tile) + '% · ' + terrainInfo.note + '</p>' : '') +
+        (tile.deposit ? '<p style="font-size:10px;color:#d7b46b">Месторождение: ' + ({stone:"строительный камень",iron:"железо",copper:"медь"}[tile.deposit]||tile.deposit) + '</p>' : '') +
         '<p>Координаты: ' + (selected.x + 1) + ", " + (selected.y + 1) + "</p>";
 
       if (tile.building) {
