@@ -99,15 +99,16 @@
       // A small founding camp gathers only what the nearby landscape can provide.
       // This replaces the old oversized starter stockpile and slows early expansion.
       const center = this.center || { x: 64, y: 64 };
-      let nearbyForest = false, nearbyRock = false;
+      let nearbyForest = false, nearbyRock = false, nearbyBerries = 0;
       for (let y = Math.max(0, center.y - 15); y <= Math.min(C.world.height - 1, center.y + 15); y++) {
         for (let x = Math.max(0, center.x - 15); x <= Math.min(C.world.width - 1, center.x + 15); x++) {
           const tile = C.world.get(x, y);
           if (tile && tile.type === "forest") nearbyForest = true;
           if (tile && (tile.type === "rock" || tile.type === "mountain")) nearbyRock = true;
+          if (tile && tile.berryBush) nearbyBerries++;
         }
       }
-      resources.food += 0.8;
+      resources.food += 0.8 + Math.min(0.45, nearbyBerries * 0.025);
       if (nearbyForest) resources.wood += 0.65;
       if (nearbyRock) resources.stone += 0.3;
       resources.money += 0.12;
