@@ -62,6 +62,7 @@
             speed: C.state.speed,
             showGrid: C.state.showGrid,
             showPoliticalMap: !!C.state.showPoliticalMap,
+            showCountryBorders: C.state.showCountryBorders !== false,
             politicalMapInitialized: true,
             showTradeRoutes: !!C.state.showTradeRoutes,
             resources: Object.assign({}, C.state.resources),
@@ -125,6 +126,7 @@
         C.state.speed = [1, 2, 4].includes(Number(savedState.speed)) ? Number(savedState.speed) : 1;
         C.state.showGrid = false;
         C.state.showPoliticalMap = savedState.politicalMapInitialized ? !!savedState.showPoliticalMap : true;
+        C.state.showCountryBorders = savedState.showCountryBorders !== false;
         C.state.politicalMapInitialized = true;
         C.state.showTradeRoutes = !!savedState.showTradeRoutes;
 
