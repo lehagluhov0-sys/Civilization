@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "purpose": "Manually reviewed subset of visually recognizable candidates. This is not a complete atlas classification.",
-  "reviewed_count": 129,
+  "reviewed_count": 130,
   "categories": [
     "vegetation",
     "building",
@@ -2371,6 +2371,24 @@
       "visual_confidence": "medium",
       "visual_note": "Candidate segmentation captures only part of the white-trunk tree; renderer uses a manually expanded crop around the visible tree.",
       "review_method": "manual review of original atlas and contact sheet"
+    },
+    {
+      "id": "world_0181",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 700,
+        "y": 679,
+        "width": 36,
+        "height": 52
+      },
+      "pixel_area": 742,
+      "bbox_fill_ratio": 0.3964,
+      "review_flags": [],
+      "label": "golden_statue",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Small golden statue or monument.",
+      "review_method": "manual visual review of original atlas"
     }
   ]
 }
