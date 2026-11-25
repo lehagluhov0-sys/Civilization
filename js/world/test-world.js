@@ -399,6 +399,26 @@
         }
       }
 
+      if (C.state.showTradeRoutes && C.trade && C.trade.routes.length) {
+        ctx.save();
+        ctx.strokeStyle = "#f2d17b";
+        ctx.lineWidth = Math.max(2, cell * 0.12);
+        ctx.globalAlpha = 0.9;
+        if (ctx.setLineDash) ctx.setLineDash([Math.max(3, cell * 0.22), Math.max(3, cell * 0.16)]);
+        C.trade.routes.forEach(route => {
+          if (!route.points || route.points.length < 2) return;
+          ctx.beginPath();
+          route.points.forEach((point, index) => {
+            const px = camera.x + (point.x + 0.5) * cell;
+            const py = camera.y + (point.y + 0.5) * cell;
+            if (index === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          });
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+
       if (C.state.showGrid && zoom > 0.65) {
         ctx.strokeStyle = "#17212966";
         ctx.lineWidth = 1;
