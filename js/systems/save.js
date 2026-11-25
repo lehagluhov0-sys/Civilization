@@ -123,7 +123,7 @@
         C.state.year = Math.max(1, Number(savedState.year) || 1);
         C.state.paused = savedState.paused !== false;
         C.state.speed = [1, 2, 4].includes(Number(savedState.speed)) ? Number(savedState.speed) : 1;
-        C.state.showGrid = savedState.showGrid !== false;
+        C.state.showGrid = false;
         C.state.showPoliticalMap = savedState.politicalMapInitialized ? !!savedState.showPoliticalMap : true;
         C.state.politicalMapInitialized = true;
         C.state.showTradeRoutes = !!savedState.showTradeRoutes;
