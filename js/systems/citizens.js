@@ -259,25 +259,39 @@
       sorted.forEach(agent => {
         const px = camera.x + agent.x * cell;
         const py = camera.y + agent.y * cell;
-        const size = Math.max(2, cell * 0.22);
-        const bob = Math.sin(agent.walk) * size * 0.22;
-        ctx.fillStyle = "#263027";
-        ctx.globalAlpha = 0.34;
-        ctx.fillRect(px - size*.55, py + size*1.55, size*1.1, size*.34);
+        // Compact WorldBox-like villagers: oversized pixel head and simple tunic.
+        // No separately drawn arms or legs, so silhouettes stay clean at phone zoom.
+        const unit = Math.max(1, Math.round(cell / 24));
+        const size = Math.max(3, cell * 0.30);
+        const bob = Math.round(Math.sin(agent.walk) * size * 0.045 / unit) * unit;
+        const rect = (x, y, w, h, color) => {
+          ctx.fillStyle = color;
+          ctx.fillRect(Math.round(x / unit) * unit, Math.round(y / unit) * unit,
+            Math.max(unit, Math.round(w / unit) * unit),
+            Math.max(unit, Math.round(h / unit) * unit));
+        };
+
+        ctx.save();
+        ctx.globalAlpha = 0.28;
+        rect(px - size*.48, py + size*.94, size*.96, size*.20, "#20251f");
         ctx.globalAlpha = 1;
-        ctx.fillStyle = agent.shirt;
-        ctx.fillRect(px - size*.48, py - size*.05 + bob, size*.96, size*1.05);
-        ctx.fillStyle = agent.color;
-        ctx.fillRect(px - size*.35, py - size*.72 + bob, size*.70, size*.68);
-        ctx.fillStyle = "#49382d";
-        ctx.fillRect(px - size*.40, py - size*.83 + bob, size*.80, size*.20);
+
+        // One-piece robe/tunic with a stepped hem.
+        rect(px - size*.29, py + size*.28 + bob, size*.58, size*.50, agent.shirt);
+        rect(px - size*.38, py + size*.48 + bob, size*.76, size*.24, agent.shirt);
+        rect(px - size*.30, py + size*.68 + bob, size*.60, size*.10, "#514638");
+
+        // Head and hair.
+        rect(px - size*.25, py - size*.18 + bob, size*.50, size*.48, agent.color);
+        rect(px - size*.30, py - size*.24 + bob, size*.60, size*.16, "#49382d");
+        rect(px - size*.34, py - size*.08 + bob, size*.12, size*.20, "#49382d");
+
         if (agent.role === "builder") {
-          ctx.fillStyle = "#d5b36a";
-          ctx.fillRect(px + size*.40, py + size*.12 + bob, size*.42, size*.38);
+          // Small hard hat, without a handheld tool that could read as an extra limb.
+          rect(px - size*.34, py - size*.32 + bob, size*.68, size*.10, "#d5b36a");
+          rect(px - size*.16, py - size*.42 + bob, size*.32, size*.12, "#e2c77d");
         }
-        ctx.fillStyle = "#263027";
-        ctx.fillRect(px - size*.34, py + size*.90 + bob, size*.24, size*.58);
-        ctx.fillRect(px + size*.10, py + size*.90 - bob, size*.24, size*.58);
+        ctx.restore();
       });
     },
 
