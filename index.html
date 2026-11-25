@@ -12,7 +12,7 @@
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.9.0</span></small></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.11.0</span></small></div></div>
       <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
@@ -62,6 +62,7 @@
         <div class="info-line"><span>Налоговая ставка</span><b id="taxRateValue">15%</b></div>
         <input id="taxRate" class="tax-slider" type="range" min="0" max="30" step="1" value="15" aria-label="Налоговая ставка">
         <div class="info-line"><span>Доход в день</span><b id="taxIncome">0</b></div>
+        <div class="info-line"><span>Доход рынков</span><b id="marketIncome">0</b></div>
         <div class="info-line"><span>Содержание зданий</span><b id="buildingUpkeep">0</b></div>
         <div class="info-line"><span>Содержание дорог</span><b id="roadUpkeep">0</b></div>
         <div class="info-line"><span>Зарплаты</span><b id="wageCost">0</b></div>
@@ -98,6 +99,7 @@
         <div class="section-label">СЛОИ КАРТЫ</div>
         <label class="layer-option"><input type="checkbox" id="gridToggle" checked> Сетка клеток</label>
         <label class="layer-option"><input type="checkbox" id="politicalLayerToggle"> Политическая карта</label>
+        <label class="layer-option"><input type="checkbox" id="tradeRoutesToggle"> Торговые маршруты</label>
       </aside>
     </main>
 
@@ -120,6 +122,7 @@
   <script src="js/camera/camera.js"></script>
   <script src="js/world/test-world.js"></script>
   <script src="js/systems/terrain.js"></script>
+  <script src="js/systems/world-events.js"></script>
   <script src="js/systems/buildings.js"></script>
   <script src="js/systems/infrastructure.js"></script>
   <script src="js/systems/workforce.js"></script>
@@ -128,6 +131,7 @@
   <script src="js/systems/research.js"></script>
   <script src="js/systems/diplomacy.js"></script>
   <script src="js/systems/world-politics.js"></script>
+  <script src="js/systems/trade.js"></script>
   <script src="js/systems/save.js"></script>
   <script src="js/ui/interface.js"></script>
   <script src="js/main.js"></script>
