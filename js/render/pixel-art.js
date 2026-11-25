@@ -46,7 +46,9 @@
       type === "farm" ? "farm_barn" : type === "lumber" ? "lumber_hut" :
       type === "quarry" ? "quarry_mine" : type === "market" ? "market_stall" :
       type === "fishery" ? "fishery_boat" : type === "city_center" ? "castle" :
-      (type === "house" && Math.floor((x + y) / Math.max(1, size)) % 2 ? "house_blue" : "house_wood");
+      (type === "house" ? ["house_wood", "house_blue", "house_yellow", "house_wood_alt"][
+        Math.floor(hash(Math.round(x / Math.max(1, size)), Math.round(y / Math.max(1, size)), 19) * 4)
+      ] : "house_wood");
     if (C.spriteAssets && C.spriteAssets.draw(spriteId, ctx, x - size*.34, y - size*.70, size*1.68, size*1.70)) return;
     const wall = type === "warehouse" ? "#b7a17a" : "#c5a879";
     const roof = type === "city_center" ? "#765044" : "#914f3d";
@@ -61,7 +63,12 @@
   }
 
   function drawFarm(ctx, x, y, size, unit) {
-    if (C.spriteAssets && C.spriteAssets.draw("farm_fields", ctx, x - size*.34, y - size*.40, size*1.68, size*1.36)) return;
+    let atlasDrawn = false;
+    if (C.spriteAssets) {
+      atlasDrawn = C.spriteAssets.draw("farm_fields", ctx, x - size*.34, y - size*.40, size*1.68, size*1.36);
+      if (atlasDrawn) C.spriteAssets.draw("farm_barn", ctx, x + size*.12, y - size*.18, size*.78, size*.82);
+    }
+    if (atlasDrawn) return;
     px(ctx, x + size*.08, y + size*.35, size*.84, size*.48, "#9c854b", unit);
     for (let i=0;i<4;i++) {
       px(ctx, x + size*(.17+i*.18), y + size*.39, size*.07, size*.39, "#d1b76c", unit);
@@ -99,15 +106,23 @@
     if (tile.type === "forest") {
       if (cell >= 16) {
         const size = cell * (.72 + r*.14);
-        drawTree(ctx, sx + cell*(.12+r*.12), sy + cell*(.08+r*.12), size, Math.floor(r*4), unit);
+        drawTree(ctx, sx + cell*(.12+r*.12), sy + cell*(.08+r*.12), size, Math.floor(r*7), unit);
       } else {
         px(ctx, sx+cell*.25, sy+cell*.2, cell*.5, cell*.5, palette[0], unit);
         px(ctx, sx+cell*.36, sy+cell*.25, cell*.24, cell*.2, palette[2], unit);
       }
     } else if (tile.type === "grass" || tile.type === "swamp") {
       if (r > .42 && cell > 12) {
-        px(ctx, sx+cell*(.2+r*.45), sy+cell*(.25+hash(tile.x,tile.y,8)*.4), cell*.09, cell*.08, palette[3], unit);
-        px(ctx, sx+cell*(.25+r*.35), sy+cell*.48, cell*.06, cell*.1, palette[2], unit);
+        const dx = sx + cell*(.2+r*.45);
+        const dy = sy + cell*(.25+hash(tile.x,tile.y,8)*.4);
+        if (C.spriteAssets && r > .76 &&
+            C.spriteAssets.draw("flowers", ctx, dx, dy, cell*.30, cell*.28)) {
+        } else if (C.spriteAssets && r > .61 &&
+            C.spriteAssets.draw("bush", ctx, dx, dy, cell*.42, cell*.40)) {
+        } else {
+          px(ctx, dx, dy, cell*.09, cell*.08, palette[3], unit);
+          px(ctx, sx+cell*(.25+r*.35), sy+cell*.48, cell*.06, cell*.1, palette[2], unit);
+        }
       }
     } else if (tile.type === "water") {
       if (cell > 10) {
@@ -115,8 +130,15 @@
         px(ctx, sx+cell*(.45+r*.25), sy+cell*.68, cell*.2, Math.max(unit,cell*.05), palette[1], unit);
       }
     } else if (tile.type === "rock" || tile.type === "mountain") {
-      if (tile.type === "rock" && C.spriteAssets &&
-          C.spriteAssets.draw("rock", ctx, sx + cell*.15, sy + cell*.22, cell*.7, cell*.65)) return;
+      if (C.spriteAssets) {
+        const id = tile.type === "mountain" ? "mountain" : "rock";
+        const drawn = C.spriteAssets.draw(id, ctx,
+          sx + (tile.type === "mountain" ? cell*.02 : cell*.15),
+          sy + (tile.type === "mountain" ? cell*.02 : cell*.22),
+          cell * (tile.type === "mountain" ? .96 : .70),
+          cell * (tile.type === "mountain" ? .96 : .65));
+        if (drawn) return;
+      }
       px(ctx, sx+cell*.18, sy+cell*.52, cell*.26, cell*.22, palette[2], unit);
       px(ctx, sx+cell*.52, sy+cell*.38, cell*.29, cell*.32, palette[0], unit);
       px(ctx, sx+cell*.57, sy+cell*.4, cell*.13, cell*.07, palette[3], unit);
