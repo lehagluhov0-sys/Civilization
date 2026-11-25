@@ -48,5 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sprite-contact-sheets
-          path: |\n            assets/sprites/catalog/*.png\n            assets/sprites/*.png
+          path: |
+            assets/sprites/catalog/*.png
+            assets/sprites/*.png
           if-no-files-found: error
