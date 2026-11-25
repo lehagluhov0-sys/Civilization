@@ -100,8 +100,8 @@
       // This replaces the old oversized starter stockpile and slows early expansion.
       const center = this.center || { x: 64, y: 64 };
       let nearbyForest = false, nearbyRock = false;
-      for (let y = Math.max(0, center.y - 5); y <= Math.min(C.world.height - 1, center.y + 5); y++) {
-        for (let x = Math.max(0, center.x - 5); x <= Math.min(C.world.width - 1, center.x + 5); x++) {
+      for (let y = Math.max(0, center.y - 15); y <= Math.min(C.world.height - 1, center.y + 15); y++) {
+        for (let x = Math.max(0, center.x - 15); x <= Math.min(C.world.width - 1, center.x + 15); x++) {
           const tile = C.world.get(x, y);
           if (tile && tile.type === "forest") nearbyForest = true;
           if (tile && (tile.type === "rock" || tile.type === "mountain")) nearbyRock = true;
