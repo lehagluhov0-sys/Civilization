@@ -12,13 +12,15 @@
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.20.0</span></small></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.21.0</span></small></div></div>
       <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">5</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
       <div class="top-stat"><span>ЕДА</span><b id="food">180</b></div>
       <div class="top-stat"><span>ДЕРЕВО</span><b id="wood">90</b></div>
-      <div class="top-stat"><span>КАМЕНЬ</span><b id="stone">60</b></div>
+      <div class="top-stat"><span>КАМЕНЬ</span><b id="stone">0</b></div>
+      <div class="top-stat"><span>ЖЕЛЕЗО</span><b id="iron">0</b></div>
+      <div class="top-stat"><span>МЕДЬ</span><b id="copper">0</b></div>
       <button class="icon-button" id="menuButton" aria-label="Меню">☰</button>
     </header>
 
@@ -119,6 +121,7 @@
         <button class="nav-button" data-section="city">⌂ Город</button>
         <button class="nav-button" data-section="economy">◈ Экономика</button>
         <button class="nav-button" data-section="research">⌬ Исследования</button>
+        <button class="nav-button" data-section="construction">⚒ Строительство</button>
         <button class="nav-button" data-section="world">🌐 Мир</button>
         <button class="nav-button" data-section="diplomacy">♙ Дипломатия</button>
         <button class="nav-button" data-section="military">⚔ Армия</button>
@@ -141,12 +144,12 @@
   <script src="js/systems/citizens.js?v=0.18.5"></script>
   <script src="js/systems/city.js"></script>
   <script src="js/systems/economy.js"></script>
-  <script src="js/systems/research.js"></script>
+  <script src="js/systems/research.js?v=0.21.0"></script>
   <script src="js/systems/diplomacy.js"></script>
   <script src="js/systems/world-politics.js"></script>
   <script src="js/systems/trade.js"></script>
   <script src="js/systems/save.js?v=0.19.3"></script>
-  <script src="js/ui/interface.js?v=0.20.0"></script>
+  <script src="js/ui/interface.js?v=0.21.0"></script>
   <script src="js/main.js?v=0.19.4"></script>
 </body>
 </html>
