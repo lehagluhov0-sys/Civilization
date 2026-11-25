@@ -2,6 +2,7 @@
   "use strict";
   const C = window.Civ;
   const STORAGE_KEY = "civilization_save_v1";
+  const SLOT_PREFIX = "civilization_slot_v1_";
   const SAVE_VERSION = 1;
   let saveTimer = null;
 
@@ -15,7 +16,27 @@
     loaded: false,
     lastSavedAt: null,
 
-    save: function () {
+    listSlots: function () {
+      return [1, 2, 3].map(id => {
+        try {
+          const raw = localStorage.getItem(SLOT_PREFIX + id);
+          if (!raw) return { id: id, empty: true };
+          const data = JSON.parse(raw);
+          return { id: id, empty: false, savedAt: Number(data.savedAt) || 0,
+            day: Number(data.state && data.state.day) || 1,
+            year: Number(data.state && data.state.year) || 1,
+            population: Number(data.city && data.city.population) || 120 };
+        } catch (error) { return { id: id, empty: true }; }
+      });
+    },
+
+    deleteSlot: function (id) {
+      if (![1, 2, 3].includes(Number(id))) return false;
+      localStorage.removeItem(SLOT_PREFIX + Number(id));
+      return true;
+    },
+
+    save: function (slotId) {
       try {
         const buildings = [];
         const roads = [];
@@ -68,7 +89,7 @@
           roads: roads
         };
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(slotId ? SLOT_PREFIX + slotId : STORAGE_KEY, JSON.stringify(data));
         this.lastSavedAt = data.savedAt;
         return true;
       } catch (error) {
@@ -77,9 +98,9 @@
       }
     },
 
-    load: function () {
+    load: function (slotId) {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(slotId ? SLOT_PREFIX + slotId : STORAGE_KEY);
         if (!raw) return false;
         const data = JSON.parse(raw);
         if (!data || data.version !== SAVE_VERSION || !data.state ||
@@ -116,6 +137,13 @@
         C.state.selected = validPoint(savedState.selected) ? savedState.selected : null;
         const mapRestored = !!(data.map && C.world.importData && C.world.importData(data.map));
         if (!mapRestored && C.world.prepareForLegacySave) C.world.prepareForLegacySave(data);
+        for (const row of C.world.tiles) {
+          for (const tile of row) {
+            tile.building = null;
+            tile.road = false;
+            tile.owner = null;
+          }
+        }
         C.city.population = Math.max(10, Number(data.city && data.city.population) || 120);
         C.state.resources.population = C.city.population;
         C.city.center = validPoint(data.city && data.city.center) ? data.city.center : null;
