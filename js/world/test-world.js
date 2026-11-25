@@ -283,7 +283,12 @@
           const type = terrain(x, y, this.seed, score);
           const mineral = type === "rock" || type === "mountain" ? seededHash(x, y, this.seed + 811) : 1;
           const deposit = mineral < 0.075 ? "iron" : mineral < 0.145 ? "copper" : mineral < 0.25 ? "stone" : null;
-          row.push({ x: x, y: y, type: type, deposit: deposit, road: false, owner: null });
+          const berryBush = (type === "grass" || type === "forest") && seededHash(x, y, this.seed + 1501) > 0.965;
+          const animalRoll = seededHash(x, y, this.seed + 1709);
+          const wildlife = (type === "grass" || type === "forest") && animalRoll > 0.982
+            ? (animalRoll > 0.996 ? "deer" : animalRoll > 0.991 ? "boar" : animalRoll > 0.987 ? "chicken" : "rabbit")
+            : null;
+          row.push({ x: x, y: y, type: type, deposit: deposit, berryBush: berryBush, wildlife: wildlife, road: false, owner: null });
         }
         this.tiles.push(row);
       }
@@ -327,6 +332,11 @@
         const tile = this.tiles[y][x];
         const mineral = tile.type === "rock" || tile.type === "mountain" ? seededHash(x, y, this.seed + 811) : 1;
         tile.deposit = mineral < 0.075 ? "iron" : mineral < 0.145 ? "copper" : mineral < 0.25 ? "stone" : null;
+        if (tile.berryBush === undefined) tile.berryBush = (tile.type === "grass" || tile.type === "forest") && seededHash(x,y,this.seed+1501) > 0.965;
+        if (tile.wildlife === undefined) {
+          const roll=seededHash(x,y,this.seed+1709);
+          tile.wildlife=(tile.type==="grass"||tile.type==="forest")&&roll>0.982?(roll>0.996?"deer":roll>0.991?"boar":roll>0.987?"chicken":"rabbit"):null;
+        }
       }
       this.updateCoasts();
     },
@@ -335,7 +345,7 @@
       return {
         version: 2,
         seed: this.seed,
-        tiles: this.tiles.map(row => row.map(tile => tile.type))
+        tiles: this.tiles.map(row => row.map(tile => ({ type: tile.type, deposit: tile.deposit, berryBush: !!tile.berryBush, wildlife: tile.wildlife || null })))
       };
     },
 
@@ -343,12 +353,21 @@
       if (!data || !Array.isArray(data.tiles) || !data.tiles.length || data.tiles.length > H) return false;
       const allowed = Object.keys(colors);
       if (!data.tiles.every(row => Array.isArray(row) && row.length > 0 && row.length <= W &&
-          row.every(type => allowed.includes(type)))) return false;
+          row.every(item => allowed.includes(typeof item === "string" ? item : item && item.type)))) return false;
       this.seed = Number(data.seed) || this.seed;
       // Older 48x48 saves are preserved in the upper-left of the expanded world.
       // Newly generated terrain remains around the old map, so old settlements are not discarded.
       for (let y = 0; y < data.tiles.length; y++) {
-        for (let x = 0; x < data.tiles[y].length; x++) this.tiles[y][x].type = data.tiles[y][x];
+        for (let x = 0; x < data.tiles[y].length; x++) {
+          const saved = data.tiles[y][x];
+          const tile = this.tiles[y][x];
+          tile.type = typeof saved === "string" ? saved : saved.type;
+          if (saved && typeof saved === "object") {
+            tile.deposit = saved.deposit || null;
+            tile.berryBush = !!saved.berryBush;
+            tile.wildlife = saved.wildlife || null;
+          }
+        }
       }
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
         const tile = this.tiles[y][x];
