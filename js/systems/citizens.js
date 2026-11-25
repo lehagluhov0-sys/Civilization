@@ -9,6 +9,11 @@
     nextId: 1,
     animationTime: 0,
     redrawTimer: 0,
+    thinkTimer: 0,
+    simTimer: 0,
+    decisionInterval: 1.6,
+    buildingsCache: [],
+    buildingsCacheTimer: 0,
     initialized: false,
 
     init: function () {
@@ -29,7 +34,10 @@
           direction: 1,
           walk: Math.random() * 6.28,
           color: ["#d9a36d", "#c77d57", "#e1c28b", "#9a654d"][i % 4],
-          shirt: ["#547b91", "#8b604d", "#6d8051", "#a18b55", "#76618f"][i % 5]
+          shirt: ["#547b91", "#8b604d", "#6d8051", "#a18b55", "#76618f"][i % 5],
+          activity: i < 4 ? "building" : "wandering",
+          hunger: 0,
+          decisionTimer: Math.random() * 1.5
         });
       }
       this.chooseWanderTargets();
@@ -59,37 +67,106 @@
 
     update: function (dt) {
       if (!this.initialized) return;
-      this.animationTime += dt;
+      // Fixed-step simulation: avoid running all citizen logic on every display frame.
+      this.simTimer += Math.min(dt, 0.1);
+      this.thinkTimer += dt;
       this.redrawTimer += dt;
-      const site = this.activeSite();
-      let arrivedBuilders = 0;
+      this.buildingsCacheTimer += dt;
+      this.animationTime += dt;
 
-      this.agents.forEach(agent => {
-        if (agent.role === "builder" && site) {
-          agent.targetX = site.x + 0.5 + (agent.id % 2 ? 0.18 : -0.18);
-          agent.targetY = site.y + 0.55 + (agent.id % 3) * 0.12;
-        } else if (Math.hypot(agent.targetX - agent.x, agent.targetY - agent.y) < 0.12) {
-          if (Math.random() < dt * 0.55) this.chooseWanderTargetsFor(agent);
+      if (this.buildingsCacheTimer >= 5) {
+        this.buildingsCacheTimer = 0;
+        this.buildingsCache = [];
+        for (let y = 0; y < C.world.height; y++) {
+          const row = C.world.tiles[y];
+          for (let x = 0; x < C.world.width; x++) {
+            const tile = row[x];
+            if (tile && tile.building && tile.building.type !== "city_center") {
+              this.buildingsCache.push({ x: x + 0.5, y: y + 0.5, type: tile.building.type,
+                workers: tile.building.workers || 0 });
+            }
+          }
         }
+      }
 
-        const dx = agent.targetX - agent.x;
-        const dy = agent.targetY - agent.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance > 0.025) {
-          const step = Math.min(distance, dt * (agent.role === "builder" && site ? 2.3 : 0.72));
-          agent.x += dx / distance * step;
-          agent.y += dy / distance * step;
-          agent.direction = dx < 0 ? -1 : 1;
-          agent.walk += dt * 10;
+      const think = this.thinkTimer >= this.decisionInterval;
+      if (think) this.thinkTimer = 0;
+      let steps = 0;
+      while (this.simTimer >= 0.05 && steps < 2) {
+        this.simTimer -= 0.05;
+        steps++;
+        const site = this.activeSite();
+        let arrivedBuilders = 0;
+
+        for (const agent of this.agents) {
+          agent.decisionTimer = (agent.decisionTimer || 0) + 0.05;
+          if (think || agent.decisionTimer >= this.decisionInterval) {
+            agent.decisionTimer = 0;
+            if (agent.role === "builder" && site) {
+              agent.activity = "building";
+              agent.targetX = site.x + 0.5 + (agent.id % 2 ? 0.18 : -0.18);
+              agent.targetY = site.y + 0.55 + (agent.id % 3) * 0.12;
+            } else if (agent.role !== "builder") {
+              this.chooseResidentTask(agent);
+            } else {
+              agent.activity = "wandering";
+              this.chooseWanderTargetsFor(agent);
+            }
+            agent.hunger = Math.min(100, (agent.hunger || 0) + 0.04);
+          }
+
+          const dx = agent.targetX - agent.x;
+          const dy = agent.targetY - agent.y;
+          const distanceSq = dx * dx + dy * dy;
+          if (distanceSq > 0.0009) {
+            const distance = Math.sqrt(distanceSq);
+            const speed = agent.role === "builder" && site ? 2.0 : 0.58;
+            const step = Math.min(distance, 0.05 * speed);
+            agent.x += dx / distance * step;
+            agent.y += dy / distance * step;
+            agent.direction = dx < 0 ? -1 : 1;
+            agent.walk += 0.5;
+          } else if (agent.activity === "working") {
+            agent.walk += 0.08;
+          }
+          if (agent.role === "builder" && site) {
+            const bx = agent.x - (site.x + 0.5);
+            const by = agent.y - (site.y + 0.6);
+            if (bx * bx + by * by < 0.64) arrivedBuilders++;
+          }
         }
-        if (agent.role === "builder" && site &&
-            Math.hypot(agent.x - (site.x + 0.5), agent.y - (site.y + 0.6)) < 0.8) arrivedBuilders++;
-      });
+        if (site) site.buildersPresent = arrivedBuilders;
+      }
 
-      if (site) site.buildersPresent = arrivedBuilders;
-      if (this.redrawTimer >= 0.09) {
+      // Redraw only the map canvas. ui.draw() also redraws all 16,384 minimap tiles,
+      // which was needlessly repeated during every citizen animation refresh.
+      if (this.redrawTimer >= 0.10) {
         this.redrawTimer = 0;
-        if (C.ui && C.ui.draw) C.ui.draw();
+        if (C.ui && C.ui.ctx && C.world && C.world.draw) C.world.draw(C.ui.ctx);
+      }
+    },
+
+    chooseResidentTask: function (agent) {
+      // Pick a nearby staffed workplace occasionally; no per-frame world scans or pathfinding.
+      let best = null;
+      let bestScore = Infinity;
+      for (const place of this.buildingsCache) {
+        if (place.workers <= 0) continue;
+        const dx = place.x - agent.x;
+        const dy = place.y - agent.y;
+        const score = dx * dx + dy * dy;
+        if (score < bestScore && score < 100) {
+          best = place;
+          bestScore = score;
+        }
+      }
+      if (best && Math.random() < 0.62) {
+        agent.targetX = best.x + (Math.random() - 0.5) * 0.5;
+        agent.targetY = best.y + 0.7;
+        agent.activity = "working";
+      } else {
+        agent.activity = "wandering";
+        this.chooseWanderTargetsFor(agent);
       }
     },
 
@@ -301,7 +378,8 @@
         agents: this.agents.map(agent => ({
           id: agent.id, role: agent.role, x: agent.x, y: agent.y,
           targetX: agent.targetX, targetY: agent.targetY, direction: agent.direction,
-          color: agent.color, shirt: agent.shirt, walk: agent.walk
+          color: agent.color, shirt: agent.shirt, walk: agent.walk,
+          activity: agent.activity || "wandering", hunger: agent.hunger || 0
         })),
         sites: this.sites.map(site => { const tile = C.world.get(site.x, site.y); const build = tile && tile.construction; return { x: site.x, y: site.y, type: site.type, progress: build ? build.progress : 0, required: build ? build.required : 5, stage: build ? build.stage : 0 }; })
       };
@@ -328,6 +406,8 @@
         return { x: site.x, y: site.y, type: site.type, buildersPresent: 0 };
       }) : [];
       this.nextId = Math.max(1, Number(data.nextId) || this.agents.length + 1);
+      this.buildingsCache = [];
+      this.buildingsCacheTimer = 5;
       this.initialized = true;
       return true;
     }
