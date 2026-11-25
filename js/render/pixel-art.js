@@ -182,11 +182,9 @@
           const size=cell*1.02;
           if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
           else if (tile.building.type === "quarry") {
-            drawTree(ctx,sx+cell*.08,sy+cell*.1,cell*.62,2,unit);
-            px(ctx,sx+cell*.56,sy+cell*.56,cell*.32,cell*.25,"#85877e",unit);
-            px(ctx,sx+cell*.61,sy+cell*.54,cell*.12,cell*.08,"#c1bca8",unit);
+            drawHouse(ctx,sx,sy,cell,"quarry",unit);
           } else if (tile.building.type === "lumber") {
-            drawHouse(ctx,sx,sy,cell,"warehouse",unit);
+            drawHouse(ctx,sx,sy,cell,"lumber",unit);
             px(ctx,sx+cell*.72,sy+cell*.64,cell*.16,cell*.12,"#8d623e",unit);
           } else drawHouse(ctx,sx,sy,size,tile.building.type,unit);
         }
