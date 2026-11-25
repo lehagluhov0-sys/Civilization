@@ -255,7 +255,7 @@
             '<button id="menuSave">Сохранить игру</button>' +
             '<button id="menuSettings">Настройки карты</button>' +
           '</div>' +
-          '<div class="main-menu-version">OFFLINE STRATEGY · v0.21.0</div>' +
+          '<div class="main-menu-version">OFFLINE STRATEGY · v0.22.0</div>' +
         '</div>';
       document.body.appendChild(overlay);
       overlay.querySelector("#menuContinue").onclick = () => overlay.remove();
