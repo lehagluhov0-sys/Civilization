@@ -65,7 +65,7 @@
 
     const spriteId = type === "warehouse" ? "warehouse" :
       type === "farm" ? "farm_barn" : type === "lumber" ? "lumber_hut" :
-      type === "quarry" ? "quarry_mine" : type === "market" ? "market_stall" :
+      type === "quarry" ? "quarry_mine" : type === "iron_mine" ? "quarry_mine" : type === "copper_mine" ? "quarry_mine" : type === "market" ? "market_stall" :
       type === "fishery" ? "fishery_boat" : type === "city_center" ? "castle" :
       (type === "house" ? ["house_wood", "house_blue", "house_yellow", "house_wood_alt"][
         Math.floor(hash(Number.isFinite(worldX) ? worldX : Math.round(x / Math.max(1, size)),
@@ -228,6 +228,11 @@
         // Buildings and construction sites own their footprint; never draw biome props underneath them.
         if (!tile.building && !tile.construction) drawTileDetails(ctx,tile,sx,sy,cell,unit);
 
+        if (tile.deposit && !tile.building && !tile.construction && cell >= 15) {
+          const oreColor = tile.deposit === "iron" ? "#a7aeb0" : tile.deposit === "copper" ? "#c47b4b" : "#d0c4a0";
+          px(ctx, sx + cell*.42, sy + cell*.43, cell*.16, cell*.13, oreColor, unit);
+          px(ctx, sx + cell*.36, sy + cell*.53, cell*.10, cell*.08, "#625f58", unit);
+        }
         if (tile.building && cell >= 13) {
           const size=cell*0.82;
           if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
