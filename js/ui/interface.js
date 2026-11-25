@@ -18,6 +18,7 @@
       C.on("resources", () => this.refreshResources());
       C.on("economy", () => this.refreshEconomy());
       C.on("workforce", () => this.refreshWorkforce());
+      C.on("citizens", () => this.refreshCitizens());
       C.on("infrastructure", () => {
         this.refreshInfrastructure();
         this.refreshEconomy();
@@ -244,7 +245,7 @@
             '<button id="menuSave">Сохранить игру</button>' +
             '<button id="menuSettings">Настройки карты</button>' +
           '</div>' +
-          '<div class="main-menu-version">OFFLINE STRATEGY · v0.12.0</div>' +
+          '<div class="main-menu-version">OFFLINE STRATEGY · v0.15.0</div>' +
         '</div>';
       document.body.appendChild(overlay);
       overlay.querySelector("#menuContinue").onclick = () => overlay.remove();
@@ -561,6 +562,7 @@
       this.refreshResources();
       this.refreshEconomy();
       this.refreshWorkforce();
+      this.refreshCitizens();
       this.refreshInfrastructure();
       $("season").textContent = C.time.season();
       $("day").textContent = C.state.day;
@@ -598,6 +600,24 @@
       $("lumberWorkers").textContent = workforce.workersByType.lumber || 0;
       $("quarryWorkers").textContent = workforce.workersByType.quarry || 0;
       $("warehouseWorkers").textContent = workforce.workersByType.warehouse || 0;
+    },
+
+    refreshCitizens: function () {
+      if (!C.citizens) return;
+      const agents = C.citizens.agents || [];
+      const builders = agents.filter(agent => agent.role === "builder").length;
+      const site = C.citizens.activeSite();
+      $("citizenCount").textContent = agents.length;
+      $("builderCount").textContent = builders;
+      if (!site) {
+        $("constructionStatus").textContent = "Нет";
+      } else {
+        const tile = C.world.get(site.x, site.y);
+        const build = tile && tile.construction;
+        const percent = build ? Math.round(build.progress / build.required * 100) : 0;
+        const definition = C.buildings.catalog[site.type];
+        $("constructionStatus").textContent = (definition ? definition.name : site.type) + " · " + percent + "%";
+      }
     },
 
     refreshInfrastructure: function () {
