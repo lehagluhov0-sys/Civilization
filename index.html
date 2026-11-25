@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <meta name="theme-color" content="#171d24">
   <title>Civilization — стратегия</title>
-  <link rel="stylesheet" href="css/main.css?v=0.18.3">
-  <link rel="stylesheet" href="css/interface.css?v=0.18.3">
-  <link rel="stylesheet" href="css/panels.css?v=0.18.3">
+  <link rel="stylesheet" href="css/main.css?v=0.18.5">
+  <link rel="stylesheet" href="css/interface.css?v=0.18.5">
+  <link rel="stylesheet" href="css/panels.css?v=0.18.5">
 </head>
 <body>
   <div id="game" class="game-shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.18.4</span></small></div></div>
-      <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">120</b></div>
+      <div class="brand"><span class="brand-mark">C</span><div><strong>CIVILIZATION</strong><small>СТРАТЕГИЧЕСКИЙ ПРОТОТИП · <span id="gameVersion">v0.18.5</span></small></div></div>
+      <div class="top-stat"><span>НАСЕЛЕНИЕ</span><b id="population">5</b></div>
       <div class="top-stat"><span>ЭПОХА</span><b id="epoch">Древний мир</b></div>
       <div class="top-stat"><span>ДЕНЬГИ</span><b id="money">250</b></div>
       <div class="top-stat"><span>ЕДА</span><b id="food">180</b></div>
@@ -34,15 +34,15 @@
         </section>
         <section class="inspector-card city-card">
           <div class="section-label">НАСЕЛЕНИЕ И ПОСЕЛЕНИЕ</div>
-          <div class="info-line"><span>Жители</span><b id="cityPopulation">120</b></div>
+          <div class="info-line"><span>Жители</span><b id="cityPopulation">5</b></div>
           <div class="info-line"><span>Жильё</span><b id="cityHousing">120</b></div>
           <div class="info-line"><span>Всего рабочих мест</span><b id="cityJobs">0</b></div>
           <div class="info-line"><span>Здания</span><b id="buildingCount">1</b></div>
         </section>
         <section class="inspector-card citizens-card">
           <div class="section-label">ЖИТЕЛИ И СТРОИТЕЛИ</div>
-          <div class="info-line"><span>На карте</span><b id="citizenCount">14</b></div>
-          <div class="info-line"><span>Строители</span><b id="builderCount">4</b></div>
+          <div class="info-line"><span>На карте</span><b id="citizenCount">5</b></div>
+          <div class="info-line"><span>Строители</span><b id="builderCount">2</b></div>
           <div class="info-line"><span>Текущая стройка</span><b id="constructionStatus">Нет</b></div>
         </section>
         <section class="inspector-card workforce-card">
@@ -108,6 +108,7 @@
         <div class="panel-divider"></div>
         <div class="section-label">СЛОИ КАРТЫ</div>
         <label class="layer-option"><input type="checkbox" id="politicalLayerToggle"> Политическая карта</label>
+        <label class="layer-option"><input type="checkbox" id="countryBordersToggle"> Границы государств</label>
         <label class="layer-option"><input type="checkbox" id="tradeRoutesToggle"> Торговые маршруты</label>
       </aside>
     </main>
@@ -130,14 +131,14 @@
   <script src="js/core/time.js"></script>
   <script src="js/camera/camera.js"></script>
   <script src="js/world/test-world.js"></script>
-  <script src="js/render/sprite-assets.js?v=0.18.3"></script>
-  <script src="js/render/pixel-art.js?v=0.18.3"></script>
+  <script src="js/render/sprite-assets.js?v=0.18.5"></script>
+  <script src="js/render/pixel-art.js?v=0.18.5"></script>
   <script src="js/systems/terrain.js"></script>
   <script src="js/systems/world-events.js"></script>
   <script src="js/systems/buildings.js"></script>
   <script src="js/systems/infrastructure.js"></script>
   <script src="js/systems/workforce.js"></script>
-  <script src="js/systems/citizens.js?v=0.18.4"></script>
+  <script src="js/systems/citizens.js?v=0.18.5"></script>
   <script src="js/systems/city.js"></script>
   <script src="js/systems/economy.js"></script>
   <script src="js/systems/research.js"></script>
