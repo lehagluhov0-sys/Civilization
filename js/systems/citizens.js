@@ -199,7 +199,10 @@
         if (tile.building) count[tile.building.type] = (count[tile.building.type] || 0) + 1;
       }
       const resources = C.state.resources;
-      if (housing <= population + 5 && resources.wood >= 20 && resources.stone >= 5 && resources.money >= 25) return "house";
+      // The current prototype has five visible citizen agents. Keep the first
+      // settlement compact until population simulation can spawn more agents.
+      if (population < 15 && housing < population + 3 &&
+          resources.wood >= 20 && resources.stone >= 5 && resources.money >= 25) return "house";
       if ((!count.farm || resources.food < 105) && resources.wood >= 15 && resources.stone >= 5 && resources.money >= 20) return "farm";
       if (!count.lumber && resources.wood < 55 && resources.stone >= 10 && resources.money >= 30) return "lumber";
       if (!count.quarry && resources.stone < 40 && resources.wood >= 10 && resources.money >= 30) return "quarry";
@@ -207,7 +210,6 @@
       if (!count.market && resources.money >= 80 && resources.wood >= 30 && resources.stone >= 12 && population >= 120) return "market";
       if (!count.warehouse && (resources.food > 220 || resources.wood > 220 || resources.stone > 220) &&
           resources.wood >= 35 && resources.stone >= 20 && resources.money >= 50) return "warehouse";
-      if (housing < population + 18 && resources.wood >= 20 && resources.stone >= 5 && resources.money >= 25) return "house";
       return null;
     },
 
@@ -224,12 +226,24 @@
           if (C.terrain && !C.terrain.canBuild(definition, x, y)) continue;
           const distance = Math.abs(x - center.x) + Math.abs(y - center.y);
           if (distance < 2 || distance > 10) continue;
+          // Leave breathing room around houses; other buildings need at
+          // least one clear tile so their footprints do not visually collide.
+          const spacing = type === "house" ? 2 : 1;
           let nearby = 0;
-          for (const [dx,dy] of directions) {
-            const neighbor = C.world.get(x + dx, y + dy);
-            if (neighbor && neighbor.building) nearby += 1;
+          let blocked = false;
+          for (let oy = -spacing; oy <= spacing; oy++) {
+            for (let ox = -spacing; ox <= spacing; ox++) {
+              if (!ox && !oy) continue;
+              const neighbor = C.world.get(x + ox, y + oy);
+              if (neighbor && (neighbor.building || neighbor.construction)) {
+                nearby++;
+                if (Math.max(Math.abs(ox), Math.abs(oy)) <= (type === "house" ? 1 : 0)) blocked = true;
+              }
+            }
           }
-          const score = distance - nearby * 1.8 + Math.abs(x - center.x) * 0.015;
+          if (blocked) continue;
+          // Positive penalty spreads buildings instead of rewarding clusters.
+          const score = distance + nearby * 1.25 + Math.abs(x - center.x) * 0.015;
           if (score < bestScore) { bestScore = score; best = { x, y }; }
         }
       }
