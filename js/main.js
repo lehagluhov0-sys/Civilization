@@ -25,6 +25,7 @@
       const dt = Math.min((now - C._lastFrame) / 1000, 0.1);
       C._lastFrame = now;
       C.time.update(dt);
+      if (C.citizens) C.citizens.update(dt);
       requestAnimationFrame(frame);
     } catch (error) {
       showStartupError(error);
@@ -40,6 +41,7 @@
       const restored = C.save ? C.save.load() : false;
       if (!C.city.center) C.city.init();
       else C.city.recalculate();
+      if (C.citizens) C.citizens.init();
       if (C.infrastructure) C.infrastructure.updateNetwork();
       if (C.politics) C.politics.init();
       if (restored) C.camera.ready = true;
