@@ -189,5 +189,5 @@
     camera.y = savedY;
   };
 
-  C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 1 };
+  C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 2 };
 })();
