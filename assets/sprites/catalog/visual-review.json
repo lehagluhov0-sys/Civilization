@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "purpose": "Manually reviewed subset of visually recognizable candidates. This is not a complete atlas classification.",
-  "reviewed_count": 128,
+  "reviewed_count": 129,
   "categories": [
     "vegetation",
     "building",
@@ -2353,6 +2353,24 @@
       "visual_confidence": "high",
       "visual_note": "Small rocky outcrop or boulder variant.",
       "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0011",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 892,
+        "y": 9,
+        "width": 51,
+        "height": 58
+      },
+      "pixel_area": 1521,
+      "bbox_fill_ratio": 0.5142,
+      "review_flags": [],
+      "label": "white_trunk_tree_fragment",
+      "category": "vegetation",
+      "visual_confidence": "medium",
+      "visual_note": "Candidate segmentation captures only part of the white-trunk tree; renderer uses a manually expanded crop around the visible tree.",
+      "review_method": "manual review of original atlas and contact sheet"
     }
   ]
 }
