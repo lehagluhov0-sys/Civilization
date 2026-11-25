@@ -30,6 +30,7 @@
       });
       C.on("world", () => this.draw());
       C.on("research", () => { if (this.researchPanel) this.renderResearchPanel(); });
+      C.on("construction", () => { if (this.constructionPanel) this.renderConstructionPanel(); });
       C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });
       C.on("politics", () => { if (this.worldPanel) this.renderWorldPanel(); this.draw(); });
       C.on("trade", () => {
@@ -204,6 +205,9 @@
             this.closeDiplomacyPanel();
             this.closeWorldPanel();
             this.addLog("Открыта карта мира.");
+          } else if (section === "construction") {
+            this.closeResearchPanel(); this.closeDiplomacyPanel(); this.closeWorldPanel();
+            this.openConstructionPanel();
           } else if (section === "research") {
             this.closeDiplomacyPanel();
             this.closeWorldPanel();
@@ -554,61 +558,108 @@
       if (!this.researchPanel || !C.research) return;
       const content = this.researchPanel.querySelector("#researchContent");
       const active = C.research.getTech(C.research.activeId);
-      let html = '<p style="color:#91a0ad;font-size:12px">Эпоха: Древний мир · Научные очки: <b style="color:#e0b86e">' +
-        C.research.points.toFixed(1) + '</b> · Получение: +' + C.research.sciencePerDay() + ' в день</p>';
+      let html = '<p style="color:#91a0ad;font-size:12px">Наука: <b style="color:#e0b86e">' +
+        C.research.points.toFixed(1) + '</b> · +' + C.research.sciencePerDay() + ' очко/день</p>';
       if (active) {
         const percent = Math.min(100, Math.round(C.research.progress / active.cost * 100));
-        html += '<div style="padding:10px;background:#222e39;border:1px solid #c69b55;margin:10px 0;border-radius:8px"><b>Сейчас изучается: ' +
-          active.name + '</b><p style="font-size:11px;color:#91a0ad">' + C.research.progress + ' / ' + active.cost +
-          ' очков науки · ' + percent + '%</p><div style="height:8px;background:#11171d;border-radius:8px;overflow:hidden"><div style="height:8px;width:' +
+        html += '<div style="padding:10px;background:#222e39;border:1px solid #c69b55;margin:10px 0;border-radius:8px"><b>Исследуется: ' +
+          active.name + '</b><p style="font-size:11px;color:#91a0ad">' + Math.round(C.research.progress) + ' / ' + active.cost +
+          ' науки · ' + percent + '%</p><div style="height:8px;background:#11171d;border-radius:8px;overflow:hidden"><div style="height:8px;width:' +
           percent + '%;background:#c69b55"></div></div></div>';
-      } else {
-        html += '<p style="font-size:11px;color:#91a0ad">Выбери доступную технологию. Для старта нужны научные очки и указанные материалы.</p>';
       }
-
-      html += '<div class="technology-tree" style="display:grid;grid-template-columns:repeat(3,minmax(190px,1fr));gap:12px;overflow-x:auto;padding:4px 2px 12px;min-width:0">';
+      html += '<p style="font-size:11px;color:#aab6bf">Технологии связаны в ветви. Обычные открытия требуют только науку; материалы нужны лишь для практических усовершенствований.</p>';
+      html += '<div class="technology-tree" style="display:flex;flex-direction:column;gap:14px;overflow-x:auto;padding:4px 2px 12px">';
       ["food","industry","knowledge"].forEach(branch => {
-        html += '<section style="min-width:190px;background:#151e26;border:1px solid #34424e;border-radius:9px;padding:10px">' +
-          '<div style="font-size:10px;letter-spacing:1px;color:#d9b66f;text-align:center;min-height:28px">' +
-          C.research.branchNames[branch] + '</div>';
-        const techs = C.research.catalog.filter(tech => tech.branch === branch).sort((a,b) => a.tier - b.tier);
+        html += '<section style="min-width:760px;background:#151e26;border:1px solid #34424e;border-radius:9px;padding:10px">';
+        html += '<div style="font-size:11px;letter-spacing:1px;color:#d9b66f;margin-bottom:9px">' + C.research.branchNames[branch] + '</div>';
+        html += '<div style="display:grid;grid-template-columns:repeat(4,minmax(155px,1fr));gap:15px;align-items:stretch">';
+        const techs = C.research.catalog.filter(tech => tech.branch === branch).sort((a,b) => a.tier-b.tier);
         techs.forEach((tech,index) => {
-          const done = C.research.isCompleted(tech.id);
-          const selected = C.research.activeId === tech.id;
-          const missing = C.research.missingPrerequisites(tech);
-          const locked = missing.length > 0;
-          const materials = Object.entries(tech.materials || {}).map(([key,value]) => {
-            const labels = { wood: "Д", stone: "К", food: "Е" };
-            const current = C.state.resources[key] || 0;
-            return labels[key] + ' ' + value + (current < value ? ' <span style="color:#e27e70">(есть ' + current + ')</span>' : '');
-          }).join(' · ');
-          const border = done ? '#79a56a' : selected ? '#c69b55' : locked ? '#39434b' : '#55758b';
-          const state = done ? 'ИЗУЧЕНО' : selected ? 'ИЗУЧАЕТСЯ' : locked ? 'ЗАБЛОКИРОВАНО' : tech.cost + ' науки';
-          html += '<article style="position:relative;padding:10px;margin:8px 0 0;background:#222e39;border:1px solid ' + border +
-            ';border-radius:7px;opacity:' + (locked ? '.68' : '1') + '">' +
-            '<div style="display:flex;justify-content:space-between;gap:6px;align-items:flex-start"><b style="font-size:12px">' +
-            tech.name + '</b><span style="font-size:9px;color:' + (done ? '#91c47d' : '#e0b86e') + ';white-space:nowrap">' + state + '</span></div>' +
-            '<p style="font-size:10px;line-height:1.4;color:#aab6bf;margin:7px 0">' + tech.description + '</p>' +
-            '<div style="font-size:10px;color:#d9b66f;margin-bottom:8px">' + materials + '</div>' +
-            (locked ? '<div style="font-size:9px;color:#e0a47a">Нужно: ' + missing.map(id => C.research.getTech(id).name).join(", ") + '</div>' :
-              done ? '' : '<button class="wide-button" data-tech="' + tech.id + '" ' +
-                ((selected || !!C.research.activeId) ? 'disabled' : '') + '>' +
-                (selected ? 'Исследуется' : 'Изучить технологию') + '</button>') +
-            '</article>' +
-            (index < techs.length - 1 ? '<div style="height:14px;width:2px;background:#657887;margin:0 auto"></div><div style="text-align:center;color:#8295a3;font-size:13px;line-height:10px">▼</div>' : '');
+          const done=C.research.isCompleted(tech.id),selected=C.research.activeId===tech.id;
+          const missing=C.research.missingPrerequisites(tech),locked=missing.length>0;
+          const mats=Object.entries(tech.materials||{}).map(([key,value])=>{
+            const label={wood:"Дерево",stone:"Камень"}[key]||key;
+            const enough=(C.state.resources[key]||0)>=value;
+            return '<span style="color:'+(enough?'#9ac58a':'#e18a79')+'">'+label+': '+value+'</span>';
+          }).join('<br>');
+          const border=done?'#79a56a':selected?'#c69b55':locked?'#39434b':'#55758b';
+          html += '<article style="position:relative;display:flex;flex-direction:column;padding:10px;background:#222e39;border:1px solid '+border+';border-radius:8px;opacity:'+(locked?'.68':'1')+';min-height:174px">';
+          html += '<div style="font-size:9px;color:#91a0ad">УРОВЕНЬ '+(index+1)+'</div><b style="font-size:12px;margin:5px 0">'+tech.name+'</b>';
+          html += '<p style="font-size:10px;line-height:1.4;color:#aab6bf;flex:1">'+tech.description+'</p>';
+          html += '<div style="font-size:10px;color:#e0b86e;margin:5px 0">'+tech.cost+' науки</div>';
+          if(mats) html += '<div style="font-size:10px;line-height:1.5;margin-bottom:7px">'+mats+'</div>';
+          if(done) html += '<b style="font-size:9px;color:#91c47d">✓ ИЗУЧЕНО</b>';
+          else if(selected) html += '<b style="font-size:9px;color:#e0b86e">● ИССЛЕДУЕТСЯ</b>';
+          else if(locked) html += '<small style="color:#e0a47a">После: '+missing.map(id=>C.research.getTech(id).name).join(", ")+'</small>';
+          else html += '<button class="wide-button" data-tech="'+tech.id+'" '+(C.research.activeId?'disabled':'')+'>Изучить</button>';
+          html += '</article>';
         });
-        html += '</section>';
+        html += '</div><div style="font-size:10px;color:#8295a3;margin-top:7px;text-align:center">Узлы соединены слева направо: следующий уровень открывается после предыдущего</div></section>';
       });
-      html += '</div><p style="font-size:10px;color:#82909a">Обозначения материалов: Д — древесина, К — камень, Е — еда. В каждой ветви технологии открываются сверху вниз.</p>';
-      content.innerHTML = html;
-      content.querySelectorAll("[data-tech]").forEach(button => {
-        button.onclick = () => {
-          const result = C.research.start(button.dataset.tech);
-          if (!result.ok) this.addLog(result.message);
-          this.renderResearchPanel();
-          this.refreshResources();
+      html += '</div>';
+      content.innerHTML=html;
+      content.querySelectorAll("[data-tech]").forEach(button=>{
+        button.onclick=()=>{
+          const result=C.research.start(button.dataset.tech);
+          if(!result.ok)this.addLog(result.message);
+          this.renderResearchPanel();this.refreshResources();
         };
       });
+    },
+
+    openConstructionPanel: function () {
+      if(!this.constructionPanel){
+        const panel=document.createElement("div");
+        panel.id="constructionOverlay";
+        panel.style.cssText="position:fixed;inset:0;z-index:510;background:rgba(5,9,13,.9);display:flex;align-items:center;justify-content:center;padding:12px";
+        panel.innerHTML='<div style="width:min(900px,100%);max-height:94%;overflow:auto;background:#1b242d;border:1px solid #c69b55;padding:14px;color:#e8edf1"><div style="display:flex;justify-content:space-between;align-items:center"><b>ЦЕНТР СТРОИТЕЛЬСТВА</b><button id="closeConstruction" class="wide-button" style="width:auto">Закрыть ✕</button></div><div id="constructionContent"></div></div>';
+        document.body.appendChild(panel);this.constructionPanel=panel;
+        panel.querySelector("#closeConstruction").onclick=()=>this.closeConstructionPanel();
+      }
+      this.renderConstructionPanel();
+    },
+
+    closeConstructionPanel: function () {
+      if(this.constructionPanel)this.constructionPanel.remove();
+      this.constructionPanel=null;
+    },
+
+    renderConstructionPanel: function () {
+      if(!this.constructionPanel||!C.citizens)return;
+      const content=this.constructionPanel.querySelector("#constructionContent");
+      const selected=C.state.selected?C.world.get(C.state.selected.x,C.state.selected.y):null;
+      let html='<p style="font-size:11px;color:#aab6bf">Выдавай ИИ строительные заказы. Он сам найдёт подходящий участок, дождётся материалов и направит строителей.</p>';
+      html+='<div style="padding:10px;background:#222e39;border-radius:8px;margin:10px 0"><b>ОЧЕРЕДЬ ЗАКАЗОВ · '+C.citizens.orders.length+'</b>';
+      if(!C.citizens.orders.length)html+='<p style="font-size:10px;color:#91a0ad">Очередь пока пуста.</p>';
+      C.citizens.orders.forEach((order,i)=>{
+        const name=order.kind==="upgrade"?"Улучшение здания ("+(order.x+1)+", "+(order.y+1)+")":(C.buildings.catalog[order.type]?.name||order.type);
+        html+='<div style="font-size:11px;padding:6px 0;border-top:1px solid #34424e">'+(i+1)+'. '+name+'</div>';
+      });
+      if(C.citizens.activeSite()){const site=C.citizens.activeSite();const tile=C.world.get(site.x,site.y);html+='<div style="font-size:10px;color:#e0b86e">В работе: '+(C.buildings.catalog[site.type]?.name||site.type)+(site.upgrade?' · улучшение':'')+' · '+Math.round(tile.construction.progress/tile.construction.required*100)+'%</div>';}
+      html+='</div><b>НОВОЕ СТРОИТЕЛЬСТВО</b><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:7px;margin:8px 0">';
+      Object.keys(C.buildings.catalog).forEach(type=>{
+        if(type==="city_center")return;
+        const def=C.buildings.catalog[type];
+        const locked=def.requiresResearch&&(!C.research||!C.research.isCompleted(def.requiresResearch));
+        const costs=Object.entries(def.cost||{}).map(([key,value])=>({wood:"Д",stone:"К",money:"₵"}[key]||key)+":"+value).join(" · ");
+        html+='<button class="wide-button" data-order-building="'+type+'" '+(locked?'disabled':'')+' style="margin:0;min-height:62px"><b>'+def.name+'</b><small class="build-cost">'+costs+'</small>'+(locked?'<small class="build-cost">Требуется исследование</small>':'')+'</button>';
+      });
+      html+='</div><b>УЛУЧШЕНИЕ ЗДАНИЯ</b>';
+      if(selected&&selected.building&&selected.building.type!=="city_center"){
+        const level=Math.max(1,Number(selected.building.level)||1);
+        html+='<p style="font-size:11px;color:#aab6bf">'+C.buildings.catalog[selected.building.type].name+' · уровень '+level+'/3 · следующий уровень: дерево '+(12*level)+', камень '+(8*level)+'</p>';
+        html+='<button class="wide-button" id="orderUpgrade" '+(level>=3?'disabled':'')+'>Заказать улучшение выбранного здания</button>';
+      }else html+='<p style="font-size:10px;color:#91a0ad">Выбери здание на карте, затем открой этот раздел.</p>';
+      content.innerHTML=html;
+      content.querySelectorAll("[data-order-building]").forEach(button=>button.onclick=()=>{
+        const result=C.citizens.requestBuilding(button.dataset.orderBuilding);if(!result.ok)this.addLog(result.message);
+        this.renderConstructionPanel();
+      });
+      const upgrade=content.querySelector("#orderUpgrade");
+      if(upgrade)upgrade.onclick=()=>{
+        const result=C.citizens.requestUpgrade(C.state.selected.x,C.state.selected.y);if(!result.ok)this.addLog(result.message);
+        this.renderConstructionPanel();
+      };
     },
 
     draw: function () {
