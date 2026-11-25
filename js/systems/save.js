@@ -47,7 +47,8 @@
             if (tile.building) buildings.push({
               x: tile.x,
               y: tile.y,
-              type: tile.building.type
+              type: tile.building.type,
+              level: tile.building.level || 1
             });
             if (tile.road) roads.push({ x: tile.x, y: tile.y });
           }
@@ -115,7 +116,7 @@
 
         const savedState = data.state;
         if (savedState.resources && typeof savedState.resources === "object") {
-          ["population", "money", "food", "wood", "stone"].forEach(key => {
+          ["population", "money", "food", "wood", "stone", "iron", "copper"].forEach(key => {
             const value = Number(savedState.resources[key]);
             if (Number.isFinite(value) && value >= 0) C.state.resources[key] = value;
           });
@@ -163,7 +164,7 @@
           if (!validPoint(item) || !C.buildings.catalog[item.type]) return;
           const tile = C.world.get(item.x, item.y);
           if (tile && C.buildings.catalog[item.type].terrain.includes(tile.type)) {
-            tile.building = { type: item.type, workers: 0 };
+            tile.building = { type: item.type, workers: 0, level: Math.max(1, Number(item.level) || 1) };
             tile.road = false;
             if (item.type === "city_center") C.city.center = { x: item.x, y: item.y };
           }
