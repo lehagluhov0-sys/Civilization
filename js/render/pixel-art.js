@@ -70,7 +70,7 @@
       (type === "house" ? ["house_wood", "house_blue", "house_yellow", "house_wood_alt"][
         Math.floor(hash(Math.round(x / Math.max(1, size)), Math.round(y / Math.max(1, size)), 19) * 4)
       ] : "house_wood");
-    if (C.spriteAssets && C.spriteAssets.draw(spriteId, ctx, x - size*.34, y - size*.70, size*1.68, size*1.70)) return;
+    if (C.spriteAssets && C.spriteAssets.draw(spriteId, ctx, x - size*.24, y - size*.52, size*1.30, size*1.30)) return;
     const wall = type === "warehouse" ? "#b7a17a" : "#c5a879";
     const roof = type === "city_center" ? "#765044" : "#914f3d";
     px(ctx, x + size*.16, y + size*.42, size*.70, size*.42, "#463d32", unit);
@@ -86,8 +86,8 @@
   function drawFarm(ctx, x, y, size, unit) {
     let atlasDrawn = false;
     if (C.spriteAssets) {
-      atlasDrawn = C.spriteAssets.draw("farm_fields", ctx, x - size*.34, y - size*.40, size*1.68, size*1.36);
-      if (atlasDrawn) C.spriteAssets.draw("farm_barn", ctx, x + size*.12, y - size*.18, size*.78, size*.82);
+      atlasDrawn = C.spriteAssets.draw("farm_fields", ctx, x - size*.18, y - size*.28, size*1.36, size*1.10);
+      if (atlasDrawn) C.spriteAssets.draw("farm_barn", ctx, x + size*.18, y - size*.12, size*.62, size*.68);
     }
     if (atlasDrawn) return;
     px(ctx, x + size*.08, y + size*.35, size*.84, size*.48, "#9c854b", unit);
@@ -228,7 +228,7 @@
         if (!tile.building && !tile.construction) drawTileDetails(ctx,tile,sx,sy,cell,unit);
 
         if (tile.building && cell >= 13) {
-          const size=cell*1.02;
+          const size=cell*0.82;
           if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
           else if (tile.building.type === "quarry") {
             drawHouse(ctx,sx,sy,cell,"quarry",unit);
