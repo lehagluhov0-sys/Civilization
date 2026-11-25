@@ -17,6 +17,11 @@
       food: 12, jobs: 8, terrain: ["grass"],
       description: "Производит до 12 единиц еды в день. Выпуск зависит от работников и дорожной связи."
     },
+    chicken_coop: {
+      name: "Курятник", icon: "♧", cost: { wood: 20, stone: 4 },
+      food: 5, jobs: 3, terrain: ["grass"], requiresResearch: "agriculture",
+      description: "Разводит кур и постепенно снабжает поселение яйцами и мясом."
+    },
     lumber: {
       name: "Лесопилка", icon: "♜", cost: { wood: 18, stone: 5 },
       wood: 7, jobs: 8, terrain: ["forest"],
