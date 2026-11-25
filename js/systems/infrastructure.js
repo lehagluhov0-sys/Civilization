@@ -83,7 +83,11 @@
 
     roadUpkeep: function () {
       const modifier = C.research ? C.research.getEffect("roads") : 1;
-      return Math.round(this.roadCount * 0.05 * modifier * 100) / 100;
+      let total = 0;
+      for (const row of C.world.tiles) for (const tile of row) {
+        if (tile.road) total += C.terrain ? C.terrain.roadUpkeepMultiplier(tile) : 1;
+      }
+      return Math.round(total * 0.05 * modifier * 100) / 100;
     },
 
     buildRoad: function (x, y) {
@@ -94,17 +98,18 @@
       if (tile.road) return { ok: false, message: "На этой клетке уже есть дорога." };
 
       const resources = C.state.resources;
-      if (resources.wood < 3 || resources.money < 2) {
-        return { ok: false, message: "Для дороги нужно 3 дерева и 2 монеты." };
+      const cost = C.terrain ? C.terrain.roadCost(tile) : { wood: 3, money: 2 };
+      if (resources.wood < cost.wood || resources.money < cost.money) {
+        return { ok: false, message: "Для дороги нужно " + cost.wood + " дерева и " + cost.money + " монет." };
       }
 
-      resources.wood -= 3;
-      resources.money -= 2;
+      resources.wood -= cost.wood;
+      resources.money -= cost.money;
       tile.road = true;
       this.updateNetwork();
       C.emit("resources");
       C.emit("world");
-      C.log("Построена дорога. Стоимость: 3 дерева и 2 монеты.");
+      C.log("Построена дорога. Стоимость: " + cost.wood + " дерева и " + cost.money + " монет.");
       return { ok: true, message: "Дорога построена." };
     }
   };
