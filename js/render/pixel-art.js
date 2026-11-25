@@ -27,6 +27,7 @@
   }
 
   function drawTree(ctx, x, y, size, variant, unit) {
+    if (C.spriteAssets && C.spriteAssets.draw("tree_oak", ctx, x, y, size, size)) return;
     const dark = variant % 2 ? "#294d35" : "#31583a";
     const mid = variant % 2 ? "#477747" : "#568449";
     const light = variant % 2 ? "#78a653" : "#8bb45d";
@@ -40,6 +41,8 @@
   }
 
   function drawHouse(ctx, x, y, size, type, unit) {
+    if (type !== "warehouse" && type !== "city_center" && C.spriteAssets &&
+        C.spriteAssets.draw("house_small", ctx, x, y, size, size * 0.9)) return;
     const wall = type === "warehouse" ? "#b7a17a" : "#c5a879";
     const roof = type === "city_center" ? "#765044" : "#914f3d";
     px(ctx, x + size*.16, y + size*.42, size*.70, size*.42, "#463d32", unit);
@@ -53,6 +56,7 @@
   }
 
   function drawFarm(ctx, x, y, size, unit) {
+    if (C.spriteAssets && C.spriteAssets.draw("farm", ctx, x, y, size, size * 0.82)) return;
     px(ctx, x + size*.08, y + size*.35, size*.84, size*.48, "#9c854b", unit);
     for (let i=0;i<4;i++) {
       px(ctx, x + size*(.17+i*.18), y + size*.39, size*.07, size*.39, "#d1b76c", unit);
@@ -106,6 +110,8 @@
         px(ctx, sx+cell*(.45+r*.25), sy+cell*.68, cell*.2, Math.max(unit,cell*.05), palette[1], unit);
       }
     } else if (tile.type === "rock" || tile.type === "mountain") {
+      if (tile.type === "rock" && C.spriteAssets &&
+          C.spriteAssets.draw("rock", ctx, sx + cell*.15, sy + cell*.22, cell*.7, cell*.65)) return;
       px(ctx, sx+cell*.18, sy+cell*.52, cell*.26, cell*.22, palette[2], unit);
       px(ctx, sx+cell*.52, sy+cell*.38, cell*.29, cell*.32, palette[0], unit);
       px(ctx, sx+cell*.57, sy+cell*.4, cell*.13, cell*.07, palette[3], unit);
