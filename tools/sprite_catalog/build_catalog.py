@@ -167,6 +167,41 @@ def catalog_one(name: str, path: Path) -> dict:
 
 
 catalogs = [catalog_one(name, path) for name, path in SOURCES]
+
+# Enlarged review sheets for known composite crops that must be split manually.
+review_path = OUT / "visual-review.json"
+if review_path.is_file():
+    reviewed = json.loads(review_path.read_text(encoding="utf-8"))
+    from PIL import ImageOps
+    for atlas_name, source_path in SOURCES:
+        source_image = Image.open(source_path).convert("RGB")
+        composites = [
+            item for item in reviewed.get("sprites", [])
+            if item.get("source") == source_path.name and item.get("category") == "composite_atlas"
+        ]
+        if not composites:
+            continue
+        cell_w, cell_h, columns = 360, 320, 4
+        rows = (len(composites) + columns - 1) // columns
+        detail = Image.new("RGB", (columns * cell_w, rows * cell_h), (30, 26, 36))
+        draw = ImageDraw.Draw(detail)
+        font = ImageFont.load_default()
+        for index, item in enumerate(composites):
+            b = item["bbox"]
+            crop = source_image.crop((b["x"], b["y"], b["x"] + b["width"], b["y"] + b["height"]))
+            crop.thumbnail((cell_w - 16, cell_h - 52), Image.Resampling.NEAREST)
+            col, row = index % columns, index // columns
+            px = col * cell_w + (cell_w - crop.width) // 2
+            py = row * cell_h + 4 + (cell_h - 52 - crop.height) // 2
+            detail.paste(crop, (px, py))
+            draw.text((col * cell_w + 6, row * cell_h + cell_h - 42),
+                      f'{item["id"]} {b["x"]},{b["y"]} {b["width"]}x{b["height"]}',
+                      fill=(255, 230, 120), font=font)
+            draw.text((col * cell_w + 6, row * cell_h + cell_h - 25),
+                      item["label"], fill=(220, 220, 220), font=font)
+            draw.rectangle((col * cell_w, row * cell_h, (col + 1) * cell_w - 1,
+                            (row + 1) * cell_h - 1), outline=(82, 68, 100))
+        detail.save(OUT / f"composite_review_{atlas_name}.png", optimize=True)
 result = {
     "schema_version": 2,
     "purpose": "diagnostic sprite candidates with original atlas coordinates; no semantic names are guessed",
