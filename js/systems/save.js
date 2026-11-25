@@ -84,6 +84,7 @@
           politics: C.politics ? C.politics.exportData() : null,
           trade: C.trade ? C.trade.exportData() : null,
           worldEvents: C.worldEvents ? C.worldEvents.exportData() : null,
+          citizens: C.citizens ? C.citizens.exportData() : null,
           map: C.world && C.world.exportData ? C.world.exportData() : null,
           buildings: buildings,
           roads: roads
@@ -169,6 +170,7 @@
         if (C.politics && data.politics) C.politics.importData(data.politics);
         if (C.trade && data.trade) C.trade.importData(data.trade);
         if (C.worldEvents && data.worldEvents) C.worldEvents.importData(data.worldEvents);
+        if (C.citizens && data.citizens) C.citizens.importData(data.citizens);
 
         const taxRate = Number(data.economy && data.economy.taxRate);
         if (Number.isFinite(taxRate)) C.economy.taxRate = Math.max(0, Math.min(30, taxRate));
@@ -190,7 +192,7 @@
         }, 700);
       };
 
-      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings", "research", "diplomacy", "politics", "trade", "worldEvents"]
+      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings", "research", "diplomacy", "politics", "trade", "worldEvents", "citizens"]
         .forEach(name => C.on(name, schedule));
 
       window.addEventListener("pagehide", () => this.save());
