@@ -529,32 +529,6 @@
         ctx.restore();
       }
 
-      if (C.state.showGrid && zoom > 0.65) {
-        ctx.strokeStyle = "#17212966";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        for (let x = x0; x <= x1; x++) {
-          ctx.moveTo(camera.x + x * cell, camera.y + y0 * cell);
-          ctx.lineTo(camera.x + x * cell, camera.y + y1 * cell);
-        }
-        for (let y = y0; y <= y1; y++) {
-          ctx.moveTo(camera.x + x0 * cell, camera.y + y * cell);
-          ctx.lineTo(camera.x + x1 * cell, camera.y + y * cell);
-        }
-        ctx.stroke();
-      }
-
-      if (C.state.selected) {
-        const selected = C.state.selected;
-        ctx.strokeStyle = "#f1c36e";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(
-          camera.x + selected.x * cell + 1,
-          camera.y + selected.y * cell + 1,
-          cell - 2,
-          cell - 2
-        );
-      }
       ctx.restore();
     },
 
