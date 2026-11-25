@@ -68,6 +68,8 @@
       if (C.research) C.research.daily();
       if (C.diplomacy) C.diplomacy.daily();
       if (C.politics) C.politics.daily();
+      if (C.trade) C.trade.daily();
+      if (C.worldEvents) C.worldEvents.daily();
       if (C.infrastructure) C.infrastructure.updateNetwork();
       if (C.workforce) C.workforce.allocate();
 
@@ -78,9 +80,14 @@
           if (!definition) continue;
 
           const productivity = C.workforce ? C.workforce.productivity(tile) : 0;
-          foodProduction += (definition.food || 0) * productivity * (C.research ? C.research.getEffect("food") : 1);
-          woodProduction += (definition.wood || 0) * productivity;
-          stoneProduction += (definition.stone || 0) * productivity * (C.research ? C.research.getEffect("stone") : 1);
+          foodProduction += (definition.food || 0) * productivity *
+            (C.research ? C.research.getEffect("food") : 1) *
+            (C.terrain ? C.terrain.productionMultiplier(tile, "food") : 1);
+          woodProduction += (definition.wood || 0) * productivity *
+            (C.terrain ? C.terrain.productionMultiplier(tile, "wood") : 1);
+          stoneProduction += (definition.stone || 0) * productivity *
+            (C.research ? C.research.getEffect("stone") : 1) *
+            (C.terrain ? C.terrain.productionMultiplier(tile, "stone") : 1);
         }
       }
 
