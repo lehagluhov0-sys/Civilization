@@ -8,17 +8,17 @@
       description: "Главное здание поселения. Здесь сосредоточено управление городом."
     },
     house: {
-      name: "Жилой дом", icon: "⌂", cost: { wood: 20, stone: 5, money: 25 },
+      name: "Жилой дом", icon: "⌂", cost: { wood: 24, stone: 8 },
       housing: 12, jobs: 0, terrain: ["grass"],
       description: "Увеличивает вместимость поселения на 12 жителей."
     },
     farm: {
-      name: "Ферма", icon: "♧", cost: { wood: 15, stone: 5, money: 20 },
+      name: "Ферма", icon: "♧", cost: { wood: 12, stone: 4 },
       food: 12, jobs: 8, terrain: ["grass"],
       description: "Производит до 12 единиц еды в день. Выпуск зависит от работников и дорожной связи."
     },
     lumber: {
-      name: "Лесопилка", icon: "♜", cost: { wood: 20, stone: 10, money: 30 },
+      name: "Лесопилка", icon: "♜", cost: { wood: 18, stone: 5 },
       wood: 7, jobs: 8, terrain: ["forest"],
       description: "Заготавливает до 7 единиц древесины в день. Выпуск зависит от работников и дорожной связи."
     },
@@ -38,17 +38,17 @@
       description: "Добывает медную руду из медного месторождения."
     },
     warehouse: {
-      name: "Склад", icon: "▣", cost: { wood: 35, stone: 20, money: 50 },
+      name: "Склад", icon: "▣", cost: { wood: 35, stone: 20 },
       storage: 250, jobs: 2, terrain: ["grass"],
       description: "Увеличивает вместимость хранилища ресурсов на 250 единиц."
     },
     fishery: {
-      name: "Рыбацкая пристань", icon: "⚓", cost: { wood: 28, stone: 8, money: 35 },
+      name: "Рыбацкая пристань", icon: "⚓", cost: { wood: 20, stone: 6 },
       food: 10, jobs: 6, terrain: ["grass"], requiresWater: true,
       description: "Ловит рыбу и снабжает поселение едой. Требует соседства с рекой или озером."
     },
     market: {
-      name: "Рынок", icon: "▤", cost: { wood: 30, stone: 12, money: 45 },
+      name: "Рынок", icon: "▤", cost: { wood: 30, stone: 12 },
       income: 1.8, jobs: 5, terrain: ["grass"],
       description: "Приносит торговый доход каждый день. Доход зависит от числа работников."
     }
