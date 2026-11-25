@@ -485,11 +485,11 @@
           }
 
           if (tile.road) {
-            const roadWidth = Math.max(3, cell * 0.23);
+            const roadWidth = tile.trail ? Math.max(2, cell * 0.10) : Math.max(3, cell * 0.23);
             const half = roadWidth / 2;
             const centerX = sx + cell / 2;
             const centerY = sy + cell / 2;
-            ctx.fillStyle = "#b39a69";
+            ctx.fillStyle = tile.trail ? "#8d7955" : "#b39a69";
             ctx.fillRect(centerX - half, centerY - half, roadWidth, roadWidth);
             const east = this.get(x + 1, y);
             const west = this.get(x - 1, y);
