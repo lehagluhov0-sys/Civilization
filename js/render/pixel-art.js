@@ -122,72 +122,77 @@
   C.world.draw = function (ctx) {
     const camera = C.state.camera;
     const zoom = camera.zoom;
-    const cell = C.camera.cell * zoom;
     const dpr = C.camera.dpr || 1;
-    // Snap the camera once for the entire frame. Every terrain and sprite
-    // layer then shares exactly the same translation, preventing pixel jitter.
+    // Align both camera translation AND tile pitch to physical display pixels.
+    // Snapping only camera.x/y is insufficient when zoom makes tile edges fractional.
     const pixelStep = 1 / dpr;
-    const renderX = Math.round(camera.x / pixelStep) * pixelStep;
-    const renderY = Math.round(camera.y / pixelStep) * pixelStep;
     const savedX = camera.x;
     const savedY = camera.y;
+    const savedBaseCell = C.camera.cell;
+    const renderCell = Math.max(pixelStep, Math.round(savedBaseCell * zoom / pixelStep) * pixelStep);
+    const cell = renderCell;
+    const renderX = Math.round(savedX / pixelStep) * pixelStep;
+    const renderY = Math.round(savedY / pixelStep) * pixelStep;
     camera.x = renderX;
     camera.y = renderY;
+    C.camera.cell = renderCell / zoom;
 
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-    originalDraw.call(this, ctx);
-    ctx.restore();
+    try {
+      ctx.save();
+      ctx.imageSmoothingEnabled = false;
+      originalDraw.call(this, ctx);
+      ctx.restore();
 
-    if (cell < 7) {
+      if (cell < 7) return;
+
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.beginPath();
+      ctx.rect(0, 0, C.camera.width, C.camera.height);
+      ctx.clip();
+
+      const x0 = Math.max(0, Math.floor(-camera.x / cell));
+      const y0 = Math.max(0, Math.floor(-camera.y / cell));
+      const x1 = Math.min(this.width, Math.ceil((C.camera.width-camera.x)/cell));
+      const y1 = Math.min(this.height, Math.ceil((C.camera.height-camera.y)/cell));
+      // Sprite details move on the physical pixel grid too; larger per-tile
+      // quantization caused their edges to jump while panning.
+      const unit = pixelStep;
+
+      for (let y=y0;y<y1;y++) for (let x=x0;x<x1;x++) {
+        const tile=this.get(x,y);
+        if (!tile) continue;
+        const sx=camera.x+x*cell, sy=camera.y+y*cell;
+        drawShoreline(ctx,tile,sx,sy,cell,unit);
+        drawTileDetails(ctx,tile,sx,sy,cell,unit);
+
+        if (tile.building && cell >= 13) {
+          const size=cell*1.02;
+          if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
+          else if (tile.building.type === "quarry") {
+            drawTree(ctx,sx+cell*.08,sy+cell*.1,cell*.62,2,unit);
+            px(ctx,sx+cell*.56,sy+cell*.56,cell*.32,cell*.25,"#85877e",unit);
+            px(ctx,sx+cell*.61,sy+cell*.54,cell*.12,cell*.08,"#c1bca8",unit);
+          } else if (tile.building.type === "lumber") {
+            drawHouse(ctx,sx,sy,cell,"warehouse",unit);
+            px(ctx,sx+cell*.72,sy+cell*.64,cell*.16,cell*.12,"#8d623e",unit);
+          } else drawHouse(ctx,sx,sy,size,tile.building.type,unit);
+        }
+      }
+
+      if (C.state.selected) {
+        const p=C.state.selected;
+        ctx.strokeStyle="#f3d27e";
+        ctx.lineWidth=Math.max(1,1.5*zoom);
+        ctx.strokeRect(camera.x+p.x*cell+1,camera.y+p.y*cell+1,cell-2,cell-2);
+      }
+      ctx.restore();
+    } finally {
       camera.x = savedX;
       camera.y = savedY;
-      return;
+      C.camera.cell = savedBaseCell;
     }
-
-    ctx.save();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.beginPath();
-    ctx.rect(0, 0, C.camera.width, C.camera.height);
-    ctx.clip();
-
-    const x0 = Math.max(0, Math.floor(-camera.x / cell));
-    const y0 = Math.max(0, Math.floor(-camera.y / cell));
-    const x1 = Math.min(this.width, Math.ceil((C.camera.width-camera.x)/cell));
-    const y1 = Math.min(this.height, Math.ceil((C.camera.height-camera.y)/cell));
-    const unit = Math.max(1, Math.round(dpr * Math.max(1, cell/18)) / dpr);
-
-    for (let y=y0;y<y1;y++) for (let x=x0;x<x1;x++) {
-      const tile=this.get(x,y);
-      if (!tile) continue;
-      const sx=camera.x+x*cell, sy=camera.y+y*cell;
-      drawShoreline(ctx,tile,sx,sy,cell,unit);
-      drawTileDetails(ctx,tile,sx,sy,cell,unit);
-
-      if (tile.building && cell >= 13) {
-        const size=cell*1.02;
-        if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
-        else if (tile.building.type === "quarry") {
-          drawTree(ctx,sx+cell*.08,sy+cell*.1,cell*.62,2,unit);
-          px(ctx,sx+cell*.56,sy+cell*.56,cell*.32,cell*.25,"#85877e",unit);
-          px(ctx,sx+cell*.61,sy+cell*.54,cell*.12,cell*.08,"#c1bca8",unit);
-        } else if (tile.building.type === "lumber") {
-          drawHouse(ctx,sx,sy,cell,"warehouse",unit);
-          px(ctx,sx+cell*.72,sy+cell*.64,cell*.16,cell*.12,"#8d623e",unit);
-        } else drawHouse(ctx,sx,sy,size,tile.building.type,unit);
-      }
-    }
-
-    if (C.state.selected) {
-      const p=C.state.selected;
-      ctx.strokeStyle="#f3d27e";
-      ctx.lineWidth=Math.max(1,1.5*zoom);
-      ctx.strokeRect(camera.x+p.x*cell+1,camera.y+p.y*cell+1,cell-2,cell-2);
-    }
-    ctx.restore();
-    camera.x = savedX;
-    camera.y = savedY;
   };
 
-  C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 2 };
+  C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 3 };
 })();
