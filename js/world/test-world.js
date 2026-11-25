@@ -33,45 +33,115 @@
       valueNoise(x * 4.1, y * 4.1, seed + 23) * 0.15;
   }
 
-  function terrain(x, y, seed) {
-    const elevation = fractalNoise(x / 10.5, y / 10.5, seed) * 0.72 +
-      valueNoise(x / 4.4, y / 4.4, seed + 31) * 0.28;
+  function terrain(x, y, seed, landScore) {
     const humidity = fractalNoise(x / 8.2 + 18, y / 8.2 - 9, seed + 47);
     const temperature = 0.9 - Math.abs(y / (H - 1) - 0.5) * 1.65 +
       fractalNoise(x / 15 + 3, y / 15 + 20, seed + 71) * 0.12;
+    const localRelief = fractalNoise(x / 7.2, y / 7.2, seed + 211);
+    const elevation = 0.40 + Math.max(0, landScore) * 0.34 + localRelief * 0.24;
 
-    if (elevation < 0.39) return "water";
+    if (landScore <= 0) return "water";
     if (temperature < 0.28) return "tundra";
-    if (elevation > 0.73) return "mountain";
-    if (elevation > 0.64) return "rock";
-    if (humidity > 0.73 && elevation < 0.59) return "swamp";
-    if (temperature > 0.58 && humidity < 0.31) return "desert";
+    if (elevation > 0.77) return "mountain";
+    if (elevation > 0.68) return "rock";
+    if (humidity > 0.76 && elevation < 0.61) return "swamp";
+    if (temperature > 0.58 && humidity < 0.30) return "desert";
     if (humidity > 0.56) return "forest";
     return "grass";
   }
 
-  function addRiver(tiles, startY, slope, amplitude, phase) {
-    for (let x = 0; x < W; x++) {
-      const centerY = startY + slope * (x - W / 2) +
-        Math.sin(x * 0.23 + phase) * amplitude +
-        Math.sin(x * 0.47 + phase * 0.7) * 0.8;
-      for (let y = Math.floor(centerY - 0.75); y <= Math.ceil(centerY + 0.75); y++) {
-        if (y >= 0 && y < H) tiles[y][x].type = "water";
+  function generateLandforms(seed) {
+    const main = {
+      x: 22.5 + (seededHash(3, 7, seed) - 0.5) * 3.5,
+      y: 23.5 + (seededHash(11, 5, seed) - 0.5) * 3.5,
+      rx: 16.5 + seededHash(13, 17, seed) * 2.5,
+      ry: 13.5 + seededHash(19, 23, seed) * 2.5,
+      angle: (seededHash(29, 31, seed) - 0.5) * 0.42
+    };
+    const forms = [main];
+    const count = 3 + Math.floor(seededHash(37, 41, seed) * 3);
+    const phase = seededHash(43, 47, seed) * Math.PI * 2;
+
+    for (let i = 0; i < count; i++) {
+      const angle = phase + i * Math.PI * 2 / count;
+      const distance = 17 + seededHash(i + 51, i + 61, seed) * 5;
+      forms.push({
+        x: Math.max(3, Math.min(W - 4, main.x + Math.cos(angle) * distance)),
+        y: Math.max(3, Math.min(H - 4, main.y + Math.sin(angle) * distance * 0.78)),
+        rx: 3.2 + seededHash(i + 67, i + 71, seed) * 3.4,
+        ry: 2.8 + seededHash(i + 73, i + 79, seed) * 3.2,
+        angle: (seededHash(i + 83, i + 89, seed) - 0.5) * 0.8
+      });
+    }
+    return forms;
+  }
+
+  function landScoreAt(x, y, forms, seed) {
+    let score = -1;
+    for (const form of forms) {
+      const dx = x - form.x;
+      const dy = y - form.y;
+      const cos = Math.cos(form.angle);
+      const sin = Math.sin(form.angle);
+      const rx = (dx * cos + dy * sin) / form.rx;
+      const ry = (-dx * sin + dy * cos) / form.ry;
+      const distance = Math.sqrt(rx * rx + ry * ry);
+      score = Math.max(score, 1 - distance);
+    }
+    const broad = (fractalNoise(x / 5.8, y / 5.8, seed + 137) - 0.5) * 0.42;
+    const fine = (fractalNoise(x / 2.6, y / 2.6, seed + 181) - 0.5) * 0.12;
+    return score + broad + fine - 0.035;
+  }
+
+  function carveRiver(tiles, startX, startY, direction, seed) {
+    let x = startX;
+    let y = startY;
+    let outsideWater = 0;
+    const horizontal = direction === "east" || direction === "west";
+    const sign = direction === "east" || direction === "south" ? 1 : -1;
+
+    for (let step = 0; step < 60; step++) {
+      if (x < 1 || y < 1 || x >= W - 1 || y >= H - 1) break;
+      if (tiles[y][x].type === "water" && step > 3) {
+        outsideWater++;
+        if (outsideWater >= 2) break;
+      } else {
+        outsideWater = 0;
+      }
+
+      tiles[y][x].type = "water";
+      if (seededHash(step + 3, startX + 7, seed) > 0.86) {
+        const side = seededHash(step + 11, startY + 13, seed) > 0.5 ? 1 : -1;
+        const bx = horizontal ? x : x + side;
+        const by = horizontal ? y + side : y;
+        if (bx > 0 && by > 0 && bx < W - 1 && by < H - 1) tiles[by][bx].type = "water";
+      }
+
+      if (horizontal) {
+        x += sign;
+        const turn = seededHash(step + 17, startY, seed);
+        if (turn > 0.62) y += turn > 0.81 ? 1 : -1;
+      } else {
+        y += sign;
+        const turn = seededHash(step + 23, startX, seed);
+        if (turn > 0.62) x += turn > 0.81 ? 1 : -1;
       }
     }
   }
 
   function addLakes(tiles, seed) {
-    for (let i = 0; i < 3; i++) {
-      const cx = 7 + Math.floor(seededHash(i + 3, 17, seed + 101) * 34);
-      const cy = 7 + Math.floor(seededHash(29, i + 5, seed + 107) * 34);
-      if (Math.abs(cx - 24) + Math.abs(cy - 24) < 8) continue;
-      const radius = 1.4 + seededHash(i + 13, 31, seed + 113) * 1.2;
-      for (let y = Math.max(0, Math.floor(cy - radius)); y <= Math.min(H - 1, Math.ceil(cy + radius)); y++) {
-        for (let x = Math.max(0, Math.floor(cx - radius)); x <= Math.min(W - 1, Math.ceil(cx + radius)); x++) {
+    const count = 2 + Math.floor(seededHash(97, 103, seed) * 2);
+    for (let i = 0; i < count; i++) {
+      const cx = 6 + Math.floor(seededHash(i + 107, 17, seed) * 36);
+      const cy = 6 + Math.floor(seededHash(29, i + 109, seed) * 36);
+      if (Math.abs(cx - 24) + Math.abs(cy - 24) < 9) continue;
+      const radius = 1.5 + seededHash(i + 113, 31, seed) * 1.7;
+      for (let y = Math.max(1, Math.floor(cy - radius - 1)); y <= Math.min(H - 2, Math.ceil(cy + radius + 1)); y++) {
+        for (let x = Math.max(1, Math.floor(cx - radius - 1)); x <= Math.min(W - 2, Math.ceil(cx + radius + 1)); x++) {
           const dx = (x - cx) / radius;
           const dy = (y - cy) / (radius * 0.82);
-          if (dx * dx + dy * dy < 1) tiles[y][x].type = "water";
+          const edge = (fractalNoise(x / 2.4, y / 2.4, seed + i * 19) - 0.5) * 0.34;
+          if (dx * dx + dy * dy < 1 + edge) tiles[y][x].type = "water";
         }
       }
     }
@@ -205,24 +275,28 @@
       const settings = options || {};
       this.seed = Number.isFinite(settings.seed) ? settings.seed : Math.floor(Math.random() * 900000000) + 100000;
       this.tiles = [];
+      const landforms = generateLandforms(this.seed);
       for (let y = 0; y < H; y++) {
         const row = [];
         for (let x = 0; x < W; x++) {
-          row.push({ x: x, y: y, type: terrain(x, y, this.seed), road: false, owner: null });
+          const score = landScoreAt(x, y, landforms, this.seed);
+          row.push({ x: x, y: y, type: terrain(x, y, this.seed, score), road: false, owner: null });
         }
         this.tiles.push(row);
       }
 
-      addRiver(this.tiles, 17, 0.24, 2.6, 0.8);
-      addRiver(this.tiles, 34, -0.25, 2.8, 2.4);
+      // A pair of narrow rivers flows from the central highlands toward nearby coasts.
+      carveRiver(this.tiles, 34, 18, "east", this.seed + 307);
+      carveRiver(this.tiles, 13, 29, "west", this.seed + 419);
       addLakes(this.tiles, this.seed);
 
-      // Keep a small fertile starting region near the centre of the world.
+      // Preserve a compact fertile starting area for the first settlement.
       for (let y = 21; y <= 27; y++) {
         for (let x = 21; x <= 27; x++) {
           if (Math.abs(x - 24) + Math.abs(y - 24) <= 4) this.tiles[y][x].type = "grass";
         }
       }
+      this.updateCoasts();
     },
 
     exportData: function () {
@@ -242,6 +316,7 @@
       for (let y = 0; y < H; y++) {
         for (let x = 0; x < W; x++) this.tiles[y][x].type = data.tiles[y][x];
       }
+      this.updateCoasts();
       return true;
     },
 
@@ -276,6 +351,28 @@
           if (tile && tile.type === "water") tile.type = "grass";
         });
       });
+      this.updateCoasts();
+    },
+
+    updateCoasts: function () {
+      const directions = [
+        ["north", 0, -1], ["east", 1, 0],
+        ["south", 0, 1], ["west", -1, 0]
+      ];
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          const tile = this.tiles[y][x];
+          const edges = {};
+          let coast = false;
+          directions.forEach(([name, dx, dy]) => {
+            const neighbor = this.get(x + dx, y + dy);
+            edges[name] = !!(neighbor && neighbor.type === "water");
+            if (edges[name]) coast = true;
+          });
+          tile.coast = coast;
+          tile.coastEdges = edges;
+        }
+      }
     },
 
     get: function (x, y) {
