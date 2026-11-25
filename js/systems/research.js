@@ -55,7 +55,7 @@
       const factors={farm:1.25,irrigation:1.2,rotation:1.2,lumber:1.3,stone:1.3};
       let value=1;
       this.completed.forEach(id=>{const tech=this.getTech(id);if(tech&&tech.effect===effect)value*=factors[effect]||1;});
-      if(effect==="roads")return this.isCompleted("wheel")?.75:1;
+      if(effect==="roads")return this.isCompleted("wheel") ? 0.75 : 1;
       if(effect==="storage")return this.isCompleted("engineering")?100:0;
       return value;
     },
