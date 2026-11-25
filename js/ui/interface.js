@@ -275,6 +275,7 @@
         confirmLayer.querySelector("#cancelNewGame").onclick = () => confirmLayer.remove();
         confirmLayer.querySelector("#confirmNewGame").onclick = () => {
           localStorage.removeItem("civilization_save_v1");
+          sessionStorage.setItem("civilization_start_new_game", "1");
           window.location.reload();
         };
       };
