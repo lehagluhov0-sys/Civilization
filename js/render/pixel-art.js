@@ -61,6 +61,29 @@
     px(ctx, x + size*.12, y + size*.28, size*.76, size*.07, "#70543a", unit);
   }
 
+  function drawShoreline(ctx, tile, sx, sy, cell, unit) {
+    if (!tile.coastEdges || cell < 12) return;
+    const sand = "#c5ad72";
+    const pale = "#e0cb91";
+    const edge = cell * 0.13;
+    if (tile.coastEdges.north) {
+      px(ctx, sx + cell*.08, sy + cell*.02, cell*.84, edge, sand, unit);
+      px(ctx, sx + cell*.22, sy + cell*.02, cell*.34, edge*.38, pale, unit);
+    }
+    if (tile.coastEdges.east) {
+      px(ctx, sx + cell - edge, sy + cell*.08, edge, cell*.84, sand, unit);
+      px(ctx, sx + cell - edge*.42, sy + cell*.28, edge*.38, cell*.34, pale, unit);
+    }
+    if (tile.coastEdges.south) {
+      px(ctx, sx + cell*.08, sy + cell - edge, cell*.84, edge, sand, unit);
+      px(ctx, sx + cell*.48, sy + cell - edge*.42, cell*.30, edge*.38, pale, unit);
+    }
+    if (tile.coastEdges.west) {
+      px(ctx, sx + cell*.02, sy + cell*.08, edge, cell*.84, sand, unit);
+      px(ctx, sx + cell*.02, sy + cell*.54, edge*.38, cell*.26, pale, unit);
+    }
+  }
+
   function drawTileDetails(ctx, tile, sx, sy, cell, unit) {
     const r = hash(tile.x, tile.y, 31);
     const palette = palettes[tile.type] || palettes.grass;
@@ -138,6 +161,7 @@
       const tile=this.get(x,y);
       if (!tile) continue;
       const sx=camera.x+x*cell, sy=camera.y+y*cell;
+      drawShoreline(ctx,tile,sx,sy,cell,unit);
       drawTileDetails(ctx,tile,sx,sy,cell,unit);
 
       if (tile.building && cell >= 13) {
