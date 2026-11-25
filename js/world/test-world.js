@@ -332,11 +332,10 @@
         const tile = this.tiles[y][x];
         const mineral = tile.type === "rock" || tile.type === "mountain" ? seededHash(x, y, this.seed + 811) : 1;
         tile.deposit = mineral < 0.075 ? "iron" : mineral < 0.145 ? "copper" : mineral < 0.25 ? "stone" : null;
-        if (tile.berryBush === undefined) tile.berryBush = (tile.type === "grass" || tile.type === "forest") && seededHash(x,y,this.seed+1501) > 0.965;
-        if (tile.wildlife === undefined) {
-          const roll=seededHash(x,y,this.seed+1709);
-          tile.wildlife=(tile.type==="grass"||tile.type==="forest")&&roll>0.982?(roll>0.996?"deer":roll>0.991?"boar":roll>0.987?"chicken":"rabbit"):null;
-        }
+        const green = tile.type === "grass" || tile.type === "forest";
+        tile.berryBush = green && seededHash(x,y,this.seed+1501) > 0.965;
+        const roll=seededHash(x,y,this.seed+1709);
+        tile.wildlife=green&&roll>0.982?(roll>0.996?"deer":roll>0.991?"boar":roll>0.987?"chicken":"rabbit"):null;
       }
       this.updateCoasts();
     },
