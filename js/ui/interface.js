@@ -155,6 +155,11 @@
         C.emit("settings");
         this.draw();
       };
+      $("countryBordersToggle").onchange = event => {
+        C.state.showCountryBorders = event.target.checked;
+        C.emit("settings");
+        this.draw();
+      };
       $("tradeRoutesToggle").onchange = event => {
         C.state.showTradeRoutes = event.target.checked;
         C.emit("settings");
@@ -571,6 +576,7 @@
       this.refreshTime();
       this.refreshRoadMode();
       $("politicalLayerToggle").checked = !!C.state.showPoliticalMap;
+      $("countryBordersToggle").checked = C.state.showCountryBorders !== false;
       $("tradeRoutesToggle").checked = !!C.state.showTradeRoutes;
       this.refreshSelection();
       this.draw();
