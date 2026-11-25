@@ -14,17 +14,17 @@ Each contact sheet also has a self-contained SVG version (for example, [world sh
 ## Coordinate catalog and visual review
 
 - [`atlas_catalog.json`](atlas_catalog.json) — all 586 detected candidates, source rectangles, pixel areas and segmentation diagnostics
-- [`visual-review.json`](visual-review.json) — 129 manually classified candidates with labels, categories, confidence and source coordinates
+- [`visual-review.json`](visual-review.json) — 130 manually classified candidates with labels, categories, confidence and source coordinates
 - [`build_catalog.py`](../../../tools/sprite_catalog/build_catalog.py) — reproducible extraction and contact-sheet generator
 
 ## Runtime integration
 
-The game renderer's sprite coordinates were corrected against the visual contact sheets in `js/render/sprite-assets.js`. Cache version was bumped to **v0.18.1**.
+The game renderer's sprite coordinates were corrected against the visual contact sheets in `js/render/sprite-assets.js`. Cache version was bumped to **v0.18.2**.
 
-The corrected map uses tight foreground bounds for recognizable trees, rocks, houses, farm plots, windmill, mine entrance, market stall, ship and castle. Existing game logic and building placement rules were not changed.
+The corrected map uses reviewed crops for trees, rocks, houses, farm plots, windmill, mine entrance, market stall, ship, castle, lighthouse, temple, cathedral, portal, well, campfire, tent and statues. Existing game logic and building placement rules were not changed.
 
 ## Important limitations
 
 The 586 entries are *candidate connected components*, not 586 guaranteed independent sprites. Some entries are composite sheets, touching objects, or fragments. The segmentation estimates the backdrop from the four image corners and selects a color-distance threshold per atlas. Every coordinate is relative to the original PNG; source pixels are not modified.
 
-The 129 labels are a manually reviewed subset. Enlarged composite sheets make multi-object regions easier to inspect. Composite sheets must be sliced into individual sprites before they can be used as independent map objects. Unreviewed candidates remain unclassified. Two construction-stage crops remain explicitly marked for manual review in runtime-mapping.json. Android runtime rendering has not yet been tested after the coordinate update, so the next check is to inspect the updated game on the phone for crop accuracy, sprite scale, and any visual regressions.
+The 130 labels are a manually reviewed subset. Enlarged composite sheets make multi-object regions easier to inspect. Composite sheets must be sliced into individual sprites before they can be used as independent map objects. Unreviewed candidates remain unclassified. Two construction-stage crops remain explicitly marked for manual review in runtime-mapping.json. Android runtime rendering has not yet been tested after the coordinate update, so the next check is to inspect the updated game on the phone for crop accuracy, sprite scale, and any visual regressions.
