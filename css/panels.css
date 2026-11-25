@@ -16,3 +16,9 @@
 .build-cost{display:block;margin-top:4px;font-size:9px;color:var(--muted);font-weight:400}
 .road-button{border-left:2px solid var(--accent)}
 .road-button:hover{background:#302b21}
+
+/* Give the event journal priority over the compact overview map */
+.right-panel{overflow-y:auto;overflow-x:hidden;min-height:0}
+.right-panel #miniMap{height:76px;max-height:76px;flex:0 0 76px;object-fit:contain}
+.right-panel .event-log{flex:1 1 auto;min-height:150px;max-height:none;overflow-y:auto}
+.right-panel .panel-heading{flex:0 0 auto}
