@@ -518,7 +518,7 @@
         const panel = document.createElement("div");
         panel.id = "researchOverlay";
         panel.style.cssText = "position:fixed;inset:0;z-index:500;background:rgba(5,9,13,.88);display:flex;align-items:center;justify-content:center;padding:14px;";
-        panel.innerHTML = '<div style="width:min(720px,100%);max-height:90%;overflow:auto;background:#1b242d;border:1px solid #c69b55;padding:16px;color:#e8edf1;box-shadow:0 12px 40px #0009"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><b style="letter-spacing:2px">НАУЧНЫЕ ИССЛЕДОВАНИЯ</b><button id="closeResearch" class="wide-button" style="width:auto">Закрыть ✕</button></div><div id="researchContent"></div></div>';
+        panel.innerHTML = '<div style="width:min(980px,100%);max-height:92%;overflow:auto;background:#1b242d;border:1px solid #c69b55;padding:16px;color:#e8edf1;box-shadow:0 12px 40px #0009"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><b style="letter-spacing:2px">НАУЧНЫЕ ИССЛЕДОВАНИЯ</b><button id="closeResearch" class="wide-button" style="width:auto">Закрыть ✕</button></div><div id="researchContent"></div></div>';
         document.body.appendChild(panel);
         this.researchPanel = panel;
         $("closeResearch").onclick = () => this.closeResearchPanel();
@@ -535,24 +535,59 @@
       if (!this.researchPanel || !C.research) return;
       const content = this.researchPanel.querySelector("#researchContent");
       const active = C.research.getTech(C.research.activeId);
-      let html = '<p style="color:#91a0ad;font-size:12px">Эпоха: Древний мир · Научные очки: <b style="color:#e0b86e">' + C.research.points.toFixed(1) + '</b> · Получение: +' + C.research.sciencePerDay() + ' в день</p>';
+      let html = '<p style="color:#91a0ad;font-size:12px">Эпоха: Древний мир · Научные очки: <b style="color:#e0b86e">' +
+        C.research.points.toFixed(1) + '</b> · Получение: +' + C.research.sciencePerDay() + ' в день</p>';
       if (active) {
         const percent = Math.min(100, Math.round(C.research.progress / active.cost * 100));
-        html += '<div style="padding:10px;background:#222e39;border:1px solid #34424e;margin:10px 0"><b>Сейчас изучается: ' + active.name + '</b><p style="font-size:11px;color:#91a0ad">' + C.research.progress + ' / ' + active.cost + ' очков · ' + percent + '%</p><div style="height:8px;background:#11171d"><div style="height:8px;width:' + percent + '%;background:#c69b55"></div></div></div>';
+        html += '<div style="padding:10px;background:#222e39;border:1px solid #c69b55;margin:10px 0;border-radius:8px"><b>Сейчас изучается: ' +
+          active.name + '</b><p style="font-size:11px;color:#91a0ad">' + C.research.progress + ' / ' + active.cost +
+          ' очков науки · ' + percent + '%</p><div style="height:8px;background:#11171d;border-radius:8px;overflow:hidden"><div style="height:8px;width:' +
+          percent + '%;background:#c69b55"></div></div></div>';
       } else {
-        html += '<p style="font-size:11px;color:#91a0ad">Выбери технологию, чтобы начать исследование. Очки науки накапливаются ежедневно.</p>';
+        html += '<p style="font-size:11px;color:#91a0ad">Выбери доступную технологию. Для старта нужны научные очки и указанные материалы.</p>';
       }
-      C.research.catalog.forEach(tech => {
-        const done = C.research.isCompleted(tech.id);
-        const selected = C.research.activeId === tech.id;
-        html += '<div style="padding:10px;margin:8px 0;background:#222e39;border:1px solid ' + (done ? '#79a56a' : selected ? '#c69b55' : '#34424e') + '"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>' + tech.name + '</b><span style="font-size:10px;color:#e0b86e">' + (done ? 'ИЗУЧЕНО' : tech.cost + ' науки') + '</span></div><p style="font-size:11px;line-height:1.4;color:#91a0ad;margin:7px 0">' + tech.description + '</p>' + (done ? '' : '<button class="wide-button" data-tech="' + tech.id + '" ' + (selected ? 'disabled' : '') + '>' + (selected ? 'Изучается' : 'Начать исследование') + '</button>') + '</div>';
+
+      html += '<div class="technology-tree" style="display:grid;grid-template-columns:repeat(3,minmax(190px,1fr));gap:12px;overflow-x:auto;padding:4px 2px 12px;min-width:0">';
+      ["food","industry","knowledge"].forEach(branch => {
+        html += '<section style="min-width:190px;background:#151e26;border:1px solid #34424e;border-radius:9px;padding:10px">' +
+          '<div style="font-size:10px;letter-spacing:1px;color:#d9b66f;text-align:center;min-height:28px">' +
+          C.research.branchNames[branch] + '</div>';
+        const techs = C.research.catalog.filter(tech => tech.branch === branch).sort((a,b) => a.tier - b.tier);
+        techs.forEach((tech,index) => {
+          const done = C.research.isCompleted(tech.id);
+          const selected = C.research.activeId === tech.id;
+          const missing = C.research.missingPrerequisites(tech);
+          const locked = missing.length > 0;
+          const materials = Object.entries(tech.materials || {}).map(([key,value]) => {
+            const labels = { wood: "Д", stone: "К", food: "Е" };
+            const current = C.state.resources[key] || 0;
+            return labels[key] + ' ' + value + (current < value ? ' <span style="color:#e27e70">(есть ' + current + ')</span>' : '');
+          }).join(' · ');
+          const border = done ? '#79a56a' : selected ? '#c69b55' : locked ? '#39434b' : '#55758b';
+          const state = done ? 'ИЗУЧЕНО' : selected ? 'ИЗУЧАЕТСЯ' : locked ? 'ЗАБЛОКИРОВАНО' : tech.cost + ' науки';
+          html += '<article style="position:relative;padding:10px;margin:8px 0 0;background:#222e39;border:1px solid ' + border +
+            ';border-radius:7px;opacity:' + (locked ? '.68' : '1') + '">' +
+            '<div style="display:flex;justify-content:space-between;gap:6px;align-items:flex-start"><b style="font-size:12px">' +
+            tech.name + '</b><span style="font-size:9px;color:' + (done ? '#91c47d' : '#e0b86e') + ';white-space:nowrap">' + state + '</span></div>' +
+            '<p style="font-size:10px;line-height:1.4;color:#aab6bf;margin:7px 0">' + tech.description + '</p>' +
+            '<div style="font-size:10px;color:#d9b66f;margin-bottom:8px">' + materials + '</div>' +
+            (locked ? '<div style="font-size:9px;color:#e0a47a">Нужно: ' + missing.map(id => C.research.getTech(id).name).join(", ") + '</div>' :
+              done ? '' : '<button class="wide-button" data-tech="' + tech.id + '" ' +
+                ((selected || !!C.research.activeId) ? 'disabled' : '') + '>' +
+                (selected ? 'Исследуется' : 'Изучить технологию') + '</button>') +
+            '</article>' +
+            (index < techs.length - 1 ? '<div style="height:14px;width:2px;background:#657887;margin:0 auto"></div><div style="text-align:center;color:#8295a3;font-size:13px;line-height:10px">▼</div>' : '');
+        });
+        html += '</section>';
       });
+      html += '</div><p style="font-size:10px;color:#82909a">Обозначения материалов: Д — древесина, К — камень, Е — еда. В каждой ветви технологии открываются сверху вниз.</p>';
       content.innerHTML = html;
       content.querySelectorAll("[data-tech]").forEach(button => {
         button.onclick = () => {
           const result = C.research.start(button.dataset.tech);
           if (!result.ok) this.addLog(result.message);
           this.renderResearchPanel();
+          this.refreshResources();
         };
       });
     },
