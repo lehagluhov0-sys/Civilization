@@ -255,10 +255,28 @@
       document.body.appendChild(overlay);
       overlay.querySelector("#menuContinue").onclick = () => overlay.remove();
       overlay.querySelector("#menuNewGame").onclick = () => {
-        if (window.confirm("Начать новую игру? Текущее автосохранение будет заменено. Ручные слоты останутся.")) {
+        const previous = document.getElementById("newGameConfirmOverlay");
+        if (previous) previous.remove();
+        const confirmLayer = document.createElement("div");
+        confirmLayer.id = "newGameConfirmOverlay";
+        confirmLayer.style.cssText = "position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(3,6,10,.88);";
+        confirmLayer.innerHTML =
+          '<div role="dialog" aria-modal="true" aria-labelledby="newGameConfirmTitle" ' +
+          'style="width:min(420px,100%);box-sizing:border-box;padding:22px;border:1px solid #c69b55;border-radius:14px;background:#1b242d;color:#e8edf1;box-shadow:0 18px 60px #000b;text-align:center">' +
+            '<div style="font-size:28px;margin-bottom:8px">⚠</div>' +
+            '<h2 id="newGameConfirmTitle" style="font-size:19px;margin:0 0 12px">Начать новую игру?</h2>' +
+            '<p style="font-size:13px;line-height:1.55;color:#b8c3cb;margin:0 0 20px">Текущее автосохранение будет заменено. Ручные сохранения в слотах останутся.</p>' +
+            '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+              '<button id="cancelNewGame" type="button" style="min-height:44px;flex:1;min-width:120px;padding:10px 14px;border:1px solid #596875;border-radius:8px;background:#293642;color:#e8edf1;font-weight:700">Отмена</button>' +
+              '<button id="confirmNewGame" type="button" style="min-height:44px;flex:1;min-width:120px;padding:10px 14px;border:1px solid #c69b55;border-radius:8px;background:#8b6330;color:#fff;font-weight:700">Начать</button>' +
+            '</div>' +
+          '</div>';
+        document.body.appendChild(confirmLayer);
+        confirmLayer.querySelector("#cancelNewGame").onclick = () => confirmLayer.remove();
+        confirmLayer.querySelector("#confirmNewGame").onclick = () => {
           localStorage.removeItem("civilization_save_v1");
           window.location.reload();
-        }
+        };
       };
       overlay.querySelector("#menuLoad").onclick = () => this.openSaveSlots("load");
       overlay.querySelector("#menuSave").onclick = () => this.openSaveSlots("save");
