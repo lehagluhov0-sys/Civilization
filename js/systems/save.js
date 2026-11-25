@@ -41,6 +41,7 @@
             speed: C.state.speed,
             showGrid: C.state.showGrid,
             showPoliticalMap: !!C.state.showPoliticalMap,
+            showTradeRoutes: !!C.state.showTradeRoutes,
             resources: Object.assign({}, C.state.resources),
             camera: Object.assign({}, C.state.camera),
             selected: C.state.selected ? {
@@ -59,6 +60,8 @@
           research: C.research ? C.research.exportData() : null,
           diplomacy: C.diplomacy ? C.diplomacy.exportData() : null,
           politics: C.politics ? C.politics.exportData() : null,
+          trade: C.trade ? C.trade.exportData() : null,
+          worldEvents: C.worldEvents ? C.worldEvents.exportData() : null,
           map: C.world && C.world.exportData ? C.world.exportData() : null,
           buildings: buildings,
           roads: roads
@@ -99,6 +102,7 @@
         C.state.speed = [1, 2, 4].includes(Number(savedState.speed)) ? Number(savedState.speed) : 1;
         C.state.showGrid = savedState.showGrid !== false;
         C.state.showPoliticalMap = !!savedState.showPoliticalMap;
+        C.state.showTradeRoutes = !!savedState.showTradeRoutes;
 
         if (savedState.camera && Number.isFinite(savedState.camera.x) &&
             Number.isFinite(savedState.camera.y) && Number.isFinite(savedState.camera.zoom)) {
@@ -133,6 +137,8 @@
         if (C.research && data.research) C.research.importData(data.research);
         if (C.diplomacy && data.diplomacy) C.diplomacy.importData(data.diplomacy);
         if (C.politics && data.politics) C.politics.importData(data.politics);
+        if (C.trade && data.trade) C.trade.importData(data.trade);
+        if (C.worldEvents && data.worldEvents) C.worldEvents.importData(data.worldEvents);
 
         const taxRate = Number(data.economy && data.economy.taxRate);
         if (Number.isFinite(taxRate)) C.economy.taxRate = Math.max(0, Math.min(30, taxRate));
@@ -154,7 +160,7 @@
         }, 700);
       };
 
-      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings", "research", "diplomacy", "politics"]
+      ["time", "world", "resources", "economy", "workforce", "infrastructure", "city", "camera", "selection", "settings", "research", "diplomacy", "politics", "trade", "worldEvents"]
         .forEach(name => C.on(name, schedule));
 
       window.addEventListener("pagehide", () => this.save());
