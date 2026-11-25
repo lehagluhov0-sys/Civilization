@@ -37,6 +37,15 @@
     market_stall: ["world", 657, 861, 53, 77],
     fishery_boat: ["world", 1452, 782, 77, 78],
     castle: ["world", 780, 417, 107, 95],
+    lighthouse: ["world", 408, 723, 64, 126],
+    temple: ["world", 847, 656, 125, 110],
+    cathedral: ["world", 1020, 678, 157, 144],
+    portal: ["world", 1189, 944, 59, 68],
+    stone_arch: ["world", 1298, 703, 53, 50],
+    campfire: ["world", 1139, 860, 48, 69],
+    tent: ["world", 1199, 867, 50, 60],
+    well: ["world", 1047, 894, 43, 44],
+    statue: ["world", 700, 679, 36, 52],
     construction_wood_0: ["world", 0, 351, 104, 74],
     construction_wood_1: ["world", 232, 330, 96, 73],
     construction_wood_2: ["world", 344, 330, 101, 73],
@@ -110,7 +119,7 @@
   }
 
   C.spriteAssets = {
-    version: 3,
+    version: 4,
     atlases: atlases,
     sprites: sprites,
     has: function (id) {
