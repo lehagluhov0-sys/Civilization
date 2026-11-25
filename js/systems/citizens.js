@@ -226,7 +226,7 @@
           if (definition.requiresResearch && (!C.research || !C.research.isCompleted(definition.requiresResearch))) continue;
           if (C.terrain && !C.terrain.canBuild(definition, x, y)) continue;
           const distance = Math.abs(x - center.x) + Math.abs(y - center.y);
-          if (distance < 2 || distance > 10) continue;
+          if (distance < 2 || distance > 16) continue;
           // Leave breathing room around houses; other buildings need at
           // least one clear tile so their footprints do not visually collide.
           const spacing = type === "house" ? 2 : 1;
@@ -499,7 +499,7 @@
       this.orders = Array.isArray(data.orders) ? data.orders.filter(order => order && (order.kind === "building" ? C.buildings.catalog[order.type] : order.kind === "upgrade" && Number.isInteger(order.x) && Number.isInteger(order.y))).slice(0, 12) : [];
       this.sites = Array.isArray(data.sites) ? data.sites.filter(site => {
         const tile = C.world.get(site.x, site.y);
-        return tile && !tile.building && C.buildings.catalog[site.type] &&
+        return tile && (site.upgrade ? !!tile.building : !tile.building) && C.buildings.catalog[site.type] &&
           Number.isFinite(site.x) && Number.isFinite(site.y);
       }).map(site => {
         const tile = C.world.get(site.x, site.y);
