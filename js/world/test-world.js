@@ -418,6 +418,24 @@
       const x1 = Math.min(W, Math.ceil((C.camera.width - camera.x) / cell));
       const y1 = Math.min(H, Math.ceil((C.camera.height - camera.y) / cell));
 
+      // Pre-index countries and settlements once per draw, not once per map tile.
+      const ownerColors = new Map();
+      const settlementMarkers = new Map();
+      if (C.politics) {
+        for (const country of C.politics.countries) {
+          ownerColors.set(country.id, country.color || "#ffffff");
+          const settlements = country.settlements || [{ x: country.capital.x, y: country.capital.y }];
+          for (let i = 0; i < settlements.length; i++) {
+            const point = settlements[i];
+            const key = point.x + "," + point.y;
+            if (!settlementMarkers.has(key)) settlementMarkers.set(key, []);
+            settlementMarkers.get(key).push({ country: country, index: i });
+          }
+        }
+      }
+      const political = !!C.state.showPoliticalMap;
+      const borders = political && C.state.showCountryBorders !== false;
+
       for (let y = y0; y < y1; y++) {
         for (let x = x0; x < x1; x++) {
           const tile = this.tiles[y][x];
@@ -430,21 +448,23 @@
 
           if (C.state.showPoliticalMap && tile.owner) {
             const ownerColor = tile.owner === "player" ? "#e2b45c" :
-              (C.politics && C.politics.get(tile.owner) ? C.politics.get(tile.owner).color : "#ffffff");
+              (ownerColors.get(tile.owner) || "#ffffff");
             ctx.fillStyle = ownerColor;
             ctx.globalAlpha = 0.19;
             ctx.fillRect(sx, sy, cell + 0.4, cell + 0.4);
             ctx.globalAlpha = 1;
-            const east = this.get(x + 1, y);
-            const south = this.get(x, y + 1);
-            ctx.strokeStyle = ownerColor;
-            ctx.globalAlpha = 0.8;
-            ctx.lineWidth = Math.max(1, cell * 0.055);
-            ctx.beginPath();
-            if (!east || east.owner !== tile.owner) { ctx.moveTo(sx + cell, sy); ctx.lineTo(sx + cell, sy + cell); }
-            if (!south || south.owner !== tile.owner) { ctx.moveTo(sx, sy + cell); ctx.lineTo(sx + cell, sy + cell); }
-            ctx.stroke();
-            ctx.globalAlpha = 1;
+            if (borders) {
+              const east = this.get(x + 1, y);
+              const south = this.get(x, y + 1);
+              ctx.strokeStyle = ownerColor;
+              ctx.globalAlpha = 0.8;
+              ctx.lineWidth = Math.max(1, cell * 0.055);
+              ctx.beginPath();
+              if (!east || east.owner !== tile.owner) { ctx.moveTo(sx + cell, sy); ctx.lineTo(sx + cell, sy + cell); }
+              if (!south || south.owner !== tile.owner) { ctx.moveTo(sx, sy + cell); ctx.lineTo(sx + cell, sy + cell); }
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
           }
 
           if (tile.road) {
@@ -472,40 +492,40 @@
             }
           }
 
-          if (C.state.showPoliticalMap && C.politics) {
-            C.politics.countries.forEach(country => {
-              (country.settlements || [{ x: country.capital.x, y: country.capital.y }]).forEach((city, index) => {
-                if (city.x !== x || city.y !== y) return;
-                const cx = sx + cell / 2;
-                const cy = sy + cell / 2;
-                if (index === 0) {
-                  ctx.fillStyle = "#fff4d6";
-                  ctx.font = "bold " + Math.max(10, cell * 0.58) + "px Arial";
+          if (political) {
+            const markers = settlementMarkers.get(x + "," + y);
+            if (markers) for (const marker of markers) {
+              const country = marker.country;
+              const index = marker.index;
+              const cx = sx + cell / 2;
+              const cy = sy + cell / 2;
+              if (index === 0) {
+                ctx.fillStyle = "#fff4d6";
+                ctx.font = "bold " + Math.max(10, cell * 0.58) + "px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(country.flag, cx, cy);
+                if (zoom >= 0.82) {
+                  const labelY = cy - Math.max(9, cell * 0.42);
+                  ctx.font = "bold " + Math.max(8, Math.min(12, cell * 0.25)) + "px Arial";
                   ctx.textAlign = "center";
-                  ctx.textBaseline = "middle";
-                  ctx.fillText(country.flag, cx, cy);
-                  if (zoom >= 0.82) {
-                    const labelY = cy - Math.max(9, cell * 0.42);
-                    ctx.font = "bold " + Math.max(8, Math.min(12, cell * 0.25)) + "px Arial";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "bottom";
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = "#111820";
-                    ctx.strokeText(country.name, cx, labelY, Math.max(54, cell * 5));
-                    ctx.fillStyle = "#fff4d6";
-                    ctx.fillText(country.name, cx, labelY, Math.max(54, cell * 5));
-                  }
-                } else {
-                  ctx.fillStyle = country.color;
-                  ctx.beginPath();
-                  ctx.arc(cx, cy, Math.max(2, cell * 0.16), 0, Math.PI * 2);
-                  ctx.fill();
-                  ctx.strokeStyle = "#fff4d6";
-                  ctx.lineWidth = 1;
-                  ctx.stroke();
+                  ctx.textBaseline = "bottom";
+                  ctx.lineWidth = 3;
+                  ctx.strokeStyle = "#111820";
+                  ctx.strokeText(country.name, cx, labelY, Math.max(54, cell * 5));
+                  ctx.fillStyle = "#fff4d6";
+                  ctx.fillText(country.name, cx, labelY, Math.max(54, cell * 5));
                 }
-              });
-            });
+              } else {
+                ctx.fillStyle = country.color;
+                ctx.beginPath();
+                ctx.arc(cx, cy, Math.max(2, cell * 0.16), 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = "#fff4d6";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
           }
 
           if (tile.building && (!C.pixelArt || !C.pixelArt.enabled)) {
