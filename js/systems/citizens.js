@@ -461,6 +461,18 @@
           ctx.fillStyle = "#d5b36a";
           ctx.fillRect(x, y - unit, unit * 3, unit);
         }
+        // A tiny axe swing and wood chips make lumber work readable at map scale.
+        if (agent.activity === "working" && agent.targetType === "lumber") {
+          const swing = Math.sin(this.animationTime * 8 + agent.id) > 0;
+          ctx.fillStyle = "#765238";
+          ctx.fillRect(x + unit * 3, y + unit * 2, unit, swing ? unit * 2 : unit);
+          ctx.fillStyle = "#c7cbd0";
+          ctx.fillRect(x + unit * 3, y + (swing ? unit * 3 : unit), unit, unit);
+          if (swing) {
+            ctx.fillStyle = "#e7c77a";
+            ctx.fillRect(x + unit * 4, y + unit * 3, unit, unit);
+          }
+        }
       }
     },
 
