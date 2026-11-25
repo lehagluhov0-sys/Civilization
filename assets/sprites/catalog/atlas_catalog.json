@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "purpose": "diagnostic sprite candidate catalog; names and semantic categories require visual review",
+  "atlases": [
+    {
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "image_size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "segmentation": {
+        "method": "8-connected components",
+        "background_rule": "max(R,G,B) <= 15 treated as background for detection only",
+        "minimum_component_pixels": 80,
+        "source_pixels_modified": false
+      },
+      "candidate_count": 1,
+      "contact_sheets": [
+        "world_contact_01.png"
+      ],
+      "sprites": [
+        {
+          "id": "world_0000",
+          "source": "world_atlas.png",
+          "bbox": {
+            "x": 0,
+            "y": 0,
+            "width": 1536,
+            "height": 1024
+          },
+          "pixel_area": 1571279,
+          "bbox_fill_ratio": 0.999,
+          "review_flags": [
+            "large_component_review"
+          ],
+          "label": "unclassified"
+        }
+      ]
+    },
+    {
+      "atlas": "secondary",
+      "source": "assets/sprites/file_000000002d208210877c4978b05eaded.png",
+      "image_size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "segmentation": {
+        "method": "8-connected components",
+        "background_rule": "max(R,G,B) <= 15 treated as background for detection only",
+        "minimum_component_pixels": 80,
+        "source_pixels_modified": false
+      },
+      "candidate_count": 1,
+      "contact_sheets": [
+        "secondary_contact_01.png"
+      ],
+      "sprites": [
+        {
+          "id": "secondary_0000",
+          "source": "file_000000002d208210877c4978b05eaded.png",
+          "bbox": {
+            "x": 0,
+            "y": 0,
+            "width": 1536,
+            "height": 1024
+          },
+          "pixel_area": 1567579,
+          "bbox_fill_ratio": 0.9966,
+          "review_flags": [
+            "large_component_review"
+          ],
+          "label": "unclassified"
+        }
+      ]
+    }
+  ]
+}
