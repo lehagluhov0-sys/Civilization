@@ -267,7 +267,7 @@
         html += '<div style="background:#26333e;padding:9px;margin:8px 0"><b>ТОРГОВЛЯ</b>';
         C.trade.routes.forEach(route => {
           const civ = C.diplomacy.get(route.civId);
-          html += '<div style="font-size:11px;margin-top:5px">' + (civ ? civ.flag + " " + civ.name : route.civId) + ' · ' + route.length + ' клеток · ' + (route.active ? 'активен' : 'приостановлен') + '</div>';
+          html += '<div style="font-size:11px;margin-top:5px">' + (civ ? civ.flag + " " + civ.name : route.civId) + ' · ' + route.length + ' клеток · ' + route.transport + ' · ' + (route.active ? 'активен' : 'приостановлен') + '</div>';
         });
         html += '</div>';
       }
@@ -378,7 +378,7 @@
         C.trade.routes.forEach(route => {
           const civ = d.get(route.civId);
           html += '<p style="font-size:11px;color:#c8d3db">' + (civ ? civ.flag + " " + civ.name : route.civId) +
-            ' · ' + route.length + ' клеток · ' + (route.active ? 'работает' : 'приостановлен') + '</p>';
+            ' · ' + route.length + ' клеток · ' + route.transport + ' · ' + (route.active ? 'работает' : 'приостановлен') + '</p>';
         });
         if (!C.trade.routes.length) html += '<p style="font-size:11px;color:#9eacb8">Маршрутов пока нет. Заключи торговый договор, затем проложи путь до столицы партнёра.</p>';
         html += '</div>';
@@ -508,6 +508,8 @@
       $("unemployed").textContent = workforce.unemployed;
       $("vacantJobs").textContent = workforce.vacantJobs;
       $("farmWorkers").textContent = workforce.workersByType.farm || 0;
+      $("fisheryWorkers").textContent = workforce.workersByType.fishery || 0;
+      $("marketWorkers").textContent = workforce.workersByType.market || 0;
       $("lumberWorkers").textContent = workforce.workersByType.lumber || 0;
       $("quarryWorkers").textContent = workforce.workersByType.quarry || 0;
       $("warehouseWorkers").textContent = workforce.workersByType.warehouse || 0;
@@ -524,7 +526,8 @@
       const economy = C.economy.calculate();
       $("taxRate").value = C.economy.taxRate;
       $("taxRateValue").textContent = C.economy.taxRate + "%";
-      $("taxIncome").textContent = economy.income.toFixed(1);
+      $("taxIncome").textContent = economy.taxIncome.toFixed(1);
+      if ($("totalIncome")) $("totalIncome").textContent = economy.income.toFixed(1);
       $("buildingUpkeep").textContent = economy.buildingUpkeep.toFixed(1);
       $("roadUpkeep").textContent = economy.roadUpkeep.toFixed(2);
       $("wageCost").textContent = economy.wages.toFixed(2);
@@ -608,7 +611,7 @@
 
       const terrainInfo = C.terrain ? C.terrain.getInfo(tile.type) : null;
       let content =
-        '<div class="terrain-preview' style="background:' + C.world.colors[tile.type] + '"></div>' +
+        '<div class="terrain-preview" style="background:' + C.world.colors[tile.type] + '"></div>' +
         '<div class="terrain-name">' + C.world.names[tile.type] + '</div>' +
         '<div class="terrain-description">' + C.world.descriptions[tile.type] + '</div>' +
         (terrainInfo ? '<p style="font-size:10px;color:#d7b46b">Плодородие: ' + C.terrain.fertility(tile) + '% · ' + terrainInfo.note + '</p>' : '') +
