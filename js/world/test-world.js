@@ -403,7 +403,8 @@
           const sy = camera.y + y * cell;
           ctx.fillStyle = colors[tile.type];
           ctx.fillRect(sx, sy, cell + 0.4, cell + 0.4);
-          drawTerrainDetail(ctx, tile, sx, sy, cell);
+          // The pixel-art renderer owns terrain object details; avoid drawing legacy tile icons beneath sprites.
+          if (!C.pixelArt || !C.pixelArt.enabled) drawTerrainDetail(ctx, tile, sx, sy, cell);
 
           if (C.state.showPoliticalMap && tile.owner) {
             const ownerColor = tile.owner === "player" ? "#e2b45c" :
@@ -485,7 +486,7 @@
             });
           }
 
-          if (tile.building) {
+          if (tile.building && (!C.pixelArt || !C.pixelArt.enabled)) {
             const symbols = {
               city_center: "⌂",
               house: "⌂",
@@ -501,7 +502,7 @@
             ctx.fillText(symbols[tile.building.type] || "•", sx + cell / 2, sy + cell / 2);
           }
 
-          if (zoom > 0.8) {
+          if (zoom > 0.8 && (!C.pixelArt || !C.pixelArt.enabled)) {
             ctx.fillStyle = tile.type === "water" ? "#ffffff0a" : "#ffffff0b";
             ctx.fillRect(sx + cell * 0.18, sy + cell * 0.18, cell * 0.12, cell * 0.12);
           }
