@@ -286,8 +286,8 @@
       }
 
       // A pair of narrow rivers flows from the central highlands toward nearby coasts.
-      carveRiver(this.tiles, 34, 18, "east", this.seed + 307);
-      carveRiver(this.tiles, 13, 29, "west", this.seed + 419);
+      carveRiver(this.tiles, Math.floor(W / 2) - 22, Math.floor(H / 2) - 8, "east", this.seed + 307);
+      carveRiver(this.tiles, Math.floor(W / 2) + 20, Math.floor(H / 2) + 9, "west", this.seed + 419);
       addLakes(this.tiles, this.seed);
 
       // Guarantee a safe fertile founding zone in the center of the larger world.
