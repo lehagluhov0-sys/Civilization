@@ -23,9 +23,19 @@
       description: "Заготавливает до 7 единиц древесины в день. Выпуск зависит от работников и дорожной связи."
     },
     quarry: {
-      name: "Каменоломня", icon: "◆", cost: { wood: 10, stone: 20, money: 30 },
-      stone: 6, jobs: 8, terrain: ["rock", "mountain"],
-      description: "Добывает до 6 единиц камня в день. Выпуск зависит от работников и дорожной связи."
+      name: "Каменная шахта", icon: "◆", cost: { wood: 10, stone: 8 },
+      stone: 7, jobs: 6, terrain: ["rock", "mountain"], requiresDeposit: "stone", requiresResearch: "masonry",
+      description: "Добывает строительный камень из каменного месторождения."
+    },
+    iron_mine: {
+      name: "Железная шахта", icon: "⛏", cost: { wood: 22, stone: 18 },
+      iron: 4, jobs: 7, terrain: ["rock", "mountain"], requiresDeposit: "iron", requiresResearch: "mining",
+      description: "Добывает железную руду из железного месторождения."
+    },
+    copper_mine: {
+      name: "Медная шахта", icon: "⛏", cost: { wood: 20, stone: 15 },
+      copper: 4, jobs: 6, terrain: ["rock", "mountain"], requiresDeposit: "copper", requiresResearch: "mining",
+      description: "Добывает медную руду из медного месторождения."
     },
     warehouse: {
       name: "Склад", icon: "▣", cost: { wood: 35, stone: 20, money: 50 },
@@ -51,6 +61,8 @@
       const tile = C.world.get(x, y);
       const definition = catalog[type];
       if (!tile || !definition) return { ok: false, message: "Невозможно построить здесь." };
+      if (definition.requiresResearch && (!C.research || !C.research.isCompleted(definition.requiresResearch))) return { ok: false, message: "Сначала изучи технологию: " + definition.requiresResearch + "." };
+      if (definition.requiresDeposit && tile.deposit !== definition.requiresDeposit) return { ok: false, message: "Здесь нет подходящего месторождения." };
       if (tile.building || tile.construction) return { ok: false, message: "На этом участке уже идёт строительство или стоит здание." };
       if (tile.road) return { ok: false, message: "Сначала выбери клетку без дороги." };
       if (C.terrain && !C.terrain.canBuild(definition, x, y)) {
