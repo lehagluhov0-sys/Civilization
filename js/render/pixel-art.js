@@ -27,7 +27,8 @@
   }
 
   function drawTree(ctx, x, y, size, variant, unit) {
-    if (C.spriteAssets && C.spriteAssets.draw("tree_oak", ctx, x, y, size, size)) return;
+    const treeIds = ["tree_oak", "tree_pine", "tree_birch", "tree_autumn", "tree_pink", "tree_palm", "tree_wide"];
+    if (C.spriteAssets && C.spriteAssets.draw(treeIds[variant % treeIds.length], ctx, x, y, size, size)) return;
     const dark = variant % 2 ? "#294d35" : "#31583a";
     const mid = variant % 2 ? "#477747" : "#568449";
     const light = variant % 2 ? "#78a653" : "#8bb45d";
@@ -41,8 +42,12 @@
   }
 
   function drawHouse(ctx, x, y, size, type, unit) {
-    if (type !== "warehouse" && type !== "city_center" && C.spriteAssets &&
-        C.spriteAssets.draw("house_small", ctx, x, y, size, size * 0.9)) return;
+    const spriteId = type === "warehouse" ? "warehouse" :
+      type === "farm" ? "farm_barn" : type === "lumber" ? "lumber_hut" :
+      type === "quarry" ? "quarry_mine" : type === "market" ? "market_stall" :
+      type === "fishery" ? "fishery_boat" : type === "city_center" ? "castle" :
+      (type === "house" && Math.floor((x + y) / Math.max(1, size)) % 2 ? "house_blue" : "house_wood");
+    if (C.spriteAssets && C.spriteAssets.draw(spriteId, ctx, x - size*.34, y - size*.70, size*1.68, size*1.70)) return;
     const wall = type === "warehouse" ? "#b7a17a" : "#c5a879";
     const roof = type === "city_center" ? "#765044" : "#914f3d";
     px(ctx, x + size*.16, y + size*.42, size*.70, size*.42, "#463d32", unit);
@@ -56,7 +61,7 @@
   }
 
   function drawFarm(ctx, x, y, size, unit) {
-    if (C.spriteAssets && C.spriteAssets.draw("farm", ctx, x, y, size, size * 0.82)) return;
+    if (C.spriteAssets && C.spriteAssets.draw("farm_fields", ctx, x - size*.34, y - size*.40, size*1.68, size*1.36)) return;
     px(ctx, x + size*.08, y + size*.35, size*.84, size*.48, "#9c854b", unit);
     for (let i=0;i<4;i++) {
       px(ctx, x + size*(.17+i*.18), y + size*.39, size*.07, size*.39, "#d1b76c", unit);
@@ -170,7 +175,8 @@
         if (!tile) continue;
         const sx=camera.x+x*cell, sy=camera.y+y*cell;
         drawShoreline(ctx,tile,sx,sy,cell,unit);
-        drawTileDetails(ctx,tile,sx,sy,cell,unit);
+        // Buildings and construction sites own their footprint; never draw biome props underneath them.
+        if (!tile.building && !tile.construction) drawTileDetails(ctx,tile,sx,sy,cell,unit);
 
         if (tile.building && cell >= 13) {
           const size=cell*1.02;
