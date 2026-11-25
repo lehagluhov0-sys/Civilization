@@ -1,4 +1,4 @@
-name: Embed sprite atlases in SVG
+name: Embed sprite atlases in SVG (automated)
 
 on:
   push:
