@@ -237,7 +237,7 @@
               const neighbor = C.world.get(x + ox, y + oy);
               if (neighbor && (neighbor.building || neighbor.construction)) {
                 nearby++;
-                if (Math.max(Math.abs(ox), Math.abs(oy)) <= (type === "house" ? 1 : 0)) blocked = true;
+                if (Math.max(Math.abs(ox), Math.abs(oy)) <= spacing) blocked = true;
               }
             }
           }
@@ -312,7 +312,7 @@
       const material = construction.type === "quarry" ? "stone" : "wood";
       const spriteId = "construction_" + material + "_" + stage;
       if (cell >= 13 && C.spriteAssets && C.spriteAssets.draw(
-          spriteId, ctx, x - cell*.40, y - cell*.78, cell*1.80, cell*1.80)) {
+          spriteId, ctx, x - cell*.197, y - cell*.426, cell*1.066, cell*1.066)) {
         const ratio = Math.max(0, Math.min(1, construction.progress / construction.required));
         ctx.fillStyle = "rgba(20,18,16,.78)";
         ctx.fillRect(x + cell*.12, y + cell*.88, cell*.76, Math.max(2, cell*.07));
