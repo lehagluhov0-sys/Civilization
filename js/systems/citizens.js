@@ -179,7 +179,7 @@
           const workers = Math.min(4, site.buildersPresent || 0);
           if (workers > 0) {
             tile.construction.progress = Math.min(tile.construction.required,
-              tile.construction.progress + workers / 2);
+              tile.construction.progress + workers / 3);
             tile.construction.stage = Math.min(3,
               Math.floor(tile.construction.progress / tile.construction.required * 4));
           }
@@ -244,7 +244,7 @@
       sorted.forEach(agent => {
         const px = camera.x + agent.x * cell;
         const py = camera.y + agent.y * cell;
-        const size = Math.max(1.5, cell * 0.115);
+        const size = Math.max(2, cell * 0.22);
         const bob = Math.sin(agent.walk) * size * 0.22;
         ctx.fillStyle = "#263027";
         ctx.globalAlpha = 0.34;
