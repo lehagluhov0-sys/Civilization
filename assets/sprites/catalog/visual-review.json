@@ -1,0 +1,2322 @@
+{
+  "schema_version": 1,
+  "purpose": "Manually reviewed subset of visually recognizable candidates. This is not a complete atlas classification.",
+  "reviewed_count": 126,
+  "categories": [
+    "vegetation",
+    "building",
+    "fortification",
+    "construction_stage",
+    "structure",
+    "agriculture",
+    "terrain",
+    "resource",
+    "decoration",
+    "vehicle",
+    "magic_structure",
+    "composite_atlas",
+    "fence_or_plot"
+  ],
+  "notes": [
+    "Coordinates are inherited from atlas_catalog.json and refer to original 1536x1024 PNG files.",
+    "Composite atlas entries contain multiple objects and must be split before use as individual sprites.",
+    "Some visually recognizable objects may still have imperfect candidate bounds; inspect the source crop before wiring into the game.",
+    "Only this subset was manually classified; all other candidates remain unclassified."
+  ],
+  "sprites": [
+    {
+      "id": "world_0000",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 90,
+        "y": 0,
+        "width": 283,
+        "height": 177
+      },
+      "pixel_area": 23967,
+      "bbox_fill_ratio": 0.4785,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "tree_variants_sheet",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Composite of several deciduous tree variants; do not use as one map object.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0006",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 377,
+        "y": 8,
+        "width": 69,
+        "height": 83
+      },
+      "pixel_area": 1950,
+      "bbox_fill_ratio": 0.3405,
+      "review_flags": [],
+      "label": "evergreen_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single conifer tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0014",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1291,
+        "y": 17,
+        "width": 52,
+        "height": 56
+      },
+      "pixel_area": 784,
+      "bbox_fill_ratio": 0.2692,
+      "review_flags": [],
+      "label": "deciduous_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single leafy tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0021",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 588,
+        "y": 33,
+        "width": 68,
+        "height": 58
+      },
+      "pixel_area": 1355,
+      "bbox_fill_ratio": 0.3436,
+      "review_flags": [],
+      "label": "large_deciduous_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single large leafy tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0033",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 536,
+        "y": 57,
+        "width": 28,
+        "height": 33
+      },
+      "pixel_area": 381,
+      "bbox_fill_ratio": 0.4123,
+      "review_flags": [],
+      "label": "pale_tree",
+      "category": "vegetation",
+      "visual_confidence": "medium",
+      "visual_note": "Pale or dead-looking tree variant.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0035",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1076,
+        "y": 58,
+        "width": 460,
+        "height": 226
+      },
+      "pixel_area": 40424,
+      "bbox_fill_ratio": 0.3888,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "nature_rock_atlas",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Composite sheet containing rocks, mountains and vegetation; requires sub-sprite slicing.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0044",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 311,
+        "y": 105,
+        "width": 64,
+        "height": 73
+      },
+      "pixel_area": 1676,
+      "bbox_fill_ratio": 0.3587,
+      "review_flags": [],
+      "label": "large_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single large tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0047",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1056,
+        "y": 113,
+        "width": 47,
+        "height": 55
+      },
+      "pixel_area": 1258,
+      "bbox_fill_ratio": 0.4867,
+      "review_flags": [],
+      "label": "round_boulder",
+      "category": "resource",
+      "visual_confidence": "high",
+      "visual_note": "Large stone boulder.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0085",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1024,
+        "y": 222,
+        "width": 55,
+        "height": 44
+      },
+      "pixel_area": 1181,
+      "bbox_fill_ratio": 0.488,
+      "review_flags": [],
+      "label": "rock_outcrop",
+      "category": "resource",
+      "visual_confidence": "high",
+      "visual_note": "Stone outcrop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0089",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1451,
+        "y": 235,
+        "width": 81,
+        "height": 66
+      },
+      "pixel_area": 2933,
+      "bbox_fill_ratio": 0.5486,
+      "review_flags": [],
+      "label": "stone_cave_entrance",
+      "category": "structure",
+      "visual_confidence": "high",
+      "visual_note": "Stone cave or mine entrance.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0126",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1234,
+        "y": 306,
+        "width": 94,
+        "height": 97
+      },
+      "pixel_area": 4735,
+      "bbox_fill_ratio": 0.5193,
+      "review_flags": [],
+      "label": "blue_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large blue-roofed house.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0127",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 591,
+        "y": 310,
+        "width": 117,
+        "height": 93
+      },
+      "pixel_area": 6678,
+      "bbox_fill_ratio": 0.6137,
+      "review_flags": [],
+      "label": "red_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large red-roofed house.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0128",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 784,
+        "y": 310,
+        "width": 103,
+        "height": 94
+      },
+      "pixel_area": 5789,
+      "bbox_fill_ratio": 0.5979,
+      "review_flags": [],
+      "label": "large_house_variant",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large detailed residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0129",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1342,
+        "y": 310,
+        "width": 100,
+        "height": 96
+      },
+      "pixel_area": 4608,
+      "bbox_fill_ratio": 0.48,
+      "review_flags": [],
+      "label": "blue_roof_cottage",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Blue-roofed cottage.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0130",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 900,
+        "y": 312,
+        "width": 116,
+        "height": 92
+      },
+      "pixel_area": 6697,
+      "bbox_fill_ratio": 0.6275,
+      "review_flags": [],
+      "label": "orange_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Orange-roofed residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0131",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 465,
+        "y": 313,
+        "width": 109,
+        "height": 90
+      },
+      "pixel_area": 6316,
+      "bbox_fill_ratio": 0.6438,
+      "review_flags": [],
+      "label": "red_roof_house_variant",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Red-roofed residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0133",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1022,
+        "y": 315,
+        "width": 87,
+        "height": 88
+      },
+      "pixel_area": 4410,
+      "bbox_fill_ratio": 0.576,
+      "review_flags": [],
+      "label": "blue_roof_house_variant",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Blue-roofed residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0134",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1117,
+        "y": 318,
+        "width": 110,
+        "height": 86
+      },
+      "pixel_area": 6104,
+      "bbox_fill_ratio": 0.6452,
+      "review_flags": [],
+      "label": "yellow_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Yellow-roofed residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0137",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 232,
+        "y": 330,
+        "width": 96,
+        "height": 73
+      },
+      "pixel_area": 3600,
+      "bbox_fill_ratio": 0.5137,
+      "review_flags": [],
+      "label": "timber_house_frame",
+      "category": "construction_stage",
+      "visual_confidence": "high",
+      "visual_note": "Timber building frame; likely construction-stage or unfinished building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0138",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 344,
+        "y": 330,
+        "width": 101,
+        "height": 73
+      },
+      "pixel_area": 3803,
+      "bbox_fill_ratio": 0.5158,
+      "review_flags": [],
+      "label": "timber_house_frame_variant",
+      "category": "construction_stage",
+      "visual_confidence": "medium",
+      "visual_note": "Second timber frame variant.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0140",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 116,
+        "y": 341,
+        "width": 96,
+        "height": 59
+      },
+      "pixel_area": 2867,
+      "bbox_fill_ratio": 0.5062,
+      "review_flags": [],
+      "label": "wooden_fenced_plot",
+      "category": "fence_or_plot",
+      "visual_confidence": "high",
+      "visual_note": "Wooden fenced rectangular plot.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0145",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1310,
+        "y": 394,
+        "width": 220,
+        "height": 162
+      },
+      "pixel_area": 18333,
+      "bbox_fill_ratio": 0.5144,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "castle_variants_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Composite sheet containing castle variants and decorative structures.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0147",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 469,
+        "y": 416,
+        "width": 116,
+        "height": 90
+      },
+      "pixel_area": 6433,
+      "bbox_fill_ratio": 0.6162,
+      "review_flags": [],
+      "label": "blue_roof_house_tall",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Tall residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0148",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1172,
+        "y": 416,
+        "width": 348,
+        "height": 278
+      },
+      "pixel_area": 23451,
+      "bbox_fill_ratio": 0.2424,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "settlement_building_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Multiple buildings and settlement elements in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0149",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 116,
+        "y": 417,
+        "width": 264,
+        "height": 214
+      },
+      "pixel_area": 26830,
+      "bbox_fill_ratio": 0.4749,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "fortification_variants_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Multiple wall and fortification pieces.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0150",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 350,
+        "y": 417,
+        "width": 105,
+        "height": 86
+      },
+      "pixel_area": 4446,
+      "bbox_fill_ratio": 0.4924,
+      "review_flags": [],
+      "label": "long_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large long residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0152",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 780,
+        "y": 417,
+        "width": 107,
+        "height": 95
+      },
+      "pixel_area": 5984,
+      "bbox_fill_ratio": 0.5887,
+      "review_flags": [],
+      "label": "stone_castle",
+      "category": "fortification",
+      "visual_confidence": "high",
+      "visual_note": "Stone castle or fortified building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0153",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1014,
+        "y": 417,
+        "width": 151,
+        "height": 108
+      },
+      "pixel_area": 10574,
+      "bbox_fill_ratio": 0.6484,
+      "review_flags": [],
+      "label": "castle_gate_complex",
+      "category": "fortification",
+      "visual_confidence": "high",
+      "visual_note": "Large castle wall and gate composition.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0154",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 900,
+        "y": 418,
+        "width": 109,
+        "height": 93
+      },
+      "pixel_area": 5752,
+      "bbox_fill_ratio": 0.5674,
+      "review_flags": [],
+      "label": "blue_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0155",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 719,
+        "y": 422,
+        "width": 51,
+        "height": 76
+      },
+      "pixel_area": 2019,
+      "bbox_fill_ratio": 0.5209,
+      "review_flags": [],
+      "label": "small_tower_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Small tall house or tower-like residence.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0156",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 7,
+        "y": 432,
+        "width": 99,
+        "height": 64
+      },
+      "pixel_area": 3423,
+      "bbox_fill_ratio": 0.5402,
+      "review_flags": [],
+      "label": "stone_fenced_plot",
+      "category": "fence_or_plot",
+      "visual_confidence": "high",
+      "visual_note": "Stone or timber fenced enclosure.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0157",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 392,
+        "y": 518,
+        "width": 120,
+        "height": 106
+      },
+      "pixel_area": 5755,
+      "bbox_fill_ratio": 0.4524,
+      "review_flags": [],
+      "label": "workshop_house",
+      "category": "building",
+      "visual_confidence": "medium",
+      "visual_note": "House with exterior materials or equipment.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0158",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 702,
+        "y": 519,
+        "width": 131,
+        "height": 227
+      },
+      "pixel_area": 9978,
+      "bbox_fill_ratio": 0.3355,
+      "review_flags": [],
+      "label": "windmill",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Windmill with surrounding decorative elements.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0159",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 7,
+        "y": 527,
+        "width": 99,
+        "height": 90
+      },
+      "pixel_area": 4819,
+      "bbox_fill_ratio": 0.5409,
+      "review_flags": [],
+      "label": "timber_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Timber residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0160",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 528,
+        "y": 537,
+        "width": 161,
+        "height": 96
+      },
+      "pixel_area": 6321,
+      "bbox_fill_ratio": 0.409,
+      "review_flags": [],
+      "label": "woodland_house_compound",
+      "category": "building",
+      "visual_confidence": "medium",
+      "visual_note": "House and surrounding props in a single crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0162",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 998,
+        "y": 554,
+        "width": 179,
+        "height": 116
+      },
+      "pixel_area": 10765,
+      "bbox_fill_ratio": 0.5184,
+      "review_flags": [],
+      "label": "farmstead",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Farmhouse with yard and vegetation.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0163",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 828,
+        "y": 557,
+        "width": 167,
+        "height": 102
+      },
+      "pixel_area": 8261,
+      "bbox_fill_ratio": 0.485,
+      "review_flags": [],
+      "label": "watermill_or_riverside_workshop",
+      "category": "building",
+      "visual_confidence": "medium",
+      "visual_note": "Building beside water; likely watermill or riverside workshop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0164",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1455,
+        "y": 560,
+        "width": 70,
+        "height": 71
+      },
+      "pixel_area": 1948,
+      "bbox_fill_ratio": 0.392,
+      "review_flags": [],
+      "label": "stone_statue_group",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Stone statues or monuments.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0165",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1339,
+        "y": 576,
+        "width": 108,
+        "height": 77
+      },
+      "pixel_area": 2973,
+      "bbox_fill_ratio": 0.3575,
+      "review_flags": [],
+      "label": "garden_or_crop_plot",
+      "category": "agriculture",
+      "visual_confidence": "high",
+      "visual_note": "Cultivated garden or crop plot.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0168",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 112,
+        "y": 626,
+        "width": 114,
+        "height": 89
+      },
+      "pixel_area": 5431,
+      "bbox_fill_ratio": 0.5353,
+      "review_flags": [],
+      "label": "smithy",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Forge or blacksmith workshop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0169",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 7,
+        "y": 633,
+        "width": 89,
+        "height": 83
+      },
+      "pixel_area": 4983,
+      "bbox_fill_ratio": 0.6746,
+      "review_flags": [],
+      "label": "wooden_workshop",
+      "category": "building",
+      "visual_confidence": "medium",
+      "visual_note": "Workshop-like building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0170",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 240,
+        "y": 636,
+        "width": 111,
+        "height": 83
+      },
+      "pixel_area": 5714,
+      "bbox_fill_ratio": 0.6202,
+      "review_flags": [],
+      "label": "red_roof_house_variant",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0173",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 476,
+        "y": 644,
+        "width": 112,
+        "height": 215
+      },
+      "pixel_area": 14476,
+      "bbox_fill_ratio": 0.6012,
+      "review_flags": [],
+      "label": "magic_tower_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "medium",
+      "visual_note": "Contains a building and a purple magical tower; requires slicing.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0176",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 847,
+        "y": 656,
+        "width": 125,
+        "height": 110
+      },
+      "pixel_area": 8207,
+      "bbox_fill_ratio": 0.5969,
+      "review_flags": [],
+      "label": "temple",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large domed temple.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0178",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 585,
+        "y": 674,
+        "width": 71,
+        "height": 48
+      },
+      "pixel_area": 1593,
+      "bbox_fill_ratio": 0.4674,
+      "review_flags": [],
+      "label": "workshop_yard",
+      "category": "building",
+      "visual_confidence": "medium",
+      "visual_note": "Workshop and yard props.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0180",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1020,
+        "y": 678,
+        "width": 157,
+        "height": 144
+      },
+      "pixel_area": 12361,
+      "bbox_fill_ratio": 0.5468,
+      "review_flags": [],
+      "label": "cathedral",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large cathedral.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0183",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1298,
+        "y": 703,
+        "width": 53,
+        "height": 50
+      },
+      "pixel_area": 860,
+      "bbox_fill_ratio": 0.3245,
+      "review_flags": [],
+      "label": "stone_arch",
+      "category": "fortification",
+      "visual_confidence": "high",
+      "visual_note": "Stone arch or gate.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0190",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 408,
+        "y": 723,
+        "width": 64,
+        "height": 126
+      },
+      "pixel_area": 4190,
+      "bbox_fill_ratio": 0.5196,
+      "review_flags": [],
+      "label": "lighthouse",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Lighthouse.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0191",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 10,
+        "y": 728,
+        "width": 148,
+        "height": 120
+      },
+      "pixel_area": 8605,
+      "bbox_fill_ratio": 0.4845,
+      "review_flags": [],
+      "label": "mine_entrance",
+      "category": "structure",
+      "visual_confidence": "high",
+      "visual_note": "Mine entrance in rocky terrain.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0193",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 179,
+        "y": 730,
+        "width": 126,
+        "height": 97
+      },
+      "pixel_area": 5502,
+      "bbox_fill_ratio": 0.4502,
+      "review_flags": [],
+      "label": "cave_entrance",
+      "category": "structure",
+      "visual_confidence": "high",
+      "visual_note": "Rocky cave entrance.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0194",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 319,
+        "y": 734,
+        "width": 74,
+        "height": 106
+      },
+      "pixel_area": 3549,
+      "bbox_fill_ratio": 0.4524,
+      "review_flags": [],
+      "label": "stone_watchtower",
+      "category": "fortification",
+      "visual_confidence": "high",
+      "visual_note": "Stone watchtower.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0195",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 600,
+        "y": 734,
+        "width": 241,
+        "height": 174
+      },
+      "pixel_area": 15375,
+      "bbox_fill_ratio": 0.3666,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "settlement_and_shop_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Composite sheet with buildings, statues and market stalls.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0199",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1385,
+        "y": 773,
+        "width": 151,
+        "height": 251
+      },
+      "pixel_area": 18626,
+      "bbox_fill_ratio": 0.4914,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "magic_and_ship_props_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "medium",
+      "visual_note": "Composite props sheet with boat, crystals and decorative objects.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0203",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1452,
+        "y": 782,
+        "width": 77,
+        "height": 78
+      },
+      "pixel_area": 3007,
+      "bbox_fill_ratio": 0.5007,
+      "review_flags": [],
+      "label": "sailing_ship",
+      "category": "vehicle",
+      "visual_confidence": "high",
+      "visual_note": "Small sailing vessel.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0205",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 223,
+        "y": 838,
+        "width": 82,
+        "height": 44
+      },
+      "pixel_area": 1201,
+      "bbox_fill_ratio": 0.3329,
+      "review_flags": [],
+      "label": "handcart",
+      "category": "vehicle",
+      "visual_confidence": "medium",
+      "visual_note": "Cart or wheeled transport prop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0213",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1257,
+        "y": 859,
+        "width": 66,
+        "height": 66
+      },
+      "pixel_area": 2324,
+      "bbox_fill_ratio": 0.5335,
+      "review_flags": [],
+      "label": "small_red_roof_building",
+      "category": "building",
+      "visual_confidence": "medium",
+      "visual_note": "Small building or hut.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0214",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 906,
+        "y": 860,
+        "width": 54,
+        "height": 47
+      },
+      "pixel_area": 1313,
+      "bbox_fill_ratio": 0.5173,
+      "review_flags": [],
+      "label": "covered_merchant_wagon",
+      "category": "vehicle",
+      "visual_confidence": "high",
+      "visual_note": "Covered wagon.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0215",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1139,
+        "y": 860,
+        "width": 48,
+        "height": 69
+      },
+      "pixel_area": 1890,
+      "bbox_fill_ratio": 0.5707,
+      "review_flags": [],
+      "label": "campfire",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Campfire.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0217",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 657,
+        "y": 861,
+        "width": 53,
+        "height": 77
+      },
+      "pixel_area": 2830,
+      "bbox_fill_ratio": 0.6935,
+      "review_flags": [],
+      "label": "market_stall",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Market stall with awning.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0221",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 835,
+        "y": 863,
+        "width": 112,
+        "height": 161
+      },
+      "pixel_area": 9387,
+      "bbox_fill_ratio": 0.5206,
+      "review_flags": [],
+      "label": "market_and_water_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "medium",
+      "visual_note": "Composite props including wagons, water and stalls.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0226",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1199,
+        "y": 867,
+        "width": 50,
+        "height": 60
+      },
+      "pixel_area": 1665,
+      "bbox_fill_ratio": 0.555,
+      "review_flags": [],
+      "label": "canvas_tent",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Canvas tent.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0232",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1047,
+        "y": 894,
+        "width": 43,
+        "height": 44
+      },
+      "pixel_area": 1095,
+      "bbox_fill_ratio": 0.5788,
+      "review_flags": [],
+      "label": "stone_well",
+      "category": "structure",
+      "visual_confidence": "high",
+      "visual_note": "Stone well.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0245",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 186,
+        "y": 937,
+        "width": 67,
+        "height": 87
+      },
+      "pixel_area": 4621,
+      "bbox_fill_ratio": 0.7928,
+      "review_flags": [],
+      "label": "farm_field_texture",
+      "category": "terrain",
+      "visual_confidence": "high",
+      "visual_note": "Cultivated field texture or plot.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0247",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1129,
+        "y": 940,
+        "width": 64,
+        "height": 68
+      },
+      "pixel_area": 3009,
+      "bbox_fill_ratio": 0.6914,
+      "review_flags": [],
+      "label": "blue_crystal",
+      "category": "resource",
+      "visual_confidence": "high",
+      "visual_note": "Large blue crystal deposit.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0248",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 253,
+        "y": 942,
+        "width": 56,
+        "height": 68
+      },
+      "pixel_area": 3061,
+      "bbox_fill_ratio": 0.8038,
+      "review_flags": [],
+      "label": "stone_ground_texture",
+      "category": "terrain",
+      "visual_confidence": "high",
+      "visual_note": "Stone ground texture tile.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0249",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1189,
+        "y": 944,
+        "width": 59,
+        "height": 68
+      },
+      "pixel_area": 1985,
+      "bbox_fill_ratio": 0.4948,
+      "review_flags": [],
+      "label": "violet_portal",
+      "category": "magic_structure",
+      "visual_confidence": "high",
+      "visual_note": "Stone-framed magical portal.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0250",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1261,
+        "y": 944,
+        "width": 128,
+        "height": 80
+      },
+      "pixel_area": 5418,
+      "bbox_fill_ratio": 0.5291,
+      "review_flags": [],
+      "label": "crystal_portals",
+      "category": "magic_structure",
+      "visual_confidence": "high",
+      "visual_note": "Two crystal portal variants.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0000",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 451,
+        "y": 0,
+        "width": 276,
+        "height": 124
+      },
+      "pixel_area": 27014,
+      "bbox_fill_ratio": 0.7893,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "autumn_tree_variants",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Three autumn-colored tree variants in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0001",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1124,
+        "y": 0,
+        "width": 152,
+        "height": 124
+      },
+      "pixel_area": 12844,
+      "bbox_fill_ratio": 0.6815,
+      "review_flags": [],
+      "label": "snowy_conifers",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Two snowy evergreen trees.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0008",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1363,
+        "y": 17,
+        "width": 170,
+        "height": 109
+      },
+      "pixel_area": 7847,
+      "bbox_fill_ratio": 0.4235,
+      "review_flags": [],
+      "label": "tree_pair",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Two deciduous tree variants.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0012",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 203,
+        "y": 32,
+        "width": 77,
+        "height": 100
+      },
+      "pixel_area": 2407,
+      "bbox_fill_ratio": 0.3126,
+      "review_flags": [],
+      "label": "large_round_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single large round-canopy tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0013",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 820,
+        "y": 36,
+        "width": 116,
+        "height": 88
+      },
+      "pixel_area": 2501,
+      "bbox_fill_ratio": 0.245,
+      "review_flags": [],
+      "label": "wide_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Large wide-canopy tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0014",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 946,
+        "y": 36,
+        "width": 92,
+        "height": 89
+      },
+      "pixel_area": 1702,
+      "bbox_fill_ratio": 0.2079,
+      "review_flags": [],
+      "label": "green_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single leafy tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0017",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 743,
+        "y": 37,
+        "width": 68,
+        "height": 87
+      },
+      "pixel_area": 1329,
+      "bbox_fill_ratio": 0.2246,
+      "review_flags": [],
+      "label": "palm_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Palm tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0024",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 287,
+        "y": 49,
+        "width": 79,
+        "height": 72
+      },
+      "pixel_area": 1321,
+      "bbox_fill_ratio": 0.2322,
+      "review_flags": [],
+      "label": "round_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Single leafy tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0026",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 373,
+        "y": 53,
+        "width": 72,
+        "height": 71
+      },
+      "pixel_area": 1711,
+      "bbox_fill_ratio": 0.3347,
+      "review_flags": [],
+      "label": "evergreen_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Conifer or dense evergreen tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0027",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 21,
+        "y": 54,
+        "width": 91,
+        "height": 75
+      },
+      "pixel_area": 1681,
+      "bbox_fill_ratio": 0.2463,
+      "review_flags": [],
+      "label": "broadleaf_tree",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Large broadleaf tree.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0032",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 446,
+        "y": 118,
+        "width": 224,
+        "height": 142
+      },
+      "pixel_area": 11155,
+      "bbox_fill_ratio": 0.3507,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "tree_variants_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Several tree types in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0033",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 200,
+        "y": 126,
+        "width": 172,
+        "height": 66
+      },
+      "pixel_area": 6938,
+      "bbox_fill_ratio": 0.6112,
+      "review_flags": [],
+      "label": "autumn_tree_variants",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Two autumn tree variants.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0135",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1152,
+        "y": 322,
+        "width": 58,
+        "height": 43
+      },
+      "pixel_area": 832,
+      "bbox_fill_ratio": 0.3336,
+      "review_flags": [],
+      "label": "rock_outcrop",
+      "category": "resource",
+      "visual_confidence": "high",
+      "visual_note": "Stone outcrop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0136",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1224,
+        "y": 323,
+        "width": 58,
+        "height": 48
+      },
+      "pixel_area": 918,
+      "bbox_fill_ratio": 0.3297,
+      "review_flags": [],
+      "label": "rock_outcrop_variant",
+      "category": "resource",
+      "visual_confidence": "high",
+      "visual_note": "Stone outcrop variant.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0144",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 12,
+        "y": 345,
+        "width": 71,
+        "height": 75
+      },
+      "pixel_area": 3694,
+      "bbox_fill_ratio": 0.6937,
+      "review_flags": [],
+      "label": "red_roof_cottage",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Small red-roofed cottage.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0146",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 166,
+        "y": 352,
+        "width": 77,
+        "height": 68
+      },
+      "pixel_area": 3347,
+      "bbox_fill_ratio": 0.6392,
+      "review_flags": [],
+      "label": "blue_roof_cottage",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Blue-roofed cottage.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0147",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 607,
+        "y": 352,
+        "width": 88,
+        "height": 114
+      },
+      "pixel_area": 4047,
+      "bbox_fill_ratio": 0.4034,
+      "review_flags": [],
+      "label": "tall_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Tall residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0149",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 705,
+        "y": 356,
+        "width": 153,
+        "height": 154
+      },
+      "pixel_area": 13968,
+      "bbox_fill_ratio": 0.5928,
+      "review_flags": [],
+      "label": "castle",
+      "category": "fortification",
+      "visual_confidence": "high",
+      "visual_note": "Stone castle with flags.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0150",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 262,
+        "y": 357,
+        "width": 102,
+        "height": 63
+      },
+      "pixel_area": 4408,
+      "bbox_fill_ratio": 0.686,
+      "review_flags": [],
+      "label": "long_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Long residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0151",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 490,
+        "y": 365,
+        "width": 110,
+        "height": 104
+      },
+      "pixel_area": 6657,
+      "bbox_fill_ratio": 0.5819,
+      "review_flags": [],
+      "label": "large_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large house.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0153",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 439,
+        "y": 368,
+        "width": 43,
+        "height": 52
+      },
+      "pixel_area": 1398,
+      "bbox_fill_ratio": 0.6252,
+      "review_flags": [],
+      "label": "small_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Small house.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0155",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1136,
+        "y": 377,
+        "width": 89,
+        "height": 138
+      },
+      "pixel_area": 6885,
+      "bbox_fill_ratio": 0.5606,
+      "review_flags": [],
+      "label": "resource_piles",
+      "category": "composite_atlas",
+      "visual_confidence": "medium",
+      "visual_note": "Two resource piles; exact material needs closer review.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0165",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 199,
+        "y": 425,
+        "width": 81,
+        "height": 82
+      },
+      "pixel_area": 4160,
+      "bbox_fill_ratio": 0.6263,
+      "review_flags": [],
+      "label": "yellow_roof_cottage",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Yellow-roofed cottage.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0167",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 13,
+        "y": 427,
+        "width": 88,
+        "height": 80
+      },
+      "pixel_area": 4661,
+      "bbox_fill_ratio": 0.6621,
+      "review_flags": [],
+      "label": "red_roof_cottage_variant",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Red-roofed cottage.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0168",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 397,
+        "y": 430,
+        "width": 83,
+        "height": 77
+      },
+      "pixel_area": 4179,
+      "bbox_fill_ratio": 0.6539,
+      "review_flags": [],
+      "label": "red_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0169",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 113,
+        "y": 431,
+        "width": 76,
+        "height": 76
+      },
+      "pixel_area": 3534,
+      "bbox_fill_ratio": 0.6118,
+      "review_flags": [],
+      "label": "blue_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0170",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 289,
+        "y": 432,
+        "width": 93,
+        "height": 75
+      },
+      "pixel_area": 4278,
+      "bbox_fill_ratio": 0.6133,
+      "review_flags": [],
+      "label": "large_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Large house.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0177",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 606,
+        "y": 466,
+        "width": 434,
+        "height": 250
+      },
+      "pixel_area": 36119,
+      "bbox_fill_ratio": 0.3329,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "settlement_building_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Composite sheet containing houses, walls, market and props.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0178",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 425,
+        "y": 476,
+        "width": 179,
+        "height": 146
+      },
+      "pixel_area": 11469,
+      "bbox_fill_ratio": 0.4389,
+      "review_flags": [],
+      "label": "house_and_water_tower",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "House and adjacent water tower in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0187",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 219,
+        "y": 512,
+        "width": 111,
+        "height": 111
+      },
+      "pixel_area": 4946,
+      "bbox_fill_ratio": 0.4014,
+      "review_flags": [],
+      "label": "blue_roof_house_and_tree",
+      "category": "composite_atlas",
+      "visual_confidence": "medium",
+      "visual_note": "House and tree overlap in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0188",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 330,
+        "y": 516,
+        "width": 102,
+        "height": 104
+      },
+      "pixel_area": 6261,
+      "bbox_fill_ratio": 0.5902,
+      "review_flags": [],
+      "label": "red_roof_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Residential building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0189",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 7,
+        "y": 517,
+        "width": 105,
+        "height": 182
+      },
+      "pixel_area": 8971,
+      "bbox_fill_ratio": 0.4694,
+      "review_flags": [],
+      "label": "windmill",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Windmill.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0190",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1347,
+        "y": 524,
+        "width": 189,
+        "height": 194
+      },
+      "pixel_area": 17553,
+      "bbox_fill_ratio": 0.4787,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "workshop_yard",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Workshop and yard props.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0191",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1158,
+        "y": 527,
+        "width": 180,
+        "height": 99
+      },
+      "pixel_area": 8668,
+      "bbox_fill_ratio": 0.4864,
+      "review_flags": [],
+      "label": "industrial_workshop",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Industrial or forge building with equipment.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0192",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 126,
+        "y": 531,
+        "width": 85,
+        "height": 108
+      },
+      "pixel_area": 4970,
+      "bbox_fill_ratio": 0.5414,
+      "review_flags": [],
+      "label": "stone_tower_house",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Tall stone-and-timber building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0194",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1060,
+        "y": 538,
+        "width": 83,
+        "height": 92
+      },
+      "pixel_area": 5431,
+      "bbox_fill_ratio": 0.7112,
+      "review_flags": [],
+      "label": "timber_workshop",
+      "category": "building",
+      "visual_confidence": "high",
+      "visual_note": "Timber workshop or storage building.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0199",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 366,
+        "y": 624,
+        "width": 159,
+        "height": 123
+      },
+      "pixel_area": 7374,
+      "bbox_fill_ratio": 0.3771,
+      "review_flags": [],
+      "label": "market_stall_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Market stall, people and trade props.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0201",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 119,
+        "y": 636,
+        "width": 216,
+        "height": 76
+      },
+      "pixel_area": 6696,
+      "bbox_fill_ratio": 0.4079,
+      "review_flags": [],
+      "label": "wagon_and_fence_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Covered wagon, fence and tree grouped together.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0204",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1157,
+        "y": 637,
+        "width": 119,
+        "height": 96
+      },
+      "pixel_area": 4258,
+      "bbox_fill_ratio": 0.3727,
+      "review_flags": [],
+      "label": "stone_mine_entrance",
+      "category": "structure",
+      "visual_confidence": "high",
+      "visual_note": "Mine or cave entrance.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0205",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1306,
+        "y": 637,
+        "width": 81,
+        "height": 96
+      },
+      "pixel_area": 3485,
+      "bbox_fill_ratio": 0.4482,
+      "review_flags": [],
+      "label": "stone_gate",
+      "category": "fortification",
+      "visual_confidence": "high",
+      "visual_note": "Stone gate or arch.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0210",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 832,
+        "y": 656,
+        "width": 85,
+        "height": 61
+      },
+      "pixel_area": 3039,
+      "bbox_fill_ratio": 0.5861,
+      "review_flags": [],
+      "label": "covered_market_wagon",
+      "category": "vehicle",
+      "visual_confidence": "high",
+      "visual_note": "Covered merchant wagon.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0218",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 82,
+        "y": 712,
+        "width": 440,
+        "height": 203
+      },
+      "pixel_area": 50258,
+      "bbox_fill_ratio": 0.5627,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "terrain_tiles_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Multiple terrain and resource tiles in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0224",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1409,
+        "y": 728,
+        "width": 127,
+        "height": 165
+      },
+      "pixel_area": 10104,
+      "bbox_fill_ratio": 0.4822,
+      "review_flags": [],
+      "label": "magic_and_statue_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "medium",
+      "visual_note": "Decorative statues and blue crystal grouped together.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0234",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 735,
+        "y": 738,
+        "width": 98,
+        "height": 90
+      },
+      "pixel_area": 5404,
+      "bbox_fill_ratio": 0.6127,
+      "review_flags": [],
+      "label": "crystal_resource_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Several colored crystal resources.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0244",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 11,
+        "y": 772,
+        "width": 64,
+        "height": 59
+      },
+      "pixel_area": 1984,
+      "bbox_fill_ratio": 0.5254,
+      "review_flags": [],
+      "label": "grass_tile",
+      "category": "terrain",
+      "visual_confidence": "high",
+      "visual_note": "Grass texture tile.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0246",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 793,
+        "y": 782,
+        "width": 89,
+        "height": 93
+      },
+      "pixel_area": 3445,
+      "bbox_fill_ratio": 0.4162,
+      "review_flags": [],
+      "label": "resource_bundle_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Mixed resource and storage props.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0256",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 888,
+        "y": 829,
+        "width": 370,
+        "height": 195
+      },
+      "pixel_area": 26342,
+      "bbox_fill_ratio": 0.3651,
+      "review_flags": [
+        "large_component_review"
+      ],
+      "label": "props_and_decor_sheet",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Sheet of small settlement props, fences and lights.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0258",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1173,
+        "y": 831,
+        "width": 37,
+        "height": 49
+      },
+      "pixel_area": 1270,
+      "bbox_fill_ratio": 0.7005,
+      "review_flags": [],
+      "label": "blue_banner",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Blue banner.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0259",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1299,
+        "y": 831,
+        "width": 36,
+        "height": 49
+      },
+      "pixel_area": 1202,
+      "bbox_fill_ratio": 0.6814,
+      "review_flags": [],
+      "label": "purple_banner",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Purple banner.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0263",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1130,
+        "y": 832,
+        "width": 42,
+        "height": 48
+      },
+      "pixel_area": 1404,
+      "bbox_fill_ratio": 0.6964,
+      "review_flags": [],
+      "label": "red_banner",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Red banner.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0265",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1217,
+        "y": 833,
+        "width": 30,
+        "height": 47
+      },
+      "pixel_area": 355,
+      "bbox_fill_ratio": 0.2518,
+      "review_flags": [],
+      "label": "green_banner",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Green banner.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0266",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1256,
+        "y": 833,
+        "width": 37,
+        "height": 110
+      },
+      "pixel_area": 1920,
+      "bbox_fill_ratio": 0.4717,
+      "review_flags": [],
+      "label": "yellow_banner_and_torch",
+      "category": "composite_atlas",
+      "visual_confidence": "high",
+      "visual_note": "Yellow banner and torch in one crop.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0282",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1129,
+        "y": 890,
+        "width": 90,
+        "height": 67
+      },
+      "pixel_area": 3833,
+      "bbox_fill_ratio": 0.6357,
+      "review_flags": [],
+      "label": "campfire_variants",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Two campfire variants.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0284",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1284,
+        "y": 896,
+        "width": 54,
+        "height": 108
+      },
+      "pixel_area": 2419,
+      "bbox_fill_ratio": 0.4148,
+      "review_flags": [],
+      "label": "ornamental_column",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Decorative stone column.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0286",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1370,
+        "y": 910,
+        "width": 60,
+        "height": 94
+      },
+      "pixel_area": 2043,
+      "bbox_fill_ratio": 0.3622,
+      "review_flags": [],
+      "label": "large_stone_column",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Large decorative stone column.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0289",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 231,
+        "y": 913,
+        "width": 154,
+        "height": 111
+      },
+      "pixel_area": 15260,
+      "bbox_fill_ratio": 0.8927,
+      "review_flags": [],
+      "label": "stone_and_sand_ground_tiles",
+      "category": "terrain",
+      "visual_confidence": "high",
+      "visual_note": "Two terrain texture tiles.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0294",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 0,
+        "y": 919,
+        "width": 157,
+        "height": 105
+      },
+      "pixel_area": 14781,
+      "bbox_fill_ratio": 0.8966,
+      "review_flags": [],
+      "label": "stone_and_autumn_ground_tiles",
+      "category": "terrain",
+      "visual_confidence": "high",
+      "visual_note": "Two terrain texture tiles.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0300",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1341,
+        "y": 932,
+        "width": 43,
+        "height": 45
+      },
+      "pixel_area": 900,
+      "bbox_fill_ratio": 0.4651,
+      "review_flags": [],
+      "label": "blue_crystal_statue",
+      "category": "magic_structure",
+      "visual_confidence": "medium",
+      "visual_note": "Blue crystal or magical statue.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0301",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1483,
+        "y": 946,
+        "width": 39,
+        "height": 55
+      },
+      "pixel_area": 1297,
+      "bbox_fill_ratio": 0.6047,
+      "review_flags": [],
+      "label": "skull_statue",
+      "category": "decoration",
+      "visual_confidence": "high",
+      "visual_note": "Skull-themed stone statue.",
+      "review_method": "manual visual review of generated contact sheet"
+    }
+  ]
+}
