@@ -49,6 +49,7 @@
       if (C.save) C.save.init();
       if (restored) C.log("Сохранение загружено. Продолжаем развитие поселения.");
       C.ui.draw();
+      C.ui.openMainMenu(!restored);
       window.addEventListener("resize", function () {
         C.camera.resize();
         C.ui.draw();
