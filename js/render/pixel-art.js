@@ -63,11 +63,23 @@
       size * landmark[2]
     )) return;
 
+    let houseEra = 2;
+    if(type==="house" && C.research){
+      houseEra=C.research.isCompleted("engineering")?4:
+        C.research.isCompleted("masonry")?3:
+        C.research.isCompleted("woodworking")?2:1;
+      if(houseEra===1 && C.spriteAssets && C.spriteAssets.draw("tent",ctx,x-size*.05,y+size*.10,size*1.05,size*.78))return;
+      if(houseEra===3 && C.spriteAssets && C.spriteAssets.draw("house_stone",ctx,x-size*.25,y-size*.58,size*1.35,size*1.28))return;
+      if(houseEra===4 && C.spriteAssets && C.spriteAssets.draw("house_blue",ctx,x-size*.24,y-size*.55,size*1.30,size*1.30)){
+        px(ctx,x+size*.68,y-size*.34,size*.10,size*.22,"#596d7b",unit);
+        return;
+      }
+    }
     const spriteId = type === "warehouse" ? "warehouse" :
       type === "farm" ? "farm_barn" : type === "lumber" ? "lumber_hut" :
       type === "quarry" ? "quarry_mine" : type === "iron_mine" ? "mine_iron" : type === "copper_mine" ? "mine_copper" : type === "market" ? "market_stall" :
       type === "fishery" ? "fishery_boat" : type === "city_center" ? "castle" :
-      (type === "house" ? ["house_wood", "house_blue", "house_yellow", "house_wood_alt"][
+      (type === "house" ? ["house_wood", "house_wood_alt", "house_yellow", "house_wood"][ 
         Math.floor(hash(Number.isFinite(worldX) ? worldX : Math.round(x / Math.max(1, size)),
           Number.isFinite(worldY) ? worldY : Math.round(y / Math.max(1, size)), 19) * 4)
       ] : "house_wood");
@@ -122,6 +134,32 @@
     }
   }
 
+  function drawWildlife(ctx,tile,sx,sy,cell,unit) {
+    if(cell<15 || !tile.wildlife)return;
+    const x=sx+cell*(.25+hash(tile.x,tile.y,71)*.25);
+    const y=sy+cell*(.47+hash(tile.x,tile.y,72)*.12);
+    const u=Math.max(unit,Math.floor(cell/18));
+    const body=tile.wildlife==="deer"?"#a97845":tile.wildlife==="boar"?"#76513d":tile.wildlife==="chicken"?"#eee0b5":"#b9b7a9";
+    const dark="#403b34";
+    px(ctx,x+u*2,y+u,u*5,u*3,body,u);
+    px(ctx,x+u*6,y,u*2,u*2,body,u);
+    px(ctx,x+u*7,y+u,u,u,"#262b29",u);
+    px(ctx,x+u*3,y+u*3,u,u*2,dark,u);
+    px(ctx,x+u*6,y+u*3,u,u*2,dark,u);
+    if(tile.wildlife==="deer"){
+      px(ctx,x+u*6,y-u*2,u,u*2,"#d6c09a",u);
+      px(ctx,x+u*8,y-u*2,u,u*2,"#d6c09a",u);
+    }else if(tile.wildlife==="chicken"){
+      px(ctx,x+u*7,y-u,u*2,u,"#c94e3d",u);
+      px(ctx,x+u*8,y+u,u,u,"#d6a34d",u);
+    }else if(tile.wildlife==="rabbit"){
+      px(ctx,x+u*6,y-u*3,u,u*3,"#d9d5c7",u);
+      px(ctx,x+u*8,y-u*3,u,u*3,"#d9d5c7",u);
+    }else{
+      px(ctx,x+u*8,y+u*2,u*2,u,"#c4a18a",u);
+    }
+  }
+
   function drawTileDetails(ctx, tile, sx, sy, cell, unit) {
     const r = hash(tile.x, tile.y, 31);
     const palette = palettes[tile.type] || palettes.grass;
@@ -171,6 +209,15 @@
       px(ctx, sx+cell*.24, sy+cell*.38, cell*.42, Math.max(unit,cell*.06), palette[3], unit);
       px(ctx, sx+cell*.52, sy+cell*.55, cell*.23, Math.max(unit,cell*.06), palette[1], unit);
     }
+    if(tile.berryBush && cell>=14){
+      const bx=sx+cell*(.54+hash(tile.x,tile.y,93)*.12),by=sy+cell*.55;
+      px(ctx,bx,by,cell*.27,cell*.17,"#315b36",unit);
+      px(ctx,bx+cell*.04,by-cell*.07,cell*.16,cell*.12,"#568548",unit);
+      px(ctx,bx+cell*.08,by+cell*.03,cell*.045,cell*.045,"#c93648",unit);
+      px(ctx,bx+cell*.19,by+cell*.02,cell*.045,cell*.045,"#d94750",unit);
+      px(ctx,bx+cell*.14,by-cell*.03,cell*.04,cell*.04,"#e35a5d",unit);
+    }
+    drawWildlife(ctx,tile,sx,sy,cell,unit);
   }
 
   const originalDraw = C.world.draw;
@@ -228,14 +275,23 @@
         // Buildings and construction sites own their footprint; never draw biome props underneath them.
         if (!tile.building && !tile.construction) drawTileDetails(ctx,tile,sx,sy,cell,unit);
 
-        if (tile.deposit && !tile.building && !tile.construction && cell >= 15) {
+        if (tile.deposit && !tile.building && !tile.construction && cell >= 13) {
           const oreColor = tile.deposit === "iron" ? "#a7aeb0" : tile.deposit === "copper" ? "#c47b4b" : "#d0c4a0";
-          px(ctx, sx + cell*.42, sy + cell*.43, cell*.16, cell*.13, oreColor, unit);
-          px(ctx, sx + cell*.36, sy + cell*.53, cell*.10, cell*.08, "#625f58", unit);
+          const oreLight = tile.deposit === "iron" ? "#e0e5e3" : tile.deposit === "copper" ? "#e7a16b" : "#f0e2bf";
+          px(ctx, sx + cell*.31, sy + cell*.49, cell*.30, cell*.22, "#55534d", unit);
+          px(ctx, sx + cell*.37, sy + cell*.43, cell*.15, cell*.12, oreColor, unit);
+          px(ctx, sx + cell*.55, sy + cell*.53, cell*.12, cell*.10, oreColor, unit);
+          px(ctx, sx + cell*.40, sy + cell*.44, cell*.06, cell*.05, oreLight, unit);
+          px(ctx, sx + cell*.58, sy + cell*.53, cell*.05, cell*.04, oreLight, unit);
         }
         if (tile.building && cell >= 13) {
           const size=cell*0.82;
-          if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
+          if(tile.building.type==="chicken_coop"){
+            drawHouse(ctx,sx,sy,size,"house",unit,x,y);
+            px(ctx,sx+cell*.68,sy+cell*.66,cell*.22,cell*.10,"#d9c18b",unit);
+            px(ctx,sx+cell*.72,sy+cell*.57,cell*.05,cell*.09,"#eee0b5",unit);
+            px(ctx,sx+cell*.79,sy+cell*.57,cell*.05,cell*.09,"#eee0b5",unit);
+          } else if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
           else if (tile.building.type === "quarry") {
             drawHouse(ctx,sx,sy,cell,"quarry",unit,x,y);
           } else if (tile.building.type === "lumber") {
