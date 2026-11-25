@@ -25,7 +25,7 @@
           return { id: id, empty: false, savedAt: Number(data.savedAt) || 0,
             day: Number(data.state && data.state.day) || 1,
             year: Number(data.state && data.state.year) || 1,
-            population: Number(data.city && data.city.population) || 120 };
+            population: Number(data.city && data.city.population) || 5 };
         } catch (error) { return { id: id, empty: true }; }
       });
     },
@@ -147,7 +147,7 @@
             tile.owner = null;
           }
         }
-        C.city.population = Math.max(10, Number(data.city && data.city.population) || 120);
+        C.city.population = Math.max(5, Number(data.city && data.city.population) || 5);
         C.state.resources.population = C.city.population;
         C.city.center = validPoint(data.city && data.city.center) ? data.city.center : null;
 
