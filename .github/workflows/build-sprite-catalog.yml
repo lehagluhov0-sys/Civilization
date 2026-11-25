@@ -1,4 +1,4 @@
-name: Build diagnostic sprite catalog v3
+name: Build diagnostic sprite catalog v4
 
 on:
   push:
@@ -48,5 +48,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sprite-contact-sheets
-          path: assets/sprites/catalog/*.png
+          path: |\n            assets/sprites/catalog/*.png\n            assets/sprites/*.png
           if-no-files-found: error
