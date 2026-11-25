@@ -6,6 +6,7 @@
   const system = {
     agents: [],
     sites: [],
+    orders: [],
     nextId: 1,
     animationTime: 0,
     redrawTimer: 0,
@@ -201,15 +202,13 @@
       const resources = C.state.resources;
       // The current prototype has five visible citizen agents. Keep the first
       // settlement compact until population simulation can spawn more agents.
-      if (population < 15 && housing < population + 3 &&
-          resources.wood >= 20 && resources.stone >= 5 && resources.money >= 25) return "house";
-      if ((!count.farm || resources.food < 105) && resources.wood >= 15 && resources.stone >= 5 && resources.money >= 20) return "farm";
-      if (!count.lumber && resources.wood < 55 && resources.stone >= 10 && resources.money >= 30) return "lumber";
-      if (!count.quarry && resources.stone < 40 && resources.wood >= 10 && resources.money >= 30) return "quarry";
-      if (!count.fishery && resources.food < 75 && resources.wood >= 28 && resources.stone >= 8 && resources.money >= 35) return "fishery";
-      if (!count.market && resources.money >= 80 && resources.wood >= 30 && resources.stone >= 12 && population >= 120) return "market";
-      if (!count.warehouse && (resources.food > 220 || resources.wood > 220 || resources.stone > 220) &&
-          resources.wood >= 35 && resources.stone >= 20 && resources.money >= 50) return "warehouse";
+      if (!count.farm && resources.wood >= 12 && resources.stone >= 4) return "farm";
+      if (!count.lumber && resources.wood >= 18 && resources.stone >= 5) return "lumber";
+      if (!count.quarry && resources.wood >= 10 && resources.stone >= 8) return "quarry";
+      if (population >= housing - 1 && population < 15 && resources.food >= 8 && resources.wood >= 24 && resources.stone >= 8) return "house";
+      if (!count.fishery && resources.food < 18 && resources.wood >= 20 && resources.stone >= 6) return "fishery";
+      if (!count.market && resources.wood >= 30 && resources.stone >= 12 && population >= 12) return "market";
+      if (!count.warehouse && resources.wood >= 35 && resources.stone >= 20) return "warehouse";
       return null;
     },
 
@@ -223,6 +222,8 @@
           const tile = C.world.get(x, y);
           if (!tile || tile.building || tile.road || tile.construction) continue;
           if (!definition.terrain.includes(tile.type)) continue;
+          if (definition.requiresDeposit && tile.deposit !== definition.requiresDeposit) continue;
+          if (definition.requiresResearch && (!C.research || !C.research.isCompleted(definition.requiresResearch))) continue;
           if (C.terrain && !C.terrain.canBuild(definition, x, y)) continue;
           const distance = Math.abs(x - center.x) + Math.abs(y - center.y);
           if (distance < 2 || distance > 10) continue;
@@ -272,6 +273,43 @@
       return true;
     },
 
+    requestBuilding: function (type) {
+      const definition = C.buildings.catalog[type];
+      if (!definition || type === "city_center") return { ok: false, message: "Такое здание нельзя заказать." };
+      if (definition.requiresResearch && (!C.research || !C.research.isCompleted(definition.requiresResearch))) return { ok: false, message: "Сначала требуется исследование «" + definition.requiresResearch + "»." };
+      this.orders.push({ kind: "building", type: type });
+      C.emit("construction");
+      C.log("Заказано строительство: " + definition.name + ". ИИ выполнит заказ, когда найдёт участок и накопит материалы.");
+      return { ok: true, message: "Заказ добавлен в очередь." };
+    },
+
+    requestUpgrade: function (x, y) {
+      const tile = C.world.get(x, y);
+      if (!tile || !tile.building || tile.building.type === "city_center") return { ok: false, message: "Выбери обычное здание для улучшения." };
+      const level = Math.max(1, Number(tile.building.level) || 1);
+      if (level >= 3) return { ok: false, message: "Здание уже достигло максимального уровня." };
+      if (this.orders.some(order => order.kind === "upgrade" && order.x === x && order.y === y)) return { ok: false, message: "Улучшение уже находится в очереди." };
+      this.orders.push({ kind: "upgrade", x: x, y: y, targetLevel: level + 1 });
+      C.emit("construction");
+      C.log("Заказано улучшение здания до уровня " + (level + 1) + ".");
+      return { ok: true, message: "Улучшение добавлено в очередь." };
+    },
+
+    startUpgrade: function (order) {
+      const tile = C.world.get(order.x, order.y);
+      if (!tile || !tile.building || tile.construction) return false;
+      const level = Math.max(1, Number(tile.building.level) || 1);
+      if (level >= 3) return false;
+      const cost = { wood: 12 * level, stone: 8 * level };
+      const resources = C.state.resources;
+      if (resources.wood < cost.wood || resources.stone < cost.stone) return false;
+      resources.wood -= cost.wood; resources.stone -= cost.stone;
+      tile.construction = { type: tile.building.type, upgrade: true, targetLevel: level + 1, progress: 0, required: 8, stage: 0 };
+      this.sites.push({ x: order.x, y: order.y, type: tile.building.type, upgrade: true, buildersPresent: 0 });
+      C.emit("resources"); C.emit("world");
+      return true;
+    },
+
     daily: function () {
       const site = this.activeSite();
       if (site) {
@@ -288,22 +326,34 @@
           }
           if (tile.construction.progress >= tile.construction.required) {
             const type = tile.construction.type;
-            tile.building = { type: type, workers: 0 };
+            const isUpgrade = !!tile.construction.upgrade;
+            if (isUpgrade && tile.building) {
+              tile.building.level = tile.construction.targetLevel;
+              C.log("Здание улучшено до уровня " + tile.building.level + ": " + C.buildings.catalog[type].name + ".");
+            } else {
+              tile.building = { type: type, workers: 0, level: 1 };
+              C.log("Строительство завершено: " + C.buildings.catalog[type].name + ".");
+            }
             tile.construction = null;
             this.sites.shift();
             C.city.recalculate();
             if (C.infrastructure) C.infrastructure.updateNetwork();
-            C.log("Строительство завершено: " + C.buildings.catalog[type].name + ".");
             C.emit("city");
             C.emit("world");
           }
         }
       }
 
-      if (!this.sites.length) {
+      if (!this.sites.length && this.orders.length) {
+        const order = this.orders[0];
+        const started = order.kind === "upgrade" ? this.startUpgrade(order) : this.startConstruction(order.type);
+        if (started) this.orders.shift();
+      }
+      if (!this.sites.length && !this.orders.length) {
         const plan = this.selectPlan();
         if (plan) this.startConstruction(plan);
       }
+      C.emit("construction");
       C.emit("citizens");
     },
 
@@ -391,7 +441,8 @@
           color: agent.color, shirt: agent.shirt, walk: agent.walk,
           activity: agent.activity || "wandering", hunger: agent.hunger || 0
         })),
-        sites: this.sites.map(site => { const tile = C.world.get(site.x, site.y); const build = tile && tile.construction; return { x: site.x, y: site.y, type: site.type, progress: build ? build.progress : 0, required: build ? build.required : 5, stage: build ? build.stage : 0 }; })
+        sites: this.sites.map(site => { const tile = C.world.get(site.x, site.y); const build = tile && tile.construction; return { x: site.x, y: site.y, type: site.type, upgrade: !!(build && build.upgrade), targetLevel: build && build.targetLevel, progress: build ? build.progress : 0, required: build ? build.required : 5, stage: build ? build.stage : 0 }; }),
+        orders: this.orders.map(order => Object.assign({}, order))
       };
     },
 
@@ -401,6 +452,7 @@
         Number.isFinite(agent.x) && Number.isFinite(agent.y) &&
         agent.x >= 0 && agent.y >= 0 && agent.x < C.world.width && agent.y < C.world.height
       ).map(agent => Object.assign({}, agent));
+      this.orders = Array.isArray(data.orders) ? data.orders.filter(order => order && (order.kind === "building" ? C.buildings.catalog[order.type] : order.kind === "upgrade" && Number.isInteger(order.x) && Number.isInteger(order.y))).slice(0, 12) : [];
       this.sites = Array.isArray(data.sites) ? data.sites.filter(site => {
         const tile = C.world.get(site.x, site.y);
         return tile && !tile.building && C.buildings.catalog[site.type] &&
@@ -409,11 +461,13 @@
         const tile = C.world.get(site.x, site.y);
         tile.construction = {
           type: site.type,
+          upgrade: !!site.upgrade,
+          targetLevel: Math.max(2, Number(site.targetLevel) || 2),
           progress: Math.max(0, Number(site.progress) || 0),
           required: Math.max(1, Number(site.required) || 5),
           stage: Math.max(0, Math.min(3, Number(site.stage) || 0))
         };
-        return { x: site.x, y: site.y, type: site.type, buildersPresent: 0 };
+        return { x: site.x, y: site.y, type: site.type, upgrade: !!site.upgrade, buildersPresent: 0 };
       }) : [];
       this.nextId = Math.max(1, Number(data.nextId) || this.agents.length + 1);
       this.buildingsCache = [];
