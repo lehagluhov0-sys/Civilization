@@ -559,6 +559,8 @@
     },
 
     refresh: function () {
+      const mapSize = $("mapSize");
+      if (mapSize) mapSize.textContent = C.world.width + " × " + C.world.height;
       this.refreshResources();
       this.refreshEconomy();
       this.refreshWorkforce();
