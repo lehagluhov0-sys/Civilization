@@ -11,7 +11,7 @@
       const width = C.world.width;
       const height = C.world.height;
       if (!start || !end || !C.world.get(start.x, start.y) || !C.world.get(end.x, end.y)) return null;
-      if (C.world.get(start.x, start.y).type === "water" || C.world.get(end.x, end.y).type === "water") return null;
+      
       const total = width * height;
       const previous = new Int32Array(total);
       previous.fill(-2);
@@ -34,7 +34,7 @@
           const nextId = ny * width + nx;
           if (previous[nextId] !== -2) continue;
           const tile = C.world.get(nx, ny);
-          if (!tile || tile.type === "water") continue;
+          if (!tile) continue;
           previous[nextId] = id;
           queue[tail++] = nextId;
         }
@@ -70,11 +70,14 @@
       }
       resources.money -= 35;
       resources.wood -= 20;
+      const seaTiles = path.filter(point => C.world.get(point.x, point.y).type === "water").length;
       const route = {
         id: "route-" + civId,
         civId: civId,
         points: path,
         length: Math.max(0, path.length - 1),
+        seaTiles: seaTiles,
+        transport: seaTiles ? "с морской переправой" : "сухопутный",
         active: true,
         createdDay: C.state.day,
         days: 0
@@ -83,7 +86,7 @@
       C.emit("resources");
       C.emit("trade");
       C.emit("world");
-      C.log("Открыт торговый маршрут с державой «" + civ.name + "». Длина пути: " + route.length + " клеток.");
+      C.log("Открыт торговый маршрут с державой «" + civ.name + "». Длина пути: " + route.length + " клеток" + (seaTiles ? ", морских клеток: " + seaTiles : "") + ".");
       return { ok: true, route: route };
     },
 
@@ -104,7 +107,8 @@
         route.active = !!(civ && civ.trade && civ.relation >= -35);
         if (!route.active) return;
         route.days++;
-        C.state.resources.money = Math.round((C.state.resources.money + 1.2) * 100) / 100;
+        const routeIncome = 1.2 + Math.min(1, route.length / 100);
+        C.state.resources.money = Math.round((C.state.resources.money + routeIncome) * 100) / 100;
         if (route.days % 15 === 0 && civ) {
           civ.trust = Math.min(100, civ.trust + 1);
           civ.relation = Math.min(100, civ.relation + 1);
@@ -119,7 +123,7 @@
         routes: this.routes.map(route => ({
           id: route.id, civId: route.civId,
           points: route.points.map(point => ({ x: point.x, y: point.y })),
-          length: route.length, active: route.active,
+          length: route.length, seaTiles: route.seaTiles || 0, transport: route.transport || "сухопутный", active: route.active,
           createdDay: route.createdDay, days: route.days
         }))
       };
@@ -139,7 +143,8 @@
         if (points.length < 2) return null;
         return {
           id: "route-" + civ.id, civId: civ.id, points,
-          length: points.length - 1, active: !!route.active,
+          length: points.length - 1, seaTiles: points.filter(point => C.world.get(point.x, point.y).type === "water").length,
+          transport: points.some(point => C.world.get(point.x, point.y).type === "water") ? "с морской переправой" : "сухопутный", active: !!route.active,
           createdDay: Math.max(1, Number(route.createdDay) || 1),
           days: Math.max(0, Number(route.days) || 0)
         };
