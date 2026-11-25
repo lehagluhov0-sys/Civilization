@@ -209,7 +209,18 @@
     },
 
     drawConstruction: function (ctx, x, y, cell, construction) {
-      const stage = construction.stage || 0;
+      const stage = Math.max(0, Math.min(3, construction.stage || 0));
+      const material = construction.type === "quarry" ? "stone" : "wood";
+      const spriteId = "construction_" + material + "_" + stage;
+      if (cell >= 13 && C.spriteAssets && C.spriteAssets.draw(
+          spriteId, ctx, x - cell*.40, y - cell*.78, cell*1.80, cell*1.80)) {
+        const ratio = Math.max(0, Math.min(1, construction.progress / construction.required));
+        ctx.fillStyle = "rgba(20,18,16,.78)";
+        ctx.fillRect(x + cell*.12, y + cell*.88, cell*.76, Math.max(2, cell*.07));
+        ctx.fillStyle = "#e7bd67";
+        ctx.fillRect(x + cell*.12, y + cell*.88, cell*.76*ratio, Math.max(2, cell*.07));
+        return;
+      }
       const unit = Math.max(1, Math.round(cell / 18));
       const block = (bx, by, w, h, color) => {
         ctx.fillStyle = color;
