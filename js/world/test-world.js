@@ -319,6 +319,11 @@
           if (Math.hypot(x - startX, y - startY) < 9) this.tiles[y][x].type = "grass";
         }
       }
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const tile = this.tiles[y][x];
+        const mineral = tile.type === "rock" || tile.type === "mountain" ? seededHash(x, y, this.seed + 811) : 1;
+        tile.deposit = mineral < 0.075 ? "iron" : mineral < 0.145 ? "copper" : mineral < 0.25 ? "stone" : null;
+      }
       this.updateCoasts();
     },
 
