@@ -13,8 +13,8 @@
   // Similar-looking variants are kept as alternatives, not duplicated game objects.
   const sprites = {
     tree_oak: ["extra", 21, 54, 91, 75],
-    tree_pine: ["extra", 373, 53, 72, 71],
-    tree_birch: ["extra", 203, 32, 77, 100],
+    tree_pine: ["world", 377, 8, 69, 83],
+    tree_birch: ["world", 884, 0, 70, 104],
     tree_autumn: ["extra", 451, 0, 90, 124],
     tree_pink: ["extra", 638, 0, 90, 124],
     tree_palm: ["extra", 743, 37, 68, 87],
@@ -22,7 +22,7 @@
     bush: ["extra", 1401, 148, 35, 30],
     flowers: ["world", 693, 235, 25, 28],
     rock: ["world", 1056, 113, 47, 55],
-    mountain: ["world", 1233, 264, 49, 38],
+    mountain: ["world", 1268, 176, 134, 73],
     house_wood: ["world", 465, 313, 109, 90],
     house_wood_alt: ["extra", 12, 345, 71, 75],
     house_stone: ["extra", 126, 531, 85, 108],
