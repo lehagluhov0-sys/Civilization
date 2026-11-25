@@ -65,15 +65,15 @@
 
     const spriteId = type === "warehouse" ? "warehouse" :
       type === "farm" ? "farm_barn" : type === "lumber" ? "lumber_hut" :
-      type === "quarry" ? "quarry_mine" : type === "iron_mine" ? "quarry_mine" : type === "copper_mine" ? "quarry_mine" : type === "market" ? "market_stall" :
+      type === "quarry" ? "quarry_mine" : type === "iron_mine" ? "mine_iron" : type === "copper_mine" ? "mine_copper" : type === "market" ? "market_stall" :
       type === "fishery" ? "fishery_boat" : type === "city_center" ? "castle" :
       (type === "house" ? ["house_wood", "house_blue", "house_yellow", "house_wood_alt"][
         Math.floor(hash(Number.isFinite(worldX) ? worldX : Math.round(x / Math.max(1, size)),
           Number.isFinite(worldY) ? worldY : Math.round(y / Math.max(1, size)), 19) * 4)
       ] : "house_wood");
     if (C.spriteAssets && C.spriteAssets.draw(spriteId, ctx, x - size*.24, y - size*.52, size*1.30, size*1.30)) return;
-    const wall = type === "warehouse" ? "#b7a17a" : "#c5a879";
-    const roof = type === "city_center" ? "#765044" : "#914f3d";
+    const wall = type === "warehouse" ? "#b7a17a" : type === "iron_mine" ? "#8c9699" : type === "copper_mine" ? "#bd8055" : "#c5a879";
+    const roof = type === "city_center" ? "#765044" : type === "iron_mine" ? "#4f5b62" : type === "copper_mine" ? "#865235" : "#914f3d";
     px(ctx, x + size*.16, y + size*.42, size*.70, size*.42, "#463d32", unit);
     px(ctx, x + size*.22, y + size*.34, size*.58, size*.43, wall, unit);
     px(ctx, x + size*.13, y + size*.23, size*.76, size*.24, roof, unit);
