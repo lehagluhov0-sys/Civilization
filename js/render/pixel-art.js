@@ -186,6 +186,7 @@
         }
       }
 
+      if (C.citizens) C.citizens.draw(ctx, camera, cell, x0, y0, x1, y1);
       ctx.restore();
     } finally {
       camera.x = savedX;
