@@ -1,4 +1,4 @@
-name: Build diagnostic sprite catalog
+name: Build diagnostic sprite catalog v2
 
 on:
   push:
