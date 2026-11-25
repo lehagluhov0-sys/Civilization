@@ -31,6 +31,12 @@
       C.on("research", () => { if (this.researchPanel) this.renderResearchPanel(); });
       C.on("diplomacy", () => { if (this.diplomacyPanel) this.renderDiplomacyPanel(); });
       C.on("politics", () => { if (this.worldPanel) this.renderWorldPanel(); this.draw(); });
+      C.on("trade", () => {
+        if (this.diplomacyPanel) this.renderDiplomacyPanel();
+        if (this.worldPanel) this.renderWorldPanel();
+        this.draw();
+      });
+      C.on("worldEvents", () => { if (this.worldPanel) this.renderWorldPanel(); });
 
       this.refresh();
     },
@@ -153,6 +159,11 @@
         C.emit("settings");
         this.draw();
       };
+      $("tradeRoutesToggle").onchange = event => {
+        C.state.showTradeRoutes = event.target.checked;
+        C.emit("settings");
+        this.draw();
+      };
       $("pauseButton").onclick = () => {
         C.state.paused = !C.state.paused;
         C.emit("settings");
@@ -244,7 +255,22 @@
     renderWorldPanel: function () {
       if (!this.worldPanel || !C.politics) return;
       const content = this.worldPanel.querySelector("#worldContent");
-      let html = '<p style="font-size:12px;color:#9eacb8">Государства развиваются самостоятельно. Территории определяются положением столиц и силой держав.</p>';
+      let html = '<p style="font-size:12px;color:#9eacb8">Государства развиваются самостоятельно. Границы учитывают столицы и основанные города.</p>';
+      if (C.worldEvents && C.worldEvents.active.length) {
+        html += '<div style="border:1px solid #c69b55;padding:9px;margin:8px 0"><b>МИРОВЫЕ СОБЫТИЯ</b>';
+        C.worldEvents.active.forEach(event => {
+          html += '<p style="font-size:11px;margin:5px 0"><b>' + event.name + '</b> · ещё ' + event.remaining + ' дн.<br><span style="color:#aebbc5">' + event.description + '</span></p>';
+        });
+        html += '</div>';
+      }
+      if (C.trade && C.trade.routes.length) {
+        html += '<div style="background:#26333e;padding:9px;margin:8px 0"><b>ТОРГОВЛЯ</b>';
+        C.trade.routes.forEach(route => {
+          const civ = C.diplomacy.get(route.civId);
+          html += '<div style="font-size:11px;margin-top:5px">' + (civ ? civ.flag + " " + civ.name : route.civId) + ' · ' + route.length + ' клеток · ' + (route.active ? 'активен' : 'приостановлен') + '</div>';
+        });
+        html += '</div>';
+      }
       html += '<div style="background:#26333e;padding:10px;margin:8px 0"><b>ТВОЁ ГОСУДАРСТВО</b><div style="font-size:12px;margin-top:5px">Территория: ' + (C.politics.playerTerritory || 0) + ' клеток · Население: ' + C.city.population + ' · Столица: ' + (C.city.center.x + 1) + ', ' + (C.city.center.y + 1) + '</div></div>';
       C.politics.countries.forEach(c => {
         const relation = C.diplomacy.get(c.id);
@@ -315,6 +341,15 @@
         html += '<div style="display:flex;justify-content:space-between;font-size:10px;color:#aab6c0"><span>Отношения: ' + civ.relation + ' / 100</span><span>Доверие: ' + civ.trust + ' / 100</span></div>';
         html += '<p style="font-size:11px;color:#9eacb8;margin:6px 0">' + civ.style + '</p>';
         html += '<p style="font-size:10px;color:#d7b46b;margin:5px 0">' + (treaties.length ? treaties.join(" · ") : "Договоров пока нет") + '</p>';
+        if (C.trade && civ.trade) {
+          const route = C.trade.get(civ.id);
+          if (route) {
+            html += '<p style="font-size:10px;color:#d7b46b">Маршрут: ' + route.length + ' клеток · ' + (route.active ? 'активен' : 'приостановлен') + '</p>';
+            html += '<button class="wide-button" data-trade-close="' + civ.id + '" style="font-size:10px;padding:7px">Закрыть маршрут</button>';
+          } else {
+            html += '<button class="wide-button" data-trade-route="' + civ.id + '" style="font-size:10px;padding:7px">Прокладывать торговый маршрут</button>';
+          }
+        }
         html += '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px">';
         const actions = [
           ["greet","Установить контакт"],["embassy","Открыть посольство"],["gift","Отправить подарок · 20 мон."],
@@ -338,6 +373,17 @@
         html += '<div style="border-bottom:1px solid #34424e;padding:6px 0;font-size:11px"><span style="color:#d7b46b">День ' + item.day + '</span> · ' + item.message + '</div>';
       });
 
+      if (C.trade) {
+        html += '<div style="border:1px solid #c69b55;padding:10px;margin:10px 0"><b>ТОРГОВЫЕ МАРШРУТЫ</b>';
+        C.trade.routes.forEach(route => {
+          const civ = d.get(route.civId);
+          html += '<p style="font-size:11px;color:#c8d3db">' + (civ ? civ.flag + " " + civ.name : route.civId) +
+            ' · ' + route.length + ' клеток · ' + (route.active ? 'работает' : 'приостановлен') + '</p>';
+        });
+        if (!C.trade.routes.length) html += '<p style="font-size:11px;color:#9eacb8">Маршрутов пока нет. Заключи торговый договор, затем проложи путь до столицы партнёра.</p>';
+        html += '</div>';
+      }
+
       content.innerHTML = html;
       content.querySelectorAll("[data-dip-action]").forEach(button => {
         button.onclick = () => {
@@ -345,6 +391,21 @@
           if (!result.ok) this.addLog(result.message);
           this.renderDiplomacyPanel();
           this.refreshResources();
+        };
+      });
+      content.querySelectorAll("[data-trade-route]").forEach(button => {
+        button.onclick = () => {
+          const result = C.trade.createRoute(button.dataset.tradeRoute);
+          if (!result.ok) this.addLog(result.message);
+          this.renderDiplomacyPanel();
+          this.refreshResources();
+          this.draw();
+        };
+      });
+      content.querySelectorAll("[data-trade-close]").forEach(button => {
+        button.onclick = () => {
+          C.trade.closeRoute(button.dataset.tradeClose);
+          this.renderDiplomacyPanel();
         };
       });
       content.querySelectorAll("[data-dip-response]").forEach(button => {
@@ -421,6 +482,7 @@
       this.refreshRoadMode();
       $("gridToggle").checked = C.state.showGrid;
       $("politicalLayerToggle").checked = !!C.state.showPoliticalMap;
+      $("tradeRoutesToggle").checked = !!C.state.showTradeRoutes;
       this.refreshSelection();
       this.draw();
     },
