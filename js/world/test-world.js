@@ -366,7 +366,8 @@
           let coast = false;
           directions.forEach(([name, dx, dy]) => {
             const neighbor = this.get(x + dx, y + dy);
-            edges[name] = !!(neighbor && neighbor.type === "water");
+            // Shoreline belongs to land tiles only; water must never receive sand.
+            edges[name] = tile.type !== "water" && !!(neighbor && neighbor.type === "water");
             if (edges[name]) coast = true;
           });
           tile.coast = coast;
