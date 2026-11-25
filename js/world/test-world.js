@@ -313,6 +313,10 @@
         }
       }
 
+      // Guarantee a nearby woodland patch and a stone outcrop for the first tools.
+      this.tiles[startY][startX - 11].type = "forest";
+      this.tiles[startY][startX + 11].type = "rock";
+
       // Keep a few open grass corridors between the settlement and nearby forest.
       for (let y = startY - 9; y <= startY + 9; y++) {
         for (let x = startX - 9; x <= startX + 9; x++) {
