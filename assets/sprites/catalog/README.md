@@ -19,7 +19,7 @@ Each contact sheet also has a self-contained SVG version (for example, [world sh
 
 ## Runtime integration
 
-The game renderer's sprite coordinates were corrected against the visual contact sheets in `js/render/sprite-assets.js`. Cache version was bumped to **v0.18.2**.
+The game renderer's sprite coordinates were corrected against the visual contact sheets in `js/render/sprite-assets.js`. Cache version was bumped to **v0.18.3**.
 
 The corrected map uses reviewed crops for trees, rocks, houses, farm plots, windmill, mine entrance, market stall, ship, castle, lighthouse, temple, cathedral, portal, well, campfire, tent and statues. Existing game logic and building placement rules were not changed.
 
