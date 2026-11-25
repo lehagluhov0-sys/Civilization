@@ -142,8 +142,8 @@
           c.stability = clamp(c.stability + (c.food > 25 ? 1 : c.food > 8 ? 0 : -2), 20, 100);
           c.industry = clamp(c.industry + (c.treasury > 100 ? 0.02 : 0), 1, 10);
 
-          if (this.dayCounter % 30 === 0 && c.development < 10 &&
-              c.population >= 800 + c.development * 180 && c.treasury >= 60 && c.food >= 20) {
+          if (this.dayCounter % 60 === 0 && c.development < 10 &&
+              c.population >= 900 + c.development * 250 && c.treasury >= 80 && c.food >= 40) {
             const site = this.findCitySite(c);
             if (site) {
               c.cities++;
