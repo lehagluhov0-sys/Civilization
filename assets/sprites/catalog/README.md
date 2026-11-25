@@ -9,7 +9,7 @@ Generated from the two original 1536×1024 PNG atlases. Original PNGs remain unc
 | `world_atlas.png` | 274 | [PNG 1](world_contact_01.png) · [2](world_contact_02.png) · [3](world_contact_03.png) · [4](world_contact_04.png) · [5](world_contact_05.png) |
 | `file_000000002d208210877c4978b05eaded.png` | 312 | [PNG 1](secondary_contact_01.png) · [2](secondary_contact_02.png) · [3](secondary_contact_03.png) · [4](secondary_contact_04.png) · [5](secondary_contact_05.png) |
 
-Each contact sheet also has a self-contained SVG version (for example, [world sheet 1](world_contact_01.svg)).
+Each contact sheet also has a self-contained SVG version (for example, [world sheet 1](world_contact_01.svg)). Enlarged composite crops: [world composites](composite_review_world.png) · [secondary composites](composite_review_secondary.png).
 
 ## Coordinate catalog and visual review
 
@@ -27,4 +27,4 @@ The corrected map uses tight foreground bounds for recognizable trees, rocks, ho
 
 The 586 entries are *candidate connected components*, not 586 guaranteed independent sprites. Some entries are composite sheets, touching objects, or fragments. The segmentation estimates the backdrop from the four image corners and selects a color-distance threshold per atlas. Every coordinate is relative to the original PNG; source pixels are not modified.
 
-The 126 labels are a manually reviewed subset. Composite sheets must be sliced into individual sprites before they can be used as independent map objects. Unreviewed candidates remain unclassified. Android runtime rendering has not yet been tested after the coordinate update, so the next check is to inspect the updated game on the phone for crop accuracy, sprite scale, and any visual regressions.
+The 126 labels are a manually reviewed subset. Enlarged composite sheets make multi-object regions easier to inspect. Composite sheets must be sliced into individual sprites before they can be used as independent map objects. Unreviewed candidates remain unclassified. Two construction-stage crops remain explicitly marked for manual review in runtime-mapping.json. Android runtime rendering has not yet been tested after the coordinate update, so the next check is to inspect the updated game on the phone for crop accuracy, sprite scale, and any visual regressions.
