@@ -17,7 +17,8 @@ SOURCES = [
     ("secondary", ROOT / "assets/sprites/file_000000002d208210877c4978b05eaded.png"),
 ]
 MIN_AREA = 80
-THRESHOLDS = (15, 25, 35, 50, 70, 100)
+THRESHOLDS = (15, 25, 35, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100)
+TARGET_COUNTS = {"world": 282, "secondary": 305}
 CELL_W, CELL_H, COLUMNS = 144, 132, 8
 STRUCTURE = np.ones((3, 3), dtype=np.uint8)
 
@@ -66,8 +67,9 @@ def catalog_one(name: str, path: Path) -> dict:
             "largest_component_pixels": largest,
         })
         # Avoid choosing a threshold where the backdrop becomes one giant object.
-        if largest < int(w * h * 0.25) and len(comps) >= 20:
-            candidates.append((abs(len(comps) - 290), threshold, comps))
+        if largest < int(w * h * 0.08) and len(comps) >= 20:
+            target = TARGET_COUNTS[name]
+            candidates.append((abs(len(comps) - target), threshold, comps))
     if candidates:
         _, chosen_threshold, components = min(candidates, key=lambda x: (x[0], x[1]))
     else:
@@ -118,6 +120,32 @@ def catalog_one(name: str, path: Path) -> dict:
         sheet.save(OUT / filename, optimize=True)
         pages.append(filename)
 
+        # A compact SVG version embeds each thumbnail as a data URI, so the
+        # entire review sheet is a single self-contained file.
+        import io
+        svg_parts = [
+            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1152" height="' + str(rows * CELL_H) + '" viewBox="0 0 1152 ' + str(rows * CELL_H) + '">',
+            '<rect width="100%" height="100%" fill="#1e1a24"/>'
+        ]
+        for i, item in enumerate(batch):
+            b = item["bbox"]
+            crop = image.crop((b["x"], b["y"], b["x"] + b["width"], b["y"] + b["height"]))
+            crop.thumbnail((CELL_W - 12, CELL_H - 34), Image.Resampling.NEAREST)
+            buffer = io.BytesIO()
+            crop.save(buffer, format="PNG", optimize=True)
+            import base64
+            encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
+            col, row = i % COLUMNS, i // COLUMNS
+            px = col * CELL_W + (CELL_W - crop.width) // 2
+            py = row * CELL_H + 4 + (CELL_H - 34 - crop.height) // 2
+            svg_parts.append(f'<image x="{px}" y="{py}" width="{crop.width}" height="{crop.height}" href="data:image/png;base64,{encoded}"/>')
+            svg_parts.append(f'<text x="{col * CELL_W + 5}" y="{row * CELL_H + CELL_H - 8}" fill="#ffe678" font-family="monospace" font-size="12">{item["id"]} · {b["x"]},{b["y"]} {b["width"]}x{b["height"]}</text>')
+            svg_parts.append(f'<rect x="{col * CELL_W}" y="{row * CELL_H}" width="{CELL_W - 1}" height="{CELL_H - 1}" fill="none" stroke="#524464"/>')
+        svg_parts.append('</svg>')
+        svg_name = f"{name}_contact_{page_index + 1:02d}.svg"
+        (OUT / svg_name).write_text("\\n".join(svg_parts), encoding="utf-8")
+        pages.append(svg_name)
+
     return {
         "atlas": name,
         "source": str(path.relative_to(ROOT)),
@@ -126,6 +154,7 @@ def catalog_one(name: str, path: Path) -> dict:
             "method": "8-connected components with corner-estimated backdrop",
             "estimated_background_rgb": [round(float(v), 2) for v in background],
             "chosen_color_distance_threshold": chosen_threshold,
+            "target_candidate_count": TARGET_COUNTS[name],
             "threshold_diagnostics": diagnostics,
             "minimum_component_pixels": MIN_AREA,
             "source_pixels_modified": False,
