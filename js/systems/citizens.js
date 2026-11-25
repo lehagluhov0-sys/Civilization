@@ -92,8 +92,8 @@
       const think = this.thinkTimer >= this.decisionInterval;
       if (think) this.thinkTimer = 0;
       let steps = 0;
-      while (this.simTimer >= 0.05 && steps < 2) {
-        this.simTimer -= 0.05;
+      while (this.simTimer >= 0.1 && steps < 1) {
+        this.simTimer -= 0.1;
         steps++;
         const site = this.activeSite();
         let arrivedBuilders = 0;
@@ -121,7 +121,7 @@
           if (distanceSq > 0.0009) {
             const distance = Math.sqrt(distanceSq);
             const speed = agent.role === "builder" && site ? 2.0 : 0.58;
-            const step = Math.min(distance, 0.05 * speed);
+            const step = Math.min(distance, 0.1 * speed);
             agent.x += dx / distance * step;
             agent.y += dy / distance * step;
             agent.direction = dx < 0 ? -1 : 1;
@@ -143,7 +143,7 @@
 
       // Redraw only the map canvas. ui.draw() also redraws all 16,384 minimap tiles,
       // which was needlessly repeated during every citizen animation refresh.
-      if (this.redrawTimer >= 0.20) {
+      if (this.redrawTimer >= 0.35) {
         this.redrawTimer = 0;
         if (C.ui && C.ui.ctx && C.world && C.world.draw) C.world.draw(C.ui.ctx);
       }
@@ -354,44 +354,32 @@
         this.drawConstruction(ctx, camera.x + x*cell, camera.y + y*cell, cell, tile.construction);
       }
 
-      const sorted = this.agents.slice().sort((a,b) => a.y - b.y);
-      sorted.forEach(agent => {
-        const px = camera.x + agent.x * cell;
-        const py = camera.y + agent.y * cell;
-        // Compact WorldBox-like villagers: oversized pixel head and simple tunic.
-        // No separately drawn arms or legs, so silhouettes stay clean at phone zoom.
-        const unit = Math.max(1, Math.round(cell / 24));
-        const size = Math.max(3, cell * 0.30);
-        const bob = Math.round(Math.sin(agent.walk) * size * 0.045 / unit) * unit;
-        const rect = (x, y, w, h, color) => {
-          ctx.fillStyle = color;
-          ctx.fillRect(Math.round(x / unit) * unit, Math.round(y / unit) * unit,
-            Math.max(unit, Math.round(w / unit) * unit),
-            Math.max(unit, Math.round(h / unit) * unit));
-        };
+      // Villagers are deliberately tiny 3x5 pixel sprites. Their only visual
+      // animation is a gentle one-pixel vertical bob; no limb/walk-cycle drawing.
+      const unit = Math.max(1, Math.floor(cell / 22));
+      const bobPhase = this.animationTime * 1.7;
+      for (let i = 0; i < this.agents.length; i++) {
+        const agent = this.agents[i];
+        const px = Math.round(camera.x + agent.x * cell);
+        const py = Math.round(camera.y + agent.y * cell);
+        const bob = Math.round(Math.sin(bobPhase + agent.id * 1.37)) * unit;
+        const x = px - unit;
+        const y = py - 2 * unit + bob;
 
-        ctx.save();
-        ctx.globalAlpha = 0.28;
-        rect(px - size*.48, py + size*.94, size*.96, size*.20, "#20251f");
-        ctx.globalAlpha = 1;
-
-        // One-piece robe/tunic with a stepped hem.
-        rect(px - size*.29, py + size*.28 + bob, size*.58, size*.50, agent.shirt);
-        rect(px - size*.38, py + size*.48 + bob, size*.76, size*.24, agent.shirt);
-        rect(px - size*.30, py + size*.68 + bob, size*.60, size*.10, "#514638");
-
-        // Head and hair.
-        rect(px - size*.25, py - size*.18 + bob, size*.50, size*.48, agent.color);
-        rect(px - size*.30, py - size*.24 + bob, size*.60, size*.16, "#49382d");
-        rect(px - size*.34, py - size*.08 + bob, size*.12, size*.20, "#49382d");
-
+        // Five compact pixel rows: hair, face, tunic, tunic, feet.
+        ctx.fillStyle = "#49382d";
+        ctx.fillRect(x + unit, y, unit, unit);
+        ctx.fillStyle = agent.color || "#d9a36d";
+        ctx.fillRect(x, y + unit, unit * 3, unit);
+        ctx.fillStyle = agent.shirt || "#547b91";
+        ctx.fillRect(x, y + unit * 2, unit * 3, unit * 2);
+        ctx.fillStyle = "#514638";
+        ctx.fillRect(x + unit, y + unit * 4, unit, unit);
         if (agent.role === "builder") {
-          // Small hard hat, without a handheld tool that could read as an extra limb.
-          rect(px - size*.34, py - size*.32 + bob, size*.68, size*.10, "#d5b36a");
-          rect(px - size*.16, py - size*.42 + bob, size*.32, size*.12, "#e2c77d");
+          ctx.fillStyle = "#d5b36a";
+          ctx.fillRect(x, y - unit, unit * 3, unit);
         }
-        ctx.restore();
-      });
+      }
     },
 
     exportData: function () {
