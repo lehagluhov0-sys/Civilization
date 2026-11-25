@@ -248,5 +248,5 @@
     }
   };
 
-  C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 3 };
+  C.pixelArt = { enabled: true, style: "worldbox-inspired", version: 4 };
 })();
