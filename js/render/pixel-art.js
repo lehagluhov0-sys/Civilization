@@ -42,6 +42,27 @@
   }
 
   function drawHouse(ctx, x, y, size, type, unit) {
+    // Civic and landmark sprites use their own proportions while sharing the
+    // same bottom-center ground anchor as ordinary buildings.
+    const landmark = {
+      lighthouse: ["lighthouse", .92, 1.9],
+      temple: ["temple", 1.8, 1.55],
+      cathedral: ["cathedral", 2.05, 1.9],
+      portal: ["portal", .95, 1.12],
+      stone_arch: ["stone_arch", 1.15, 1.05],
+      campfire: ["campfire", .72, .9],
+      tent: ["tent", .92, 1.0],
+      well: ["well", .78, .78],
+      statue: ["statue", .72, 1.12]
+    }[type];
+    if (landmark && C.spriteAssets && C.spriteAssets.draw(
+      landmark[0], ctx,
+      x - size * landmark[1] / 2,
+      y + size - size * landmark[2],
+      size * landmark[1],
+      size * landmark[2]
+    )) return;
+
     const spriteId = type === "warehouse" ? "warehouse" :
       type === "farm" ? "farm_barn" : type === "lumber" ? "lumber_hut" :
       type === "quarry" ? "quarry_mine" : type === "market" ? "market_stall" :
