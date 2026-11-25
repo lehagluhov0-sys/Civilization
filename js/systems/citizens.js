@@ -118,6 +118,10 @@
       if ((!count.farm || resources.food < 105) && resources.wood >= 15 && resources.stone >= 5 && resources.money >= 20) return "farm";
       if (!count.lumber && resources.wood < 55 && resources.stone >= 10 && resources.money >= 30) return "lumber";
       if (!count.quarry && resources.stone < 40 && resources.wood >= 10 && resources.money >= 30) return "quarry";
+      if (!count.fishery && resources.food < 75 && resources.wood >= 28 && resources.stone >= 8 && resources.money >= 35) return "fishery";
+      if (!count.market && resources.money >= 80 && resources.wood >= 30 && resources.stone >= 12 && population >= 120) return "market";
+      if (!count.warehouse && (resources.food > 220 || resources.wood > 220 || resources.stone > 220) &&
+          resources.wood >= 35 && resources.stone >= 20 && resources.money >= 50) return "warehouse";
       if (housing < population + 18 && resources.wood >= 20 && resources.stone >= 5 && resources.money >= 25) return "house";
       return null;
     },
