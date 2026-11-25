@@ -273,6 +273,37 @@
       return true;
     },
 
+    connectTrail: function (targetX, targetY) {
+      const start = C.city.center;
+      if (!start) return;
+      const total = C.world.width * C.world.height;
+      const previous = new Int32Array(total); previous.fill(-1);
+      const queue = new Int32Array(total); let head = 0, tail = 0;
+      const id = (x,y) => y * C.world.width + x;
+      const startId = id(start.x,start.y), targetId = id(targetX,targetY);
+      previous[startId] = startId; queue[tail++] = startId;
+      const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+      while (head < tail && previous[targetId] === -1) {
+        const current = queue[head++], x = current % C.world.width, y = Math.floor(current / C.world.width);
+        for (const d of dirs) {
+          const nx=x+d[0],ny=y+d[1],tile=C.world.get(nx,ny);
+          if (!tile || tile.type === "water" || previous[id(nx,ny)] !== -1) continue;
+          if (tile.building && id(nx,ny) !== targetId) continue;
+          const next=id(nx,ny); previous[next]=current; queue[tail++]=next;
+        }
+      }
+      if (previous[targetId] === -1) return;
+      let cursor=targetId;
+      while (cursor !== startId) {
+        const x=cursor % C.world.width,y=Math.floor(cursor / C.world.width),tile=C.world.get(x,y);
+        if (tile && !tile.building && !tile.road) { tile.road=true; tile.trail=true; }
+        cursor=previous[cursor];
+      }
+      if (C.infrastructure) C.infrastructure.updateNetwork();
+      C.emit("world");
+      C.log("ИИ проложил тропинку к новому зданию.");
+    },
+
     requestBuilding: function (type) {
       const definition = C.buildings.catalog[type];
       if (!definition || type === "city_center") return { ok: false, message: "Такое здание нельзя заказать." };
@@ -338,6 +369,7 @@
             this.sites.shift();
             C.city.recalculate();
             if (C.infrastructure) C.infrastructure.updateNetwork();
+            this.connectTrail(site.x, site.y);
             C.emit("city");
             C.emit("world");
           }
