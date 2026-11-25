@@ -41,7 +41,7 @@
     px(ctx, x + size*.31, y + size*.30, size*.16, size*.10, light, unit);
   }
 
-  function drawHouse(ctx, x, y, size, type, unit) {
+  function drawHouse(ctx, x, y, size, type, unit, worldX, worldY) {
     // Civic and landmark sprites use their own proportions while sharing the
     // same bottom-center ground anchor as ordinary buildings.
     const landmark = {
@@ -68,7 +68,8 @@
       type === "quarry" ? "quarry_mine" : type === "market" ? "market_stall" :
       type === "fishery" ? "fishery_boat" : type === "city_center" ? "castle" :
       (type === "house" ? ["house_wood", "house_blue", "house_yellow", "house_wood_alt"][
-        Math.floor(hash(Math.round(x / Math.max(1, size)), Math.round(y / Math.max(1, size)), 19) * 4)
+        Math.floor(hash(Number.isFinite(worldX) ? worldX : Math.round(x / Math.max(1, size)),
+          Number.isFinite(worldY) ? worldY : Math.round(y / Math.max(1, size)), 19) * 4)
       ] : "house_wood");
     if (C.spriteAssets && C.spriteAssets.draw(spriteId, ctx, x - size*.24, y - size*.52, size*1.30, size*1.30)) return;
     const wall = type === "warehouse" ? "#b7a17a" : "#c5a879";
@@ -231,11 +232,11 @@
           const size=cell*0.82;
           if (tile.building.type === "farm") drawFarm(ctx,sx,sy,size,unit);
           else if (tile.building.type === "quarry") {
-            drawHouse(ctx,sx,sy,cell,"quarry",unit);
+            drawHouse(ctx,sx,sy,cell,"quarry",unit,x,y);
           } else if (tile.building.type === "lumber") {
-            drawHouse(ctx,sx,sy,cell,"lumber",unit);
+            drawHouse(ctx,sx,sy,cell,"lumber",unit,x,y);
             px(ctx,sx+cell*.72,sy+cell*.64,cell*.16,cell*.12,"#8d623e",unit);
-          } else drawHouse(ctx,sx,sy,size,tile.building.type,unit);
+          } else drawHouse(ctx,sx,sy,size,tile.building.type,unit,x,y);
         }
       }
 
