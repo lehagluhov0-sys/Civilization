@@ -1,11 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "renderer_version": 3,
   "notes": [
-    "Traceability map from the runtime sprite keys to candidate IDs in atlas_catalog.json.",
-    "exact_component means the runtime crop exactly matches a detected candidate bounding box.",
-    "manual_subcrop means the runtime crop is a deliberate smaller rectangle inside a composite candidate and should be visually checked at full scale.",
-    "needs_manual_review entries are retained for compatibility but should not be treated as verified construction-stage sprites."
+    "Traceability map from runtime sprite keys to visually reviewed candidate IDs.",
+    "exact_component crops match detected component boxes.",
+    "manual_subcrop crops select one object from a composite atlas candidate.",
+    "manual_expanded_crop intentionally uses a larger visual crop because connected-component detection split the tree.",
+    "needs_manual_review crops are legacy construction-stage placeholders, not verified stages."
   ],
   "sprites": [
     {
@@ -26,47 +27,50 @@
         "height": 75
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "tree_pine",
-      "atlas": "secondary",
-      "source": "assets/sprites/file_000000002d208210877c4978b05eaded.png",
-      "candidate_id": "secondary_0026",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0006",
       "bbox": {
-        "x": 373,
-        "y": 53,
-        "width": 72,
-        "height": 71
+        "x": 377,
+        "y": 8,
+        "width": 69,
+        "height": 83
       },
       "candidate_bbox": {
-        "x": 373,
-        "y": 53,
-        "width": 72,
-        "height": 71
+        "x": 377,
+        "y": 8,
+        "width": 69,
+        "height": 83
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "tree_birch",
-      "atlas": "secondary",
-      "source": "assets/sprites/file_000000002d208210877c4978b05eaded.png",
-      "candidate_id": "secondary_0012",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0011",
       "bbox": {
-        "x": 203,
-        "y": 32,
-        "width": 77,
-        "height": 100
+        "x": 884,
+        "y": 0,
+        "width": 70,
+        "height": 104
       },
       "candidate_bbox": {
-        "x": 203,
-        "y": 32,
-        "width": 77,
-        "height": 100
+        "x": 892,
+        "y": 9,
+        "width": 51,
+        "height": 58
       },
-      "overlap_iou": 1,
-      "review_status": "exact_component"
+      "overlap_iou": 0.406,
+      "review_status": "manual_expanded_crop",
+      "review_note": "Full white-trunk tree crop expands beyond the fragmented connected-component box."
     },
     {
       "runtime_key": "tree_autumn",
@@ -86,7 +90,8 @@
         "height": 124
       },
       "overlap_iou": 0.326,
-      "review_status": "manual_subcrop"
+      "review_status": "manual_subcrop",
+      "review_note": "Single tree manually cropped from the three-tree composite."
     },
     {
       "runtime_key": "tree_pink",
@@ -106,7 +111,8 @@
         "height": 124
       },
       "overlap_iou": 0.321,
-      "review_status": "manual_subcrop"
+      "review_status": "manual_subcrop",
+      "review_note": "Single tree manually cropped from the three-tree composite."
     },
     {
       "runtime_key": "tree_palm",
@@ -126,7 +132,8 @@
         "height": 87
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "tree_wide",
@@ -146,7 +153,8 @@
         "height": 88
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "bush",
@@ -166,7 +174,8 @@
         "height": 30
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "flowers",
@@ -186,7 +195,8 @@
         "height": 28
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "rock",
@@ -206,27 +216,29 @@
         "height": 55
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "mountain",
       "atlas": "world",
       "source": "assets/sprites/world_atlas.png",
-      "candidate_id": "world_0105",
+      "candidate_id": "world_0035",
       "bbox": {
-        "x": 1233,
-        "y": 264,
-        "width": 49,
-        "height": 38
+        "x": 1268,
+        "y": 176,
+        "width": 134,
+        "height": 73
       },
       "candidate_bbox": {
-        "x": 1233,
-        "y": 264,
-        "width": 49,
-        "height": 38
+        "x": 1076,
+        "y": 58,
+        "width": 460,
+        "height": 226
       },
-      "overlap_iou": 1,
-      "review_status": "exact_component"
+      "overlap_iou": 0.094,
+      "review_status": "manual_subcrop",
+      "review_note": "Snow mountain manually cropped from the large rock-and-mountain composite."
     },
     {
       "runtime_key": "house_wood",
@@ -246,7 +258,8 @@
         "height": 90
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "house_wood_alt",
@@ -266,7 +279,8 @@
         "height": 75
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "house_stone",
@@ -286,7 +300,8 @@
         "height": 108
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "house_blue",
@@ -306,7 +321,8 @@
         "height": 68
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "house_yellow",
@@ -326,7 +342,8 @@
         "height": 82
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "farm_barn",
@@ -346,7 +363,8 @@
         "height": 116
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "farm_fields",
@@ -366,7 +384,8 @@
         "height": 77
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "mill",
@@ -386,7 +405,8 @@
         "height": 227
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "lumber_hut",
@@ -406,7 +426,8 @@
         "height": 90
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "quarry_mine",
@@ -426,7 +447,8 @@
         "height": 120
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "warehouse",
@@ -446,7 +468,8 @@
         "height": 92
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "market_stall",
@@ -466,7 +489,8 @@
         "height": 77
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "fishery_boat",
@@ -486,7 +510,8 @@
         "height": 78
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "castle",
@@ -506,7 +531,8 @@
         "height": 95
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "construction_wood_0",
@@ -526,7 +552,8 @@
         "height": 74
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "construction_wood_1",
@@ -546,7 +573,8 @@
         "height": 73
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "construction_wood_2",
@@ -566,7 +594,8 @@
         "height": 73
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "construction_wood_3",
@@ -586,7 +615,8 @@
         "height": 90
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "construction_stone_0",
@@ -606,7 +636,8 @@
         "height": 64
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     },
     {
       "runtime_key": "construction_stone_1",
@@ -626,7 +657,8 @@
         "height": 214
       },
       "overlap_iou": 0.178,
-      "review_status": "needs_manual_review"
+      "review_status": "needs_manual_review",
+      "review_note": "Crop lies within a multi-building fortification sheet; not confirmed as a construction stage."
     },
     {
       "runtime_key": "construction_stone_2",
@@ -646,7 +678,8 @@
         "height": 214
       },
       "overlap_iou": 0.209,
-      "review_status": "needs_manual_review"
+      "review_status": "needs_manual_review",
+      "review_note": "Crop lies within a multi-building fortification sheet; not confirmed as a construction stage."
     },
     {
       "runtime_key": "construction_stone_3",
@@ -666,7 +699,8 @@
         "height": 95
       },
       "overlap_iou": 1,
-      "review_status": "exact_component"
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
     }
   ]
 }
