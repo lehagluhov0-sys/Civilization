@@ -43,7 +43,7 @@
         roadUpkeep: roadUpkeep,
         wages: wages,
         upkeep: upkeep,
-        balance: Math.round((income - upkeep) * 100) / 100
+        balance: Math.round((income * taxModifier + commerceIncome - upkeep) * 100) / 100
       };
     },
 
