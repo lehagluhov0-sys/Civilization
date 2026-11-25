@@ -128,6 +128,9 @@
             agent.walk += 0.5;
           } else if (agent.activity === "working") {
             agent.walk += 0.08;
+            if (agent.targetType === "farm" || agent.targetType === "fishery" || agent.targetType === "market") {
+              agent.hunger = Math.max(0, (agent.hunger || 0) - 0.22);
+            }
           }
           if (agent.role === "builder" && site) {
             const bx = agent.x - (site.x + 0.5);
@@ -154,8 +157,11 @@
         if (place.workers <= 0) continue;
         const dx = place.x - agent.x;
         const dy = place.y - agent.y;
-        const score = dx * dx + dy * dy;
-        if (score < bestScore && score < 100) {
+        const distance = dx * dx + dy * dy;
+        const isFood = place.type === "farm" || place.type === "fishery" || place.type === "market";
+        const score = distance + ((agent.hunger || 0) > 25 && !isFood ? 18 : 0) -
+          ((agent.hunger || 0) > 25 && isFood ? 12 : 0);
+        if (score < bestScore && distance < 100) {
           best = place;
           bestScore = score;
         }
@@ -163,9 +169,11 @@
       if (best && Math.random() < 0.62) {
         agent.targetX = best.x + (Math.random() - 0.5) * 0.5;
         agent.targetY = best.y + 0.7;
+        agent.targetType = best.type;
         agent.activity = "working";
       } else {
         agent.activity = "wandering";
+        agent.targetType = null;
         this.chooseWanderTargetsFor(agent);
       }
     },
