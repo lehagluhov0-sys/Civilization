@@ -1,0 +1,59 @@
+name: Embed sprite atlases in SVG
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/sprites/*.png"
+      - ".github/workflows/embed-atlases-in-svg.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  embed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Embed original PNG bytes into SVG files
+        shell: bash
+        run: |
+          mkdir -p assets/sprites/svg
+          python3 - <<'PY'
+          import base64
+          from pathlib import Path
+
+          pairs = [
+              (Path("assets/sprites/world_atlas.png"), Path("assets/sprites/svg/world_atlas.svg"), "World sprite atlas"),
+              (Path("assets/sprites/file_000000002d208210877c4978b05eaded.png"), Path("assets/sprites/svg/secondary_atlas.svg"), "Secondary sprite atlas"),
+          ]
+
+          for source, target, title in pairs:
+              if not source.is_file():
+                  raise SystemExit(f"Missing source atlas: {source}")
+              encoded = base64.b64encode(source.read_bytes()).decode("ascii")
+              svg = f'''<?xml version="1.0" encoding="UTF-8"?>
+          <svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1024" viewBox="0 0 1536 1024">
+            <title>{title}</title>
+            <image x="0" y="0" width="1536" height="1024" preserveAspectRatio="none" href="data:image/png;base64,{encoded}"/>
+          </svg>
+          '''
+              target.write_text(svg, encoding="utf-8")
+              print(f"Created {target}: {target.stat().st_size} bytes")
+          PY
+
+      - name: Commit embedded SVG files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/sprites/svg/*.svg
+          if git diff --cached --quiet; then
+            echo "SVG files are already up to date."
+          else
+            git commit -m "Embed original sprite atlases into SVG"
+            git push
+          fi
