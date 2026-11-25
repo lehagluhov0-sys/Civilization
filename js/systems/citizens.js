@@ -274,7 +274,7 @@
           targetX: agent.targetX, targetY: agent.targetY, direction: agent.direction,
           color: agent.color, shirt: agent.shirt, walk: agent.walk
         })),
-        sites: this.sites.map(site => ({ x: site.x, y: site.y, type: site.type }))
+        sites: this.sites.map(site => { const tile = C.world.get(site.x, site.y); const build = tile && tile.construction; return { x: site.x, y: site.y, type: site.type, progress: build ? build.progress : 0, required: build ? build.required : 5, stage: build ? build.stage : 0 }; })
       };
     },
 
@@ -286,8 +286,18 @@
       ).map(agent => Object.assign({}, agent));
       this.sites = Array.isArray(data.sites) ? data.sites.filter(site => {
         const tile = C.world.get(site.x, site.y);
-        return tile && tile.construction && C.buildings.catalog[site.type];
-      }).map(site => Object.assign({}, site, { buildersPresent: 0 })) : [];
+        return tile && !tile.building && C.buildings.catalog[site.type] &&
+          Number.isFinite(site.x) && Number.isFinite(site.y);
+      }).map(site => {
+        const tile = C.world.get(site.x, site.y);
+        tile.construction = {
+          type: site.type,
+          progress: Math.max(0, Number(site.progress) || 0),
+          required: Math.max(1, Number(site.required) || 5),
+          stage: Math.max(0, Math.min(3, Number(site.stage) || 0))
+        };
+        return { x: site.x, y: site.y, type: site.type, buildersPresent: 0 };
+      }) : [];
       this.nextId = Math.max(1, Number(data.nextId) || this.agents.length + 1);
       this.initialized = true;
       return true;
