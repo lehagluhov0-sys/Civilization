@@ -137,8 +137,7 @@
         if (!civ || !Array.isArray(route.points) || route.points.length < 2 || route.points.length > C.world.width * C.world.height) return null;
         const points = route.points.filter(point =>
           point && Number.isInteger(point.x) && Number.isInteger(point.y) &&
-          point.x >= 0 && point.y >= 0 && point.x < C.world.width && point.y < C.world.height &&
-          C.world.get(point.x, point.y).type !== "water"
+          point.x >= 0 && point.y >= 0 && point.x < C.world.width && point.y < C.world.height
         ).map(point => ({ x: point.x, y: point.y }));
         if (points.length < 2) return null;
         return {
