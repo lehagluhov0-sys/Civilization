@@ -52,6 +52,12 @@
       if (restored) C.log("Сохранение загружено. Продолжаем развитие поселения.");
       C.ui.draw();
       C.ui.openMainMenu(!restored);
+      const startFresh = sessionStorage.getItem("civilization_start_new_game") === "1";
+      if (startFresh) {
+        sessionStorage.removeItem("civilization_start_new_game");
+        const startButton = document.querySelector("#menuContinue");
+        if (startButton) startButton.click();
+      }
       window.addEventListener("resize", function () {
         C.camera.resize();
         C.ui.draw();
