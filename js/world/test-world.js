@@ -280,7 +280,10 @@
         const row = [];
         for (let x = 0; x < W; x++) {
           const score = landScoreAt(x, y, landforms, this.seed);
-          row.push({ x: x, y: y, type: terrain(x, y, this.seed, score), road: false, owner: null });
+          const type = terrain(x, y, this.seed, score);
+          const mineral = type === "rock" || type === "mountain" ? seededHash(x, y, this.seed + 811) : 1;
+          const deposit = mineral < 0.075 ? "iron" : mineral < 0.145 ? "copper" : mineral < 0.25 ? "stone" : null;
+          row.push({ x: x, y: y, type: type, deposit: deposit, road: false, owner: null });
         }
         this.tiles.push(row);
       }
@@ -337,6 +340,11 @@
       // Newly generated terrain remains around the old map, so old settlements are not discarded.
       for (let y = 0; y < data.tiles.length; y++) {
         for (let x = 0; x < data.tiles[y].length; x++) this.tiles[y][x].type = data.tiles[y][x];
+      }
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const tile = this.tiles[y][x];
+        const mineral = tile.type === "rock" || tile.type === "mountain" ? seededHash(x, y, this.seed + 811) : 1;
+        tile.deposit = mineral < 0.075 ? "iron" : mineral < 0.145 ? "copper" : mineral < 0.25 ? "stone" : null;
       }
       this.updateCoasts();
       return true;
