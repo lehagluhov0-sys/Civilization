@@ -47,6 +47,19 @@
     construction_stone_3: ["world", 455, 415, 120, 115]
   };
 
+  // Ground texture cells from the lower-left texture palette of the extra atlas.
+  // Each cell is an individual tile texture, not a whole-atlas stretch.
+  const terrainTextures = {
+    grass: [["extra", 8, 770, 68, 68], ["extra", 84, 846, 68, 68]],
+    forest: [["extra", 84, 846, 68, 68], ["extra", 8, 846, 68, 68]],
+    desert: [["extra", 160, 770, 68, 68], ["extra", 388, 846, 68, 68]],
+    tundra: [["extra", 236, 770, 68, 68], ["extra", 312, 922, 68, 68]],
+    water: [["extra", 312, 770, 68, 68], ["extra", 388, 770, 68, 68]],
+    swamp: [["extra", 160, 846, 68, 68], ["extra", 8, 922, 68, 68]],
+    rock: [["extra", 236, 922, 68, 68], ["extra", 312, 922, 68, 68]],
+    mountain: [["extra", 236, 922, 68, 68], ["extra", 312, 922, 68, 68]]
+  };
+
   Object.keys(atlases).forEach(function (key) {
     const entry = atlases[key];
     const image = new Image();
@@ -79,6 +92,23 @@
     return true;
   }
 
+  function drawTile(type, variant, ctx, x, y, width, height) {
+    const choices = terrainTextures[type];
+    if (!choices || !choices.length) return false;
+    const spec = choices[Math.abs(variant || 0) % choices.length];
+    const atlas = atlases[spec[0]];
+    const image = atlas && atlas.image;
+    if (!image || atlas.status !== "ready" || !image.naturalWidth) return false;
+    const dpr = (C.camera && C.camera.dpr) || 1;
+    const snap = value => Math.round(value * dpr) / dpr;
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(image, spec[1], spec[2], spec[3], spec[4],
+      snap(x), snap(y), Math.max(1 / dpr, snap(width)), Math.max(1 / dpr, snap(height)));
+    ctx.restore();
+    return true;
+  }
+
   C.spriteAssets = {
     version: 2,
     atlases: atlases,
@@ -88,6 +118,7 @@
       return !!spec && atlases[spec[0]].status === "ready";
     },
     draw: draw,
+    drawTile: drawTile,
     getStatus: function () {
       return {
         world: atlases.world.status,
