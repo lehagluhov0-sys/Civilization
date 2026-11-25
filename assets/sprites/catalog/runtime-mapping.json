@@ -1,6 +1,6 @@
 {
-  "schema_version": 2,
-  "renderer_version": 3,
+  "schema_version": 3,
+  "renderer_version": 4,
   "notes": [
     "Traceability map from runtime sprite keys to visually reviewed candidate IDs.",
     "exact_component crops match detected component boxes.",
@@ -529,6 +529,195 @@
         "y": 417,
         "width": 107,
         "height": 95
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "lighthouse",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0190",
+      "bbox": {
+        "x": 408,
+        "y": 723,
+        "width": 64,
+        "height": 126
+      },
+      "candidate_bbox": {
+        "x": 408,
+        "y": 723,
+        "width": 64,
+        "height": 126
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "temple",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0176",
+      "bbox": {
+        "x": 847,
+        "y": 656,
+        "width": 125,
+        "height": 110
+      },
+      "candidate_bbox": {
+        "x": 847,
+        "y": 656,
+        "width": 125,
+        "height": 110
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "cathedral",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0180",
+      "bbox": {
+        "x": 1020,
+        "y": 678,
+        "width": 157,
+        "height": 144
+      },
+      "candidate_bbox": {
+        "x": 1020,
+        "y": 678,
+        "width": 157,
+        "height": 144
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "portal",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0249",
+      "bbox": {
+        "x": 1189,
+        "y": 944,
+        "width": 59,
+        "height": 68
+      },
+      "candidate_bbox": {
+        "x": 1189,
+        "y": 944,
+        "width": 59,
+        "height": 68
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "stone_arch",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0183",
+      "bbox": {
+        "x": 1298,
+        "y": 703,
+        "width": 53,
+        "height": 50
+      },
+      "candidate_bbox": {
+        "x": 1298,
+        "y": 703,
+        "width": 53,
+        "height": 50
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "campfire",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0215",
+      "bbox": {
+        "x": 1139,
+        "y": 860,
+        "width": 48,
+        "height": 69
+      },
+      "candidate_bbox": {
+        "x": 1139,
+        "y": 860,
+        "width": 48,
+        "height": 69
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "tent",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0226",
+      "bbox": {
+        "x": 1199,
+        "y": 867,
+        "width": 50,
+        "height": 60
+      },
+      "candidate_bbox": {
+        "x": 1199,
+        "y": 867,
+        "width": 50,
+        "height": 60
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "well",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0232",
+      "bbox": {
+        "x": 1047,
+        "y": 894,
+        "width": 43,
+        "height": 44
+      },
+      "candidate_bbox": {
+        "x": 1047,
+        "y": 894,
+        "width": 43,
+        "height": 44
+      },
+      "overlap_iou": 1,
+      "review_status": "exact_component",
+      "review_note": "Crop exactly matches a detected candidate."
+    },
+    {
+      "runtime_key": "statue",
+      "atlas": "world",
+      "source": "assets/sprites/world_atlas.png",
+      "candidate_id": "world_0181",
+      "bbox": {
+        "x": 700,
+        "y": 679,
+        "width": 36,
+        "height": 52
+      },
+      "candidate_bbox": {
+        "x": 700,
+        "y": 679,
+        "width": 36,
+        "height": 52
       },
       "overlap_iou": 1,
       "review_status": "exact_component",
