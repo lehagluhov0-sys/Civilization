@@ -50,7 +50,7 @@
               type: tile.building.type,
               level: tile.building.level || 1
             });
-            if (tile.road) roads.push({ x: tile.x, y: tile.y });
+            if (tile.road) roads.push({ x: tile.x, y: tile.y, trail: !!tile.trail });
           }
         }
 
@@ -157,7 +157,7 @@
         data.roads.forEach(point => {
           if (!validPoint(point)) return;
           const tile = C.world.get(point.x, point.y);
-          if (tile && tile.type !== "water" && !tile.building) tile.road = true;
+          if (tile && tile.type !== "water" && !tile.building) { tile.road = true; tile.trail = !!point.trail; }
         });
 
         data.buildings.forEach(item => {
