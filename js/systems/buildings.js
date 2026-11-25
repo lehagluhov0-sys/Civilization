@@ -31,6 +31,16 @@
       name: "Склад", icon: "▣", cost: { wood: 35, stone: 20, money: 50 },
       storage: 250, jobs: 2, terrain: ["grass"],
       description: "Увеличивает вместимость хранилища ресурсов на 250 единиц."
+    },
+    fishery: {
+      name: "Рыбацкая пристань", icon: "⚓", cost: { wood: 28, stone: 8, money: 35 },
+      food: 10, jobs: 6, terrain: ["grass"], requiresWater: true,
+      description: "Ловит рыбу и снабжает поселение едой. Требует соседства с рекой или озером."
+    },
+    market: {
+      name: "Рынок", icon: "▤", cost: { wood: 30, stone: 12, money: 45 },
+      income: 1.8, jobs: 5, terrain: ["grass"],
+      description: "Приносит торговый доход каждый день. Доход зависит от числа работников."
     }
   };
 
@@ -43,6 +53,11 @@
       if (!tile || !definition) return { ok: false, message: "Невозможно построить здесь." };
       if (tile.building) return { ok: false, message: "На этой клетке уже есть здание." };
       if (tile.road) return { ok: false, message: "Сначала выбери клетку без дороги." };
+      if (C.terrain && !C.terrain.canBuild(definition, x, y)) {
+        return { ok: false, message: definition.requiresWater
+          ? "Для пристани нужна клетка рядом с рекой или озером."
+          : "Это здание нельзя построить на такой местности." };
+      }
       if (!definition.terrain.includes(tile.type)) {
         return { ok: false, message: "Это здание нельзя строить на данной местности." };
       }
