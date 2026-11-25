@@ -684,7 +684,7 @@
       const element = $("selectionInfo");
       const selected = C.state.selected;
       if (!selected) {
-        element.innerHTML = '<div class="empty-symbol">⌖</div><b>Ничего не выбрано</b><p>Нажми на клетку карты, чтобы посмотреть местность.</p>';
+        element.innerHTML = '<div class="empty-symbol">⌖</div><b>Ничего не выбрано</b><p>Выбери участок или объект, чтобы посмотреть сведения.</p>';
         return;
       }
 
