@@ -4,6 +4,16 @@
   const palette = ["#d9a441", "#67a8d8", "#8fc16b", "#bd82cf", "#d17d68", "#63c2b2", "#d18d48", "#8f9bd1"];
   const starts = [[5, 5], [42, 6], [6, 41], [42, 41], [24, 5], [24, 42], [5, 24], [42, 24]];
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+  const cityNames = {
+    solaria: ["Златоречье", "Солнечный Берег", "Аврелия", "Лавров", "Велис"],
+    northland: ["Снежноград", "Фьордхейм", "Вальд", "Каменфьорд", "Северин"],
+    verdantia: ["Листоград", "Вереск", "Миролесье", "Травники", "Эльм"],
+    montara: ["Каменец", "Горноречье", "Дубравск", "Рудный Посад", "Бастион"],
+    maritoria: ["Портовый", "Мореград", "Лазурный Мыс", "Венеция", "Сольмар"],
+    aurelia: ["Рассвет", "Золотая Гавань", "Седоград", "Эстель", "Аркадия"],
+    kharad: ["Молотск", "Железный Ключ", "Бореград", "Рудогор", "Кузнецк"],
+    serebria: ["Луноград", "Серебряный Бор", "Ноктюрн", "Элар", "Звёздный"]
+  };
 
   C.politics = {
     countries: [],
@@ -49,6 +59,7 @@
           food: 90 + i * 12, stability: 70 + i * 3,
           cityNames: [civ.name + " — столица"],
           settlements: [{ name: civ.name + " — столица", x: capital.x, y: capital.y }],
+          science: 0, tradeLevel: 1, industry: 1,
           lastGrowth: 0, territory: 0
         };
       }).filter(Boolean);
@@ -61,8 +72,17 @@
 
     recalculateTerritories: function () {
       if (!C.city.center) return;
-      const centers = [{ id: "player", x: C.city.center.x, y: C.city.center.y, power: 1 }]
-        .concat(this.countries.map(c => ({ id: c.id, x: c.capital.x, y: c.capital.y, power: c.power || 1 })));
+      const centers = [{ id: "player", x: C.city.center.x, y: C.city.center.y, power: 1 }];
+      this.countries.forEach(country => {
+        const settlements = Array.isArray(country.settlements) && country.settlements.length
+          ? country.settlements : [{ x: country.capital.x, y: country.capital.y }];
+        settlements.forEach((city, index) => {
+          centers.push({
+            id: country.id, x: city.x, y: city.y,
+            power: (country.power || 1) + Math.min(1.5, index * 0.25)
+          });
+        });
+      });
       const counts = { player: 0 };
       this.countries.forEach(c => { counts[c.id] = 0; });
       for (let y = 0; y < C.world.height; y++) {
@@ -114,27 +134,37 @@
         this.countries.forEach((c, i) => {
           const growth = 2 + ((this.dayCounter + i * 3) % 4);
           c.population += growth;
-          c.treasury += 1 + (i % 3);
-          c.food = Math.max(0, Math.min(500, c.food + 2 - (c.population / 900)));
-          c.stability = clamp(c.stability + (c.food > 20 ? 1 : -2), 20, 100);
-          if (this.dayCounter % 30 === 0 && c.development < 10) {
-            c.development++;
-            c.cities++;
-            if (!Array.isArray(c.cityNames)) c.cityNames = [c.name + " — столица"];
-            const cityName = c.name + " — город " + c.cities;
-            c.cityNames.push(cityName);
+          const foodUse = Math.max(1, Math.ceil(c.population / 1100));
+          c.food = clamp(c.food + 3 + c.development * 0.25 - foodUse, 0, 500);
+          const tradeBonus = C.diplomacy && C.diplomacy.get(c.id) && C.diplomacy.get(c.id).trade ? 2 : 0;
+          c.treasury += 1 + (i % 3) + tradeBonus + Math.max(0, c.tradeLevel - 1) * 0.2;
+          c.science = (c.science || 0) + 0.2 + c.development * 0.05;
+          c.stability = clamp(c.stability + (c.food > 25 ? 1 : c.food > 8 ? 0 : -2), 20, 100);
+          c.industry = clamp(c.industry + (c.treasury > 100 ? 0.02 : 0), 1, 10);
+
+          if (this.dayCounter % 30 === 0 && c.development < 10 &&
+              c.population >= 800 + c.development * 180 && c.treasury >= 60 && c.food >= 20) {
             const site = this.findCitySite(c);
             if (site) {
-              if (!Array.isArray(c.settlements)) c.settlements = [{ name: c.name + " — столица", x: c.capital.x, y: c.capital.y }];
+              c.cities++;
+              c.development++;
+              c.treasury -= 45;
+              if (!Array.isArray(c.cityNames)) c.cityNames = [c.name + " — столица"];
+              if (!Array.isArray(c.settlements)) {
+                c.settlements = [{ name: c.name + " — столица", x: c.capital.x, y: c.capital.y }];
+              }
+              const pool = cityNames[c.id] || ["Новый Город"];
+              const suffix = pool[(c.cities - 2) % pool.length];
+              const cityName = suffix + (c.cities > pool.length + 1 ? " " + c.cities : "");
+              c.cityNames.push(cityName);
               c.settlements.push({ name: cityName, x: site.x, y: site.y });
+              C.log("Держава «" + c.name + "» основала город «" + cityName + "».");
             }
-            c.treasury = Math.max(0, c.treasury - 20);
-            C.log("Держава «" + c.name + "» развила экономику и основала новый город.");
           }
-          c.power = 1 + c.development * 0.35 + c.cities * 0.1;
+          c.power = 1 + c.development * 0.35 + c.cities * 0.2 + c.industry * 0.05;
         });
       }
-      if (this.dayCounter % 30 === 0) this.recalculateTerritories();
+      if (this.dayCounter % 20 === 0) this.recalculateTerritories();
       if (this.dayCounter % 10 === 0) C.emit("politics");
     },
 
@@ -151,7 +181,7 @@
           id: c.id, capital: { x: c.capital.x, y: c.capital.y },
           population: c.population, treasury: c.treasury,
           development: c.development, power: c.power, cities: c.cities,
-          food: c.food, stability: c.stability,
+          food: c.food, stability: c.stability, science: c.science || 0, tradeLevel: c.tradeLevel || 1, industry: c.industry || 1,
           cityNames: Array.isArray(c.cityNames) ? c.cityNames.slice(0, 20) : [c.name + " — столица"],
           settlements: Array.isArray(c.settlements) ? c.settlements.slice(0, 20).map(city => ({ name: city.name, x: city.x, y: city.y })) : []
         }))
@@ -177,6 +207,7 @@
           cities: clamp(Number(saved.cities) || 1, 1, 20),
           food: clamp(Number(saved.food) || 0, 0, 500),
           stability: clamp(Number(saved.stability) || 50, 0, 100),
+          science: Math.max(0, Number(saved.science) || 0), tradeLevel: clamp(Number(saved.tradeLevel) || 1, 1, 10), industry: clamp(Number(saved.industry) || 1, 1, 10),
           cityNames: Array.isArray(saved.cityNames) ? saved.cityNames.slice(0, 20) : [civ.name + " — столица"],
           settlements: Array.isArray(saved.settlements) ? saved.settlements.slice(0, 20).filter(city =>
             city && Number.isInteger(city.x) && Number.isInteger(city.y) &&
