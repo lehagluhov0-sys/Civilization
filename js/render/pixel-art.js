@@ -186,12 +186,6 @@
         }
       }
 
-      if (C.state.selected) {
-        const p=C.state.selected;
-        ctx.strokeStyle="#f3d27e";
-        ctx.lineWidth=Math.max(1,1.5*zoom);
-        ctx.strokeRect(camera.x+p.x*cell+1,camera.y+p.y*cell+1,cell-2,cell-2);
-      }
       ctx.restore();
     } finally {
       camera.x = savedX;
