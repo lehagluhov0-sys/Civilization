@@ -70,6 +70,7 @@
       if (C.politics) C.politics.daily();
       if (C.trade) C.trade.daily();
       if (C.worldEvents) C.worldEvents.daily();
+      if (C.citizens) C.citizens.daily();
       if (C.infrastructure) C.infrastructure.updateNetwork();
       if (C.workforce) C.workforce.allocate();
 
