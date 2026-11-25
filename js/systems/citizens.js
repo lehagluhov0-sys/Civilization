@@ -21,14 +21,14 @@
       this.initialized = true;
       if (this.agents.length) return;
       const center = C.city.center || { x: 24, y: 24 };
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 5; i++) {
         const angle = i * 2.399963;
         const radius = 0.7 + (i % 4) * 0.38;
         const x = Math.max(1, Math.min(C.world.width - 2, center.x + Math.cos(angle) * radius));
         const y = Math.max(1, Math.min(C.world.height - 2, center.y + Math.sin(angle) * radius));
         this.agents.push({
           id: this.nextId++,
-          role: i < 4 ? "builder" : "resident",
+          role: i < 2 ? "builder" : "resident",
           x: x, y: y,
           targetX: x, targetY: y,
           direction: 1,
@@ -66,7 +66,7 @@
     },
 
     update: function (dt) {
-      if (!this.initialized) return;
+      if (!this.initialized || C.state.paused) return;
       // Fixed-step simulation: avoid running all citizen logic on every display frame.
       this.simTimer += Math.min(dt, 0.1);
       this.thinkTimer += dt;
@@ -143,7 +143,7 @@
 
       // Redraw only the map canvas. ui.draw() also redraws all 16,384 minimap tiles,
       // which was needlessly repeated during every citizen animation refresh.
-      if (this.redrawTimer >= 0.10) {
+      if (this.redrawTimer >= 0.20) {
         this.redrawTimer = 0;
         if (C.ui && C.ui.ctx && C.world && C.world.draw) C.world.draw(C.ui.ctx);
       }
