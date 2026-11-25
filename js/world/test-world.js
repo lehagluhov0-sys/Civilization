@@ -1,8 +1,8 @@
 (function () {
   "use strict";
   const C = window.Civ;
-  const W = 48;
-  const H = 48;
+  const W = 128;
+  const H = 128;
 
   function seededHash(x, y, seed) {
     const value = Math.sin(x * 127.1 + y * 311.7 + seed * 0.0137) * 43758.5453;
@@ -52,24 +52,24 @@
 
   function generateLandforms(seed) {
     const main = {
-      x: 22.5 + (seededHash(3, 7, seed) - 0.5) * 3.5,
-      y: 23.5 + (seededHash(11, 5, seed) - 0.5) * 3.5,
-      rx: 16.5 + seededHash(13, 17, seed) * 2.5,
-      ry: 13.5 + seededHash(19, 23, seed) * 2.5,
+      x: W / 2 + (seededHash(3, 7, seed) - 0.5) * 7,
+      y: H / 2 + (seededHash(11, 5, seed) - 0.5) * 7,
+      rx: W * 0.34 + seededHash(13, 17, seed) * 5,
+      ry: H * 0.29 + seededHash(19, 23, seed) * 5,
       angle: (seededHash(29, 31, seed) - 0.5) * 0.42
     };
     const forms = [main];
-    const count = 3 + Math.floor(seededHash(37, 41, seed) * 3);
+    const count = 5 + Math.floor(seededHash(37, 41, seed) * 3);
     const phase = seededHash(43, 47, seed) * Math.PI * 2;
 
     for (let i = 0; i < count; i++) {
       const angle = phase + i * Math.PI * 2 / count;
-      const distance = 17 + seededHash(i + 51, i + 61, seed) * 5;
+      const distance = W * 0.31 + seededHash(i + 51, i + 61, seed) * 10;
       forms.push({
         x: Math.max(3, Math.min(W - 4, main.x + Math.cos(angle) * distance)),
         y: Math.max(3, Math.min(H - 4, main.y + Math.sin(angle) * distance * 0.78)),
-        rx: 3.2 + seededHash(i + 67, i + 71, seed) * 3.4,
-        ry: 2.8 + seededHash(i + 73, i + 79, seed) * 3.2,
+        rx: 5.5 + seededHash(i + 67, i + 71, seed) * 5.5,
+        ry: 4.8 + seededHash(i + 73, i + 79, seed) * 5,
         angle: (seededHash(i + 83, i + 89, seed) - 0.5) * 0.8
       });
     }
@@ -100,7 +100,7 @@
     const horizontal = direction === "east" || direction === "west";
     const sign = direction === "east" || direction === "south" ? 1 : -1;
 
-    for (let step = 0; step < 60; step++) {
+    for (let step = 0; step < Math.max(W, H) * 1.5; step++) {
       if (x < 1 || y < 1 || x >= W - 1 || y >= H - 1) break;
       if (tiles[y][x].type === "water" && step > 3) {
         outsideWater++;
@@ -130,11 +130,11 @@
   }
 
   function addLakes(tiles, seed) {
-    const count = 2 + Math.floor(seededHash(97, 103, seed) * 2);
+    const count = 5 + Math.floor(seededHash(97, 103, seed) * 4);
     for (let i = 0; i < count; i++) {
-      const cx = 6 + Math.floor(seededHash(i + 107, 17, seed) * 36);
-      const cy = 6 + Math.floor(seededHash(29, i + 109, seed) * 36);
-      if (Math.abs(cx - 24) + Math.abs(cy - 24) < 9) continue;
+      const cx = 10 + Math.floor(seededHash(i + 107, 17, seed) * (W - 20));
+      const cy = 10 + Math.floor(seededHash(29, i + 109, seed) * (H - 20));
+      if (Math.abs(cx - W / 2) + Math.abs(cy - H / 2) < 18) continue;
       const radius = 1.5 + seededHash(i + 113, 31, seed) * 1.7;
       for (let y = Math.max(1, Math.floor(cy - radius - 1)); y <= Math.min(H - 2, Math.ceil(cy + radius + 1)); y++) {
         for (let x = Math.max(1, Math.floor(cx - radius - 1)); x <= Math.min(W - 2, Math.ceil(cx + radius + 1)); x++) {
@@ -290,10 +290,30 @@
       carveRiver(this.tiles, 13, 29, "west", this.seed + 419);
       addLakes(this.tiles, this.seed);
 
-      // Preserve a compact fertile starting area for the first settlement.
-      for (let y = 21; y <= 27; y++) {
-        for (let x = 21; x <= 27; x++) {
-          if (Math.abs(x - 24) + Math.abs(y - 24) <= 4) this.tiles[y][x].type = "grass";
+      // Guarantee a safe fertile founding zone in the center of the larger world.
+      const startX = Math.floor(W / 2);
+      const startY = Math.floor(H / 2);
+      for (let y = startY - 6; y <= startY + 6; y++) {
+        for (let x = startX - 6; x <= startX + 6; x++) {
+          if (Math.abs(x - startX) + Math.abs(y - startY) <= 8) this.tiles[y][x].type = "grass";
+        }
+      }
+
+      // A guaranteed nearby woodland ring gives the first settlement access to timber.
+      for (let y = startY - 15; y <= startY + 15; y++) {
+        for (let x = startX - 15; x <= startX + 15; x++) {
+          const distance = Math.hypot(x - startX, y - startY);
+          const patch = fractalNoise(x / 3.4, y / 3.4, this.seed + 1201);
+          const tile = this.tiles[y] && this.tiles[y][x];
+          if (!tile || distance < 8.5 || distance > 15 || tile.type === "water") continue;
+          if (patch > 0.43) tile.type = "forest";
+        }
+      }
+
+      // Keep a few open grass corridors between the settlement and nearby forest.
+      for (let y = startY - 9; y <= startY + 9; y++) {
+        for (let x = startX - 9; x <= startX + 9; x++) {
+          if (Math.hypot(x - startX, y - startY) < 9) this.tiles[y][x].type = "grass";
         }
       }
       this.updateCoasts();
@@ -308,13 +328,15 @@
     },
 
     importData: function (data) {
-      if (!data || !Array.isArray(data.tiles) || data.tiles.length !== H) return false;
+      if (!data || !Array.isArray(data.tiles) || !data.tiles.length || data.tiles.length > H) return false;
       const allowed = Object.keys(colors);
-      if (!data.tiles.every(row => Array.isArray(row) && row.length === W &&
+      if (!data.tiles.every(row => Array.isArray(row) && row.length > 0 && row.length <= W &&
           row.every(type => allowed.includes(type)))) return false;
       this.seed = Number(data.seed) || this.seed;
-      for (let y = 0; y < H; y++) {
-        for (let x = 0; x < W; x++) this.tiles[y][x].type = data.tiles[y][x];
+      // Older 48x48 saves are preserved in the upper-left of the expanded world.
+      // Newly generated terrain remains around the old map, so old settlements are not discarded.
+      for (let y = 0; y < data.tiles.length; y++) {
+        for (let x = 0; x < data.tiles[y].length; x++) this.tiles[y][x].type = data.tiles[y][x];
       }
       this.updateCoasts();
       return true;
