@@ -101,6 +101,10 @@
     },
 
     getEffect: function (effect) {
+      if (effect === "storage") {
+        return (this.isCompleted("pottery") ? 100 : 0) +
+          (this.isCompleted("architecture") ? 150 : 0);
+      }
       return this.completed.reduce((value, id) => {
         const tech = this.getTech(id);
         if (!tech) return value;
@@ -110,10 +114,7 @@
         if (effect === "stone" && tech.effect === "engineering") return value * 1.2;
         if (effect === "roads" && tech.effect === "roads") return value * 0.75;
         return value;
-      }, 1) + (effect === "storage"
-        ? (this.isCompleted("pottery") ? 100 : 0) +
-          (this.isCompleted("architecture") ? 150 : 0)
-        : 0);
+      }, 1);
     },
 
     exportData: function () {
