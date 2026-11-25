@@ -42,10 +42,12 @@
     draw: function (id, ctx, x, y, width, height) {
       const image = images[id];
       if (!image || status[id] !== "ready" || !image.naturalWidth) return false;
+      const dpr = (C.camera && C.camera.dpr) || 1;
+      const snap = function (value) { return Math.round(value * dpr) / dpr; };
       ctx.save();
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(image, Math.round(x), Math.round(y),
-        Math.max(1, Math.round(width)), Math.max(1, Math.round(height)));
+      ctx.drawImage(image, snap(x), snap(y),
+        Math.max(1 / dpr, snap(width)), Math.max(1 / dpr, snap(height)));
       ctx.restore();
       return true;
     },
