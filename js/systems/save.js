@@ -41,6 +41,7 @@
             speed: C.state.speed,
             showGrid: C.state.showGrid,
             showPoliticalMap: !!C.state.showPoliticalMap,
+            politicalMapInitialized: true,
             showTradeRoutes: !!C.state.showTradeRoutes,
             resources: Object.assign({}, C.state.resources),
             camera: Object.assign({}, C.state.camera),
@@ -101,7 +102,8 @@
         C.state.paused = savedState.paused !== false;
         C.state.speed = [1, 2, 4].includes(Number(savedState.speed)) ? Number(savedState.speed) : 1;
         C.state.showGrid = savedState.showGrid !== false;
-        C.state.showPoliticalMap = !!savedState.showPoliticalMap;
+        C.state.showPoliticalMap = savedState.politicalMapInitialized ? !!savedState.showPoliticalMap : true;
+        C.state.politicalMapInitialized = true;
         C.state.showTradeRoutes = !!savedState.showTradeRoutes;
 
         if (savedState.camera && Number.isFinite(savedState.camera.x) &&
