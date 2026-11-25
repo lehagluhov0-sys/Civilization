@@ -55,6 +55,7 @@
       const startFresh = sessionStorage.getItem("civilization_start_new_game") === "1";
       if (startFresh) {
         sessionStorage.removeItem("civilization_start_new_game");
+        if (C.save) C.save.save();
         const startButton = document.querySelector("#menuContinue");
         if (startButton) startButton.click();
       }
