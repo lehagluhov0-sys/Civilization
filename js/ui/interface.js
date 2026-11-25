@@ -683,7 +683,7 @@
       time.textContent = "День " + C.state.day;
       item.append(time, document.createTextNode(message));
       element.prepend(item);
-      while (element.children.length > 12) element.lastElementChild.remove();
+      while (element.children.length > 40) element.lastElementChild.remove();
     }
   };
 })();
