@@ -100,7 +100,9 @@
       resources.wood = roundOne(Math.max(0, Math.min(capacity, resources.wood + woodProduction)));
       resources.stone = roundOne(Math.max(0, Math.min(capacity, resources.stone + stoneProduction)));
 
-      if (C.state.day % 5 === 0 && this.population < this.housing && resources.food > consumption * 3) {
+      const prototypePopulationCap = 15;
+      if (C.state.day % 5 === 0 && this.population < Math.min(this.housing, prototypePopulationCap) &&
+          resources.food > consumption * 3) {
         this.population++;
         resources.population = this.population;
         C.log("Население поселения выросло до " + this.population + ".");
