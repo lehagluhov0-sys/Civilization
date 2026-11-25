@@ -24,7 +24,7 @@
     },
     quarry: {
       name: "Каменная шахта", icon: "◆", cost: { wood: 10, stone: 8 },
-      stone: 7, jobs: 6, terrain: ["rock", "mountain"], requiresDeposit: "stone", requiresResearch: "masonry",
+      stone: 7, jobs: 6, terrain: ["rock", "mountain"], requiresDeposit: "stone",
       description: "Добывает строительный камень из каменного месторождения."
     },
     iron_mine: {
