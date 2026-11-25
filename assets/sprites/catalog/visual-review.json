@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "purpose": "Manually reviewed subset of visually recognizable candidates. This is not a complete atlas classification.",
-  "reviewed_count": 126,
+  "reviewed_count": 128,
   "categories": [
     "vegetation",
     "building",
@@ -2316,6 +2316,42 @@
       "category": "decoration",
       "visual_confidence": "high",
       "visual_note": "Skull-themed stone statue.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "secondary_0046",
+      "source": "file_000000002d208210877c4978b05eaded.png",
+      "bbox": {
+        "x": 1401,
+        "y": 148,
+        "width": 35,
+        "height": 30
+      },
+      "pixel_area": 453,
+      "bbox_fill_ratio": 0.4314,
+      "review_flags": [],
+      "label": "small_green_shrub",
+      "category": "vegetation",
+      "visual_confidence": "high",
+      "visual_note": "Small rounded green shrub.",
+      "review_method": "manual visual review of generated contact sheet"
+    },
+    {
+      "id": "world_0105",
+      "source": "world_atlas.png",
+      "bbox": {
+        "x": 1233,
+        "y": 264,
+        "width": 49,
+        "height": 38
+      },
+      "pixel_area": 710,
+      "bbox_fill_ratio": 0.3813,
+      "review_flags": [],
+      "label": "rock_outcrop_variant",
+      "category": "resource",
+      "visual_confidence": "high",
+      "visual_note": "Small rocky outcrop or boulder variant.",
       "review_method": "manual visual review of generated contact sheet"
     }
   ]
