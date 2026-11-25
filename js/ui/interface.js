@@ -149,11 +149,6 @@
           ? "Режим дорог включён. Проведи пальцем по карте, чтобы проложить маршрут."
           : "Режим прокладки дорог выключен.");
       };
-      $("gridToggle").onchange = event => {
-        C.state.showGrid = event.target.checked;
-        C.emit("settings");
-        this.draw();
-      };
       $("politicalLayerToggle").onchange = event => {
         C.state.showPoliticalMap = event.target.checked;
         C.emit("settings");
@@ -571,7 +566,6 @@
       $("day").textContent = C.state.day;
       this.refreshTime();
       this.refreshRoadMode();
-      $("gridToggle").checked = C.state.showGrid;
       $("politicalLayerToggle").checked = !!C.state.showPoliticalMap;
       $("tradeRoutesToggle").checked = !!C.state.showTradeRoutes;
       this.refreshSelection();
@@ -634,7 +628,7 @@
       button.classList.toggle("active", this.roadMode);
       $("mapHint").textContent = this.roadMode
         ? "РЕЖИМ ДОРОГ · ПРОВЕДИ ПАЛЬЦЕМ ПО КАРТЕ ДЛЯ ПРОКЛАДКИ МАРШРУТА"
-        : "ПЕРЕТАСКИВАЙ КАРТУ · НАЖМИ НА КЛЕТКУ ДЛЯ ВЫБОРА";
+        : "ПЕРЕТАСКИВАЙ КАРТУ · НАЖМИ НА МЕСТНОСТЬ ИЛИ ОБЪЕКТ ДЛЯ ОСМОТРА";
     },
 
     paintRoadLine: function (from, to) {
