@@ -363,6 +363,17 @@
                   ctx.textAlign = "center";
                   ctx.textBaseline = "middle";
                   ctx.fillText(country.flag, cx, cy);
+                  if (zoom >= 0.82) {
+                    const labelY = cy - Math.max(9, cell * 0.42);
+                    ctx.font = "bold " + Math.max(8, Math.min(12, cell * 0.25)) + "px Arial";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "bottom";
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = "#111820";
+                    ctx.strokeText(country.name, cx, labelY, Math.max(54, cell * 5));
+                    ctx.fillStyle = "#fff4d6";
+                    ctx.fillText(country.name, cx, labelY, Math.max(54, cell * 5));
+                  }
                 } else {
                   ctx.fillStyle = country.color;
                   ctx.beginPath();
