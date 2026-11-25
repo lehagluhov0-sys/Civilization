@@ -174,6 +174,12 @@
         const tile=this.get(x,y);
         if (!tile) continue;
         const sx=camera.x+x*cell, sy=camera.y+y*cell;
+        // Replace flat biome fills with pixel textures from the user's atlas.
+        // Deterministic variation prevents texture flicker while panning or redrawing.
+        if (C.spriteAssets && C.spriteAssets.drawTile) {
+          C.spriteAssets.drawTile(tile.type, Math.floor(hash(x, y, 73) * 2), ctx,
+            sx, sy, cell + pixelStep, cell + pixelStep);
+        }
         drawShoreline(ctx,tile,sx,sy,cell,unit);
         // Buildings and construction sites own their footprint; never draw biome props underneath them.
         if (!tile.building && !tile.construction) drawTileDetails(ctx,tile,sx,sy,cell,unit);
