@@ -466,6 +466,7 @@
       $("buildingUpkeep").textContent = economy.buildingUpkeep.toFixed(1);
       $("roadUpkeep").textContent = economy.roadUpkeep.toFixed(2);
       $("wageCost").textContent = economy.wages.toFixed(2);
+      if ($("marketIncome")) $("marketIncome").textContent = economy.commerceIncome.toFixed(2);
       $("dailyBalance").textContent = (economy.balance > 0 ? "+" : "") + economy.balance.toFixed(2);
       $("dailyBalance").style.color = economy.balance < 0 ? "#d97757" : economy.balance > 0 ? "#63b98b" : "";
     },
@@ -543,10 +544,12 @@
         return;
       }
 
+      const terrainInfo = C.terrain ? C.terrain.getInfo(tile.type) : null;
       let content =
-        '<div class="terrain-preview" style="background:' + C.world.colors[tile.type] + '"></div>' +
+        '<div class="terrain-preview' style="background:' + C.world.colors[tile.type] + '"></div>' +
         '<div class="terrain-name">' + C.world.names[tile.type] + '</div>' +
         '<div class="terrain-description">' + C.world.descriptions[tile.type] + '</div>' +
+        (terrainInfo ? '<p style="font-size:10px;color:#d7b46b">Плодородие: ' + C.terrain.fertility(tile) + '% · ' + terrainInfo.note + '</p>' : '') +
         '<p>Координаты: ' + (selected.x + 1) + ", " + (selected.y + 1) + "</p>";
 
       if (tile.building) {
@@ -568,7 +571,7 @@
         Object.keys(C.buildings.catalog).forEach(type => {
           if (type === "city_center") return;
           const definition = C.buildings.catalog[type];
-          if (!definition.terrain.includes(tile.type)) return;
+          if (C.terrain ? !C.terrain.canBuild(definition, tile.x, tile.y) : !definition.terrain.includes(tile.type)) return;
           hasAction = true;
           const cost = definition.cost;
           content +=
